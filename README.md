@@ -8,8 +8,9 @@ In a battle, the player can choose 4 characters to form a team and fight against
 ## How to play
 To start the game, run the following command:
 ```bash
-make run
+make
 ```
+Yes this is literally it. 
 
 ## Stats
 Each character and enemy has the following stats:
