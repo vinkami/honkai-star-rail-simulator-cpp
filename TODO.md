@@ -23,6 +23,8 @@ asks the user what playable characters they want to use and what enemies they wa
 - [ ] ask the user what situation they want to fight and return the enemies
 ### `settingsMenu()`
 - [ ] difficulty settings
+### `loadCharacters()`
+- [ ] load the character stats from a file (maybe a json file if we're fancy. have to `#include nlohmann/json` tho)
 
 
 ## battle.cpp
