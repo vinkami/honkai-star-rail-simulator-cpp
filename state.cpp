@@ -1,12 +1,8 @@
-//
-// Created by vinkami on 11/4/2024.
-//
-
 #include "state.h"
 #include "character.h"
 using namespace std;
 
-State::State(vector<Character> &allies, vector<Character> &enemies): allies(allies), enemies(enemies), round({"Round", 100}) {
+State::State(vector<Character> &allies, vector<Character> &enemies, Character &round): allies(allies), enemies(enemies), round(round) {
     maxSkillPoint = 5;
     skillPoint = 3;
     roundNumber = 0;

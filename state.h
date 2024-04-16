@@ -5,16 +5,16 @@
 #ifndef PROJECT_STATE_H
 #define PROJECT_STATE_H
 
-#include "character.h"
 #include <vector>
 using namespace std;
 
+class Character;
 class State {
 public:
-    State(vector<Character> &allies, vector<Character> &enemies);
+    State(vector<Character> &allies, vector<Character> &enemies, Character &round);
     vector<Character> &allies;
     vector<Character> &enemies;
-    Character round;
+    Character &round;
 
     int maxSkillPoint;
     int skillPoint;
