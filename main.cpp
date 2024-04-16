@@ -30,8 +30,6 @@ int main() {
             battleStart(state);
             while (gameLoop(state));
             battleEnd(state);
-
-            cout << "Battle ended." << endl;
         } else if (cmd == "team") {
             teamMenu(state);
         } else if (cmd == "battle") {
