@@ -1,6 +1,7 @@
 # TODO list + tiny documentation
-This is a list of things that need to be done in the project.
-
+This is a list of things that need to be done in the project.  
+Note for anyone who reads this: most likely all functions here will be void functions. 
+the State should be passed around as a reference to the functions. and be modified in the functions.
 
 ## main.cpp
 - [ ] include everything needed from battle.cpp and setup.cpp
@@ -16,8 +17,8 @@ This is a list of things that need to be done in the project.
 ## setup.cpp
 asks the user what playable characters they want to use and what enemies they want to fight
 ### `teamMenu()`
-- [ ] provides a list of playable characters with their skills and stats
-- [ ] ask the user what characters they want to use
+- [x] provides a list of playable characters with their skills and stats
+- [x] ask the user what characters they want to use
 ### `battleMenu()`
 - [ ] provides a list of situations, with a description of the enemies
 - [ ] ask the user what situation they want to fight and return the enemies
