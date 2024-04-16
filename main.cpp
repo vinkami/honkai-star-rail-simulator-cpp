@@ -4,6 +4,8 @@
 #include "battle.h"
 #include "character.h"
 #include "state.h"
+#include "setup.h"
+
 using namespace std;
 
 int main() {
@@ -15,7 +17,7 @@ int main() {
         } else if (cmd == "help") {
             cout << "Commands: help, exit" << endl;
         } else if (cmd == "start") {
-            vector<Character> allies {Character("A1", 133), Character("A2", 90), Character("A3", 170), Character("A4", 136)};
+            vector<Character> allies = teamMenu();
             vector<Character> enemies {Character("E1", 100), Character("E2", 200), Character("E3", 300), Character("E4", 400), Character("E5", 500)};
             State state(allies, enemies);
 
