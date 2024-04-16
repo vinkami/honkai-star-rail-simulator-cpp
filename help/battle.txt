@@ -1,0 +1,8 @@
+Commands:
+- help: Display this help message
+- escape: Escape from the fight
+- exit: Exit the game
+
+- q: Do a normal attack
+- e: Release the skill of the current character
+- {1-4}: Release the ultimate of the character at the corresponding position, only when the ultimate energy bar is full
