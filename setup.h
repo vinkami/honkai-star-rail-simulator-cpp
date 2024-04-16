@@ -15,9 +15,9 @@
 #include <iostream>
 
 
-int targetinlist(const std::vector<Character>& characters, const std::string& target);
+int searchCharacter(const std::vector<Character>& characters, const std::string& target);
 
-vector<Character> teamMenu();
+void teamMenu(State &state);
 
 void battleMenu(State &state);
 

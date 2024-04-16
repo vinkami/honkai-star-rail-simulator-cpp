@@ -1,23 +1,12 @@
-//
-// Created by vinkami on 11/4/2024.
-//
-
 #include "setup.h"
 #include "state.h"
+#include "character.h"
 #include <iostream>
 using namespace std;
 
-void Character::printcharacter() const {
-    cout << "Name: " << name << endl;
-    cout << "HP: " << hp << endl;
-    cout << "ATK: " << atk << endl;
-    cout << "DEF: " << def << endl;
-    cout << "Speed: " << speed << endl;
-    cout << endl;
-}
 
-int targetinlist(const std::vector<Character>& characters, const std::string& target) {
-    for (std::size_t i = 0; i < characters.size(); ++i) {
+int searchCharacter(const vector<Character>& characters, const string& target) {
+    for (int i = 0; i < characters.size(); ++i) {
         if (characters[i].name == target) {
             return i;
         }
@@ -25,26 +14,26 @@ int targetinlist(const std::vector<Character>& characters, const std::string& ta
     return -1;
 }
 
-vector<Character> teamMenu() {
+void teamMenu(State &state) {
     vector<Character> playableCharacter;
     cout << "Team Menu" << endl;
     vector<Character> allies;
-    Character jingliu("jingliu", 96), huohuo("huohuo", 98), kafka("kafka", 100), clara("clara", 90);
-    jingliu.hp = 1435;jingliu.atk = 679;jingliu.def = 485; playableCharacter.push_back(jingliu);
-    huohuo.hp = 1358;huohuo.atk = 601;huohuo.def = 509; playableCharacter.push_back(huohuo);
-    kafka.hp = 1086;kafka.atk = 679;kafka.def = 485;playableCharacter.push_back(kafka);
-    clara.hp = 1241;clara.atk = 737;clara.def = 485;playableCharacter.push_back(clara);
+    Character jingliu("Jingliu", 96, 1435, 679, 485, 0, 0);
+    Character huohuo("Huohuo", 98, 1358, 601, 509, 0, 0);
+    Character kafka("Kafka", 100, 1086, 679, 485, 0, 0);
+    Character clara("Clara", 90, 1241, 737, 485, 0, 0);
+    playableCharacter.insert(playableCharacter.end(), {jingliu, huohuo, kafka, clara});
     for (const auto & i : playableCharacter){
-        i.printcharacter();
+        i.print();
     }
     cout << "Select a character to your allies by typing their names. (Exact word)" << endl;
     while (allies.size()!=4){
         string selection;
         cin >> selection;
-        int temp = targetinlist(playableCharacter, selection);
+        int temp = searchCharacter(playableCharacter, selection);
         if (temp > -1) {
             allies.push_back(playableCharacter[temp]);
-            cout << allies[allies.size()].name  << " has joint the team." << endl;
+            cout << selection << " has joined the team." << endl;
         }
         else
             cout << "Selected Character not found! Check whether there is a typo." << endl;
@@ -52,7 +41,7 @@ vector<Character> teamMenu() {
     cout << "Team formed successfully" << endl;
     for (const auto &character : allies)
         cout << character.name << endl;
-    return allies;
+    state.allies = allies;
 }
 
 void battleMenu(State &state) {
