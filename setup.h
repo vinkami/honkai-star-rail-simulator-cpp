@@ -7,7 +7,18 @@
 
 #include "state.h"
 
-void teamMenu(State &state);
+//
+// Created by david on 4/17/2024.
+//
+
+#include "state.h"
+#include "characterinfo.h"
+#include <iostream>
+
+
+int targetinlist(const std::vector<Character>& characters, const std::string& target);
+
+vector<Character> teamMenu();
 
 void battleMenu(State &state);
 
