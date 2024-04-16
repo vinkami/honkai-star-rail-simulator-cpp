@@ -3,9 +3,11 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <vector>
+
 using namespace std;
 
 void printHelp(const string& name);
-void slowPrint(const string& text, int delayMS=50);
+void slowPrint(const string& text, int delayMS=50, const vector<int>& sgr={0});
 
 #endif //PROJECT_FUNCTION_H

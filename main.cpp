@@ -16,6 +16,7 @@ int main() {
     Character round("Round", 100, 0, 0, 0, 0, 0);
     State state(allies, enemies, round);
 
+    slowPrint("答え、見つけてごらん？\n", 50, {38, 5, 160});
     cout << "Welcome to Honkai: Star Rail battle simulator.\nType 'help' for a list of commands.\nEnter command:";
     string input;
     while (getline(cin, input)) {
