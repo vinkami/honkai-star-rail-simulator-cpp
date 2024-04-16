@@ -12,7 +12,6 @@
 //
 
 #include "state.h"
-#include "characterinfo.h"
 #include <iostream>
 
 
