@@ -1,8 +1,10 @@
+#include <iostream>
+#include <random>
+#include <sstream>
 #include "battle.h"
 #include "state.h"
 #include "function.h"
-#include <iostream>
-#include <random>
+#include "character.h"
 using namespace std;
 
 void battleStart(State &state) {
@@ -12,9 +14,14 @@ void battleStart(State &state) {
 }
 
 bool gameLoop(State &state) {
-    string move;
+    Character next = state.nextCharacter();
+    cout << next.name << "'s turn." << endl;
+
+    string line, move;
     cout << "Action:";
-    cin >> move;
+    getline(cin, line);
+    stringstream ss(line);
+    ss >> move;
 
     if (move == "escape") {
         cout << "You escaped. Battle terminated." << endl;
@@ -25,8 +32,12 @@ bool gameLoop(State &state) {
     } else if (move == "help") {
         printHelp("battle");
     } else {
-        cout << "Unknown command: " << move << endl;
+        cout << "Unknown command" << endl;
     }
+
+//    Things to run after this character has finished their turn (put them in q and e commands):
+//    state.forward(next.remTime);
+//    next.reset();
 
     return true;
 }
