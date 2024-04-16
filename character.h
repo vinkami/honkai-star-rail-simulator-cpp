@@ -1,28 +1,25 @@
-//
-// Created by vinkami on 11/4/2024.
-//
-
 #ifndef PROJECT_CHARACTER_H
 #define PROJECT_CHARACTER_H
 
 #include <string>
-#include <iostream>
+#include "state.h"
+
 using namespace std;
 
 class Character{
 public:
     string name;
-    int speed,hp,atk,def;
-    int critrate, critdamage;
-    double resetRemTime;
-    double remTime;
+    int speed, hp, atk, def;
+    int critRate, critDamage;
+    double resetRemTime, remTime;
 
-    Character(string name, int speed);
+    Character(string name, int speed, int hp, int atk, int def, int critRate, int critDamage);
 
     void forward(double time);
     void reset();
-    void printcharacter() const;
-//    string action(State state);  // TODO: figure out how to implement this without circular dependencies
+
+    void action(State &state);
+    void print() const;
 };
 
 #endif //PROJECT_CHARACTER_H
