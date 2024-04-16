@@ -11,6 +11,8 @@ void battleStart(State &state) {
 }
 
 bool gameLoop(State &state) {
+    string move;
+    while (cin >> move)
     return false;
 }
 
