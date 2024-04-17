@@ -3,4 +3,5 @@ project(Project)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Project main.cpp battle.cpp character.cpp state.cpp setup.cpp function.cpp)
+add_executable(Project main.cpp battle.cpp character.cpp state.cpp setup.cpp function.cpp
+        skill.cpp)
