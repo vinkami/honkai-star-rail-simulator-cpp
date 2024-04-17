@@ -47,10 +47,12 @@ void teamMenu(State &state) {
         string selection;
         cin >> selection;
         int temp = searchCharacter(playableCharacter, selection);
-        if (temp > -1) {
+        if (temp > -1 && searchCharacter(allies,selection)==-1) {
             allies.push_back(playableCharacter[temp]);
             cout << selection << " has joined the team." << endl;
         }
+        else if (searchCharacter(allies,selection)!=-1)
+            cout << "Character is already in team! Please choose again."<< endl;
         else
             cout << "Selected Character not found! Check whether there is a typo." << endl;
     }
