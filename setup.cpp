@@ -26,11 +26,11 @@ void teamMenu(State &state) {
     getline(characterFile, line); // Skip the first line (header)
     while (getline(characterFile, line)) {
         stringstream ss(line);
-        string name,role;
-        int speed, hp, atk, def, critRate, critDamage;
-        ss >> name >> role >> speed >> hp >> atk >> def >> critRate >> critDamage;
+        string name;
+        double speed, hp, atk, def, critRate, critDamage;
+        ss >> name >> speed >> hp >> atk >> def >> critRate >> critDamage;
         name = name.substr(0, name.size()-1);  // Remove the last comma
-        Character temp(name, role, speed, hp, atk, def, critRate, critDamage);
+        Character temp(name, speed, hp, atk, def, critRate, critDamage);
         playableCharacter.push_back(temp);
         temp.print();
     }
