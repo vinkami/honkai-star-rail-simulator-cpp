@@ -1,7 +1,7 @@
-#include "function.h"
 #include <iostream>
 #include <fstream>
-
+#include <random>
+#include "function.h"
 using namespace std;
 
 void printHelp(const string& name) {
@@ -38,3 +38,15 @@ void slowPrint(const string& text, int delayMS, const vector<int>& sgr) {
     cout << "\033[0m";
 }
 
+/* Determine whether something hits in a random chance.
+ * chance: err... the chance of something hits
+ * return: whether it hits */
+bool hit(double chance){
+    double min = 1;
+    double max = 100;
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<double> dist(min, max); // distribution in range [1, 100)
+    double randomNumber = dist(gen);
+    return (randomNumber <= chance);
+}
