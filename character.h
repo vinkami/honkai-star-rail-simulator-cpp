@@ -2,23 +2,24 @@
 #define PROJECT_CHARACTER_H
 
 #include <string>
+#include <functional>
 #include "state.h"
 
 using namespace std;
 
 class Character{
 public:
-    string name, role;
-    int speed, hp, atk, def;
-    int critRate, critDamage;
+    string name;
+    double speed, hp, atk, def;
+    double critRate, critDamage;
     double resetRemTime, remTime;
 
-    Character(string name,string role, int speed, int hp, int atk, int def, int critRate, int critDamage);
+    function<void(State &state)> basicAtk{}, skill{}, ult{};
+
+    Character(string name, double speed, double hp, double atk, double def, double critRate, double critDamage);
 
     void forward(double time);
     void reset();
-
-    void action(State &state);
     void print() const;
 };
 
