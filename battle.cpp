@@ -1,11 +1,9 @@
 #include <iostream>
-#include <random>
 #include <sstream>
 #include "battle.h"
 #include "state.h"
 #include "function.h"
 #include "character.h"
-#include "skill.h"
 using namespace std;
 
 void battleStart(State &state) {
@@ -13,8 +11,6 @@ void battleStart(State &state) {
     state.skillPoint = 3;
     state.roundNumber = 0;
 }
-
-
 
 bool gameLoop(State &state) {
     Character next = state.nextCharacter();
@@ -25,20 +21,29 @@ bool gameLoop(State &state) {
     getline(cin, line);
     stringstream ss(line);
     ss >> move;
-    int damage=0,heal=0;
+
+    // actions
+    if (move == "q") {
+        next.basicAtk(state);
+    } else if (move == "e") {
+        next.skill( state);
+    } else if (move == "1") {
+        state.allies[0].ult(state);
+    } else if (move == "2") {
+        state.allies[1].ult(state);
+    } else if (move == "3") {
+        state.allies[2].ult(state);
+    } else if (move == "4") {
+        state.allies[3].ult(state);
+    } else
+
+    // other commands
     if (move == "escape") {
         cout << "You escaped. Battle terminated." << endl;
         return false;
     } else if (move == "exit") {
         cout << "Goodbye!" << endl;
         exit(0);
-    } else if (move == "Q" || move == "q") {
-        damage = normalAtk(next);
-
-    } else if (next.role == "healer" && (move == "E" || move == "e")) {
-        heal = skillHeal(next);
-    } else if (move == "E" || move == "e") {
-        damage = skillHeal()
     } else if (move == "help") {
         printHelp("battle");
     } else {
