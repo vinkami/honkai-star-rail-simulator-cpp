@@ -32,7 +32,7 @@ void slowPrint(const string& text, int delayMS, const vector<int>& sgr) {
 
     // text
     for (char c : text) {
-        cout << c;
+        cout << c << flush;
         this_thread::sleep_for(chrono::milliseconds(delayMS));
     }
     cout << "\033[0m";
