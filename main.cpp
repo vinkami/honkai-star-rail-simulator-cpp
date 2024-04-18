@@ -17,7 +17,7 @@ int main() {
     State state(allies, enemies, round);
 
 //    slowPrint("答え、見つけてごらん？\n", 50, {38, 5, 160});
-    cout << "Welcome to Honkai: Star Rail battle simulator.\nType 'help' for a list of commands.\nEnter command:";
+    slowPrint("Welcome to Honkai: Star Rail battle simulator.\nType 'help' for a list of commands.\nEnter command:");
     string input;
     while (getline(cin, input)) {
         stringstream ss(input);
@@ -26,18 +26,18 @@ int main() {
         if (cmd == "exit") {
             break;
         } else if (cmd == "help") {
-            printHelp("main");
+            printHelp("main"); //goes to function.cpp
         } else if (cmd == "start") {
-            battleStart(state);
-            while (gameLoop(state));
-            battleEnd(state);
+            battleStart(state); //goes to battle.cpp
+            while (gameLoop(state)); //goes to battle.cpp
+            battleEnd(state); //goes to battle.cpp
         } else if (cmd == "team") {
-            teamMenu(state);
+            teamMenu(state); //goes to setup.cpp
             getline(cin, input);
         } else if (cmd == "battle") {
-            battleMenu(state);
+            battleMenu(state); //goes to setup.cpp
         } else if (cmd == "settings") {
-            settingsMenu(state);
+            settingsMenu(state); //goes to setup.cpp
         } else {
             cout << "Unknown command" << endl;
         }
