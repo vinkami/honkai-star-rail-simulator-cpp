@@ -1,20 +1,70 @@
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "battle.h"
 #include "state.h"
 #include "function.h"
 #include "character.h"
 using namespace std;
 
+bool battleEndCheck(State &state) {
+    if (none_of(state.allies.begin(), state.allies.end(), [](Character &character) { return character.hp > 0; })) {
+        state.victory = false;
+        return false;
+    }
+    if (none_of(state.enemies.begin(), state.enemies.end(), [](Character &character) { return character.hp > 0; })) {
+        state.victory = true;
+        return false;
+    }
+    return true;
+}
+
 void battleStart(State &state) {
     state.maxSkillPoint = 5;
     state.skillPoint = 3;
     state.roundNumber = 0;
+    for (auto &ally : state.allies) {
+        ally.remTime = 15000.0 / ally.speed;  // First round is longer according to the original game
+        ally.resetRemTime = 10000.0 / ally.speed;
+        ally.startBattle(state);
+    }
+    for (auto &enemy : state.enemies) {
+        enemy.remTime = 15000.0 / enemy.speed;
+        enemy.resetRemTime = 10000.0 / enemy.speed;
+        enemy.startBattle(state);
+    }
+    state.round.remTime = 150.0;  // speed for round is fixed at 100
+    state.round.resetRemTime = 100.0;
 }
 
-bool gameLoop(State &state) {
-    Character next = state.nextCharacter();
-    cout << next.name << "'s turn." << endl;
+bool gameLoop(State &state) {  // return value: whether the battle is still ongoing
+    Character current = state.nextCharacter();
+    current.startRound(state);
+    bool battleContinues = battleEndCheck(state);  // possible that the last character dies to damage over time or something and ends the battle
+    if (!battleContinues) return false;
+
+    // new round starts
+    if (current.faction == "round") {
+        state.roundNumber++;
+        cout << "Round " << state.roundNumber << "starts" << endl;
+        state.forward(current.remTime);
+        current.reset();
+        return true;
+    }
+
+    // enemy's turn
+    if (current.faction == "enemy") {
+        cout << current.name << "'s turn" << endl;
+        current.basicAtk(state);
+        current.endRound(state);
+        state.forward(current.remTime);
+        current.reset();
+        return battleEndCheck(state);
+    }
+
+    // player's turn
+    cout << current.name << "'s turn" << endl;
+    cout << "Skill Points: " << state.skillPoint << " / " << state.maxSkillPoint << endl;
 
     string line, move;
     cout << "Action: ";
@@ -24,11 +74,17 @@ bool gameLoop(State &state) {
 
     // actions
     if (move == "q") {
-        next.basicAtk(state);
+        current.basicAtk(state);
+        current.endRound(state);
+        state.forward(current.remTime);
+        current.reset();
     } else if (move == "e") {
-        next.skill( state);
+        current.skill(state);
+        current.endRound(state);
+        state.forward(current.remTime);
+        current.reset();
     } else if (move == "1") {
-        state.allies[0].ult(state);
+        state.allies[0].ult(state);  // Note: ultimates always cut the queue and the timeline will not move forward
     } else if (move == "2") {
         state.allies[1].ult(state);
     } else if (move == "3") {
@@ -37,7 +93,7 @@ bool gameLoop(State &state) {
         state.allies[3].ult(state);
     } else
 
-    //other commands
+    // other commands
     if (move == "escape") {
         cout << "You escaped. Battle terminated." << endl;
         return false;
@@ -49,20 +105,8 @@ bool gameLoop(State &state) {
     } else {
         cout << "Unknown command" << endl;
     }
-//    Things to run after this character has finished their turn (put them in q and e commands):
-//    state.forward(next.remTime);
-//    next.reset();
 
-    //check HPs
-    if (state.allies[0].hp == 0 && state.allies[1].hp == 0 && state.allies[2].hp == 0 && state.allies[3].hp == 0) {   //Allies die
-        return false;
-    } else if (state.enemies[0].hp==0 && state.enemies[1].hp==0 && state.enemies[2].hp==0 && state.enemies[3].hp==0) {      //Enemies die
-        state.victory=true;
-        return false;
-    }
-
-
-    return true;
+    return battleEndCheck(state);
 }
 
 void battleEnd(State &state) {
