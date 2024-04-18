@@ -82,7 +82,9 @@ int selectTarget(vector<Character>& characters) {
     } while (true);
 }
 
-
+// For character voice lines see https://wiki.biligame.com/sr/%E8%A7%92%E8%89%B2%E8%AF%AD%E9%9F%B3
+// For character abilities see https://www.prydwen.gg/star-rail/characters
+// If u can't 100% copy the ability, just make a similar one and write a comment to explain what changes u made
 void insertCharacterAbility(Character &character) {
     if (character.name == "Clara") {
         character.basicAtk = [](Character &self, State &state) {
