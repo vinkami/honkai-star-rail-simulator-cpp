@@ -6,7 +6,7 @@ State::State(vector<Character> &allies, vector<Character> &enemies, Character &r
     maxSkillPoint = 5;
     skillPoint = 3;
     roundNumber = 0;
-    victory= false;
+    victory = false;
 }
 
 void State::forward(double time) {
@@ -22,12 +22,12 @@ void State::forward(double time) {
 Character State::nextCharacter() {
     Character &next = round;
     for (auto & ally: allies) {
-        if (ally.remTime < next.remTime) {
+        if (ally.remTime < next.remTime && ally.hp > 0) {
             next = ally;
         }
     }
     for (auto & enemy: enemies) {
-        if (enemy.remTime < next.remTime) {
+        if (enemy.remTime < next.remTime && enemy.hp > 0) {
             next = enemy;
         }
     }
