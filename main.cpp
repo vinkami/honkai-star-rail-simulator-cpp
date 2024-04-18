@@ -17,7 +17,7 @@ int main() {
     round.faction = "round";
     State state(allies, enemies, round);
 
-    slowPrint("答え、見つけてごらん？\n", 50, {38, 5, 160});
+//    slowPrint("答え、見つけてごらん？\n", {38, 5, 160}, 50);
     slowPrint("Welcome to Honkai: Star Rail battle simulator.\nType 'help' for a list of commands.\nEnter command: ");
     string input;
     while (getline(cin, input)) {
@@ -46,6 +46,8 @@ int main() {
             battleMenu(state);  // setup.cpp
         } else if (cmd == "settings") {
             settingsMenu(state);  // setup.cpp
+        } else if (cmd == "debug") {
+            debugMenu(state);  // setup.cpp
         } else {
             cout << "Unknown command" << endl;
         }
