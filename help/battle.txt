@@ -1,7 +1,7 @@
 Commands:
 - help: Display this help message
 - escape: Escape from the fight
-- exit: Exit the game
+- exit: Exit the battle menu and return to the main menu
 
 - q: Do a normal attack
 - e: Release the skill of the current character
