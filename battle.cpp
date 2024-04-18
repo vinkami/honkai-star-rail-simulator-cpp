@@ -38,7 +38,7 @@ bool gameLoop(State &state) {
     } else if (next.role == "healer" && (move == "E" || move == "e")) {
         heal = skillHeal(next);
     } else if (move == "E" || move == "e") {
-        damage = skillHeal()
+        damage = skillHeal(next);
     } else if (move == "help") {
         printHelp("battle");
     } else {
