@@ -22,7 +22,7 @@ public:
     bool victory;
 
     void forward(double time);
-    Character nextCharacter();
+    Character &nextCharacter();
 };
 
 #endif //PROJECT_STATE_H
