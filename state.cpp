@@ -6,6 +6,7 @@ State::State(vector<Character> &allies, vector<Character> &enemies, Character &r
     maxSkillPoint = 5;
     skillPoint = 3;
     roundNumber = 0;
+    victory= false;
 }
 
 void State::forward(double time) {
