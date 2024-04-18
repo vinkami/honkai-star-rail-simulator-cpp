@@ -9,5 +9,6 @@ using namespace std;
 
 void printHelp(const string& name);
 void slowPrint(const string& text, int delayMS=50, const vector<int>& sgr={0});
+bool hit(double chance);
 
 #endif //PROJECT_FUNCTION_H
