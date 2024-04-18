@@ -4,6 +4,8 @@
 #include "setup.h"
 #include "state.h"
 #include "character.h"
+#include "function.h"
+
 using namespace std;
 
 int searchCharacter(const vector<Character>& characters, const string& target) {
@@ -48,14 +50,19 @@ void teamMenu(State &state) {
         string selection;
         cin >> selection;
         int temp = searchCharacter(playableCharacter, selection);
-        if (temp > -1 && searchCharacter(allies,selection)==-1) {
+        if (temp > -1 && searchCharacter(allies,selection) == -1) {
             allies.push_back(playableCharacter[temp]);
             cout << selection << " has joined the team." << endl;
-        }
-        else if (searchCharacter(allies,selection)!=-1)
+        } else if (searchCharacter(allies,selection)!=-1) {
             cout << "Character is already in team! Please choose again."<< endl;
-        else
+        } else if (selection == "exit") {
+            cout << "Character selection terminated." << endl;
+            return;
+        } else if (selection == "help") {
+            printHelp("team");
+        } else {
             cout << "Selected Character not found! Check whether there is a typo." << endl;
+        }
     }
     cout << "Team formed successfully!" << endl << "Current Team:" << endl;
     for (const auto &character : allies)
