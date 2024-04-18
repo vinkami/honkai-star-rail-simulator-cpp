@@ -6,6 +6,7 @@
 #define PROJECT_BATTLE_H
 
 #include "state.h"
+#include "function.h"
 #include <vector>
 using namespace std;
 
