@@ -108,6 +108,35 @@ void insertCharacterAbility(Character &character) {
     }
     // Todo: Add more characters
 }
+vector<vector<Character>> getSituation() {
+    vector<vector<Character>> enemySituation;
+    vector<Character> enemyTeam;
+    ifstream enemyFile("enemy.csv");
+    string line;
+    vector<string> description;
+    getline(enemyFile,line);
+    while (getline(enemyFile, line)) {  // comma separated values
+        stringstream ss(line);
+        string name;
+        double speed, hp, atk, def,critRate=0,critDamage=0;
+        char comma;
+
+        getline(ss, name, ',');
+        ss >> speed >> comma;
+        ss >> hp >> comma;
+        ss >> atk >> comma;
+        ss >> def;
+
+
+        Character temp(name, speed, hp, atk, def, critRate, critDamage);
+        enemyTeam.push_back(temp);
+        if (enemyTeam.size()==3) {
+            enemySituation.push_back(enemyTeam);
+            enemyTeam={{}};
+        }
+    }
+    return enemySituation;
+}
 
 vector<Character> getPlayableCharacters() {
     vector<Character> playableCharacters;
@@ -132,6 +161,29 @@ vector<Character> getPlayableCharacters() {
         insertCharacterAbility(temp);
         playableCharacters.push_back(temp);
     }
-
     return playableCharacters;
 }
+
+string setDescription(int i, const string& requirement){
+    string description;
+    if (requirement == "description"){  //return the description of situation
+        if (i==0){
+            description = "Violently aggressive, they embody the will of the Destruction\nBasic combat units of the Antimatter Legion \nActing only according to their destructive instincts.";
+        } else if (i==1){
+            description = "to be confirmed";
+        } else if (i==2){
+            description = "to be confirmed";
+        }
+        return description;
+    }
+    else if (requirement== "name"){     //return the name of situation
+        if (i==0){
+            description = "Antimatter Legion";
+        } else if (i==1){
+            description = "to be confirmed";
+        } else if (i==2){
+            description = "to be confirmed";
+        }
+        return description;
+    }
+    }

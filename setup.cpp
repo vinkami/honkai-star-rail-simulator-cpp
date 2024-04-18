@@ -51,9 +51,27 @@ void teamMenu(State &state) {
 }
 
 void battleMenu(State &state) {
-    cout << "Battle Menu" << endl;
-
+    cout << "Battle Menu" << endl<< endl;
+    vector<vector<Character>> enemyTeam = getSituation();
+    for (int i=0;i<enemyTeam.size();i++){
+        cout << "Situation " << i+1 << endl;
+        string description = setDescription(i,"description");
+        for (const auto& enemy : enemyTeam[i]){
+            cout << enemy.name << endl;
+        }
+        cout << endl;
+    }
+    cout << "Please choose your situation (1/2/3)   ";
+    int selection;
+    cin >> selection;
+ //   for (const auto& enemy: enemyTeam[selection-1]) enemy.print();
+    state.enemies = enemyTeam[selection-1];
+    cout << "Situation selected successfully!" << endl;
+    cout << "You will be facing " ;
+    slowPrint(setDescription(selection-1,"name"),{1,31},50);
+    cout <<endl;
 }
+
 
 void settingsMenu(State &state) {
     cout << "Settings Menu" << endl;
