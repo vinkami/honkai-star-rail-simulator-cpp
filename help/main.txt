@@ -6,3 +6,4 @@ Commands:
 - team: Go to the team selection menu, where you pick your playable characters and check their skills and stats
 - battle: Go to the battle menu, where you can pick a situation to fight in
 - start: Start the battle, only available after you have picked a team and a situation
+Please remember that you can always type 'help' to display the help message for your current menu.
