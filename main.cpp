@@ -33,6 +33,7 @@ int main() {
             battleEnd(state);
         } else if (cmd == "team") {
             teamMenu(state);
+            getline(cin, input);
         } else if (cmd == "battle") {
             battleMenu(state);
         } else if (cmd == "settings") {

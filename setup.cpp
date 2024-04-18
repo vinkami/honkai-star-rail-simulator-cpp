@@ -62,7 +62,6 @@ void teamMenu(State &state) {
         cout << character.name << "     ";
     cout << endl;
     state.allies = allies;
-    // TODO: Fix when going back to main(), cin detects something weird and prints "Enter command:Unknown command: "
 }
 
 void battleMenu(State &state) {
