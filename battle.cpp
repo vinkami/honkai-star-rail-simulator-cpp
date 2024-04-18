@@ -113,8 +113,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 void battleEnd(State &state) {
     if (state.victory){
         slowPrint("Battle Over. Victory!\n", {1,34}, 20);
-    }
-    else{
+    } else{
         slowPrint("Battle Over. You lose. Imagine losing in a simulator.\n", {1,31}, 20);
     }
 }
