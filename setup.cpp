@@ -57,9 +57,10 @@ void teamMenu(State &state) {
         else
             cout << "Selected Character not found! Check whether there is a typo." << endl;
     }
-    cout << "Team formed successfully" << endl;
+    cout << "Team formed successfully!" << endl << "Current Team:" << endl;
     for (const auto &character : allies)
-        cout << character.name << endl;
+        cout << character.name << "     ";
+    cout << endl;
     state.allies = allies;
     // TODO: Fix when going back to main(), cin detects something weird and prints "Enter command:Unknown command: "
 }
