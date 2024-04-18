@@ -28,8 +28,16 @@ void teamMenu(State &state) {
         stringstream ss(line);
         string name;
         double speed, hp, atk, def, critRate, critDamage;
-        ss >> name >> speed >> hp >> atk >> def >> critRate >> critDamage;
-        name = name.substr(0, name.size()-1);  // Remove the last comma
+        char comma;
+
+        getline(ss, name, ',');
+        ss >> speed >> comma;
+        ss >> hp >> comma;
+        ss >> atk >> comma;
+        ss >> def >> comma;
+        ss >> critRate >> comma;
+        ss >> critDamage;
+
         Character temp(name, speed, hp, atk, def, critRate, critDamage);
         playableCharacter.push_back(temp);
         temp.print();
