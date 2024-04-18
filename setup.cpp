@@ -44,7 +44,7 @@ void teamMenu(State &state) {
         playableCharacter.push_back(temp);
         temp.print();
     }
-
+    cout << "A team must have 4 characters." << endl;
     cout << "Select a character to your allies by typing their names. (Exact word)" << endl;
     while (allies.size()!=4){
         string selection;

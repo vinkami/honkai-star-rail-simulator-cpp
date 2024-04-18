@@ -27,10 +27,12 @@ int main() {
             break;
         } else if (cmd == "help") {
             printHelp("main"); //goes to function.cpp
-        } else if (cmd == "start") {
+        } else if (cmd == "start" && state.allies.size()==4) {
             battleStart(state); //goes to battle.cpp
             while (gameLoop(state)); //goes to battle.cpp
             battleEnd(state); //goes to battle.cpp
+        } else if (cmd == "start" && state.allies.size() !=4) {
+            cout << "Please form a team first!" << endl;
         } else if (cmd == "team") {
             teamMenu(state); //goes to setup.cpp
             getline(cin, input);
