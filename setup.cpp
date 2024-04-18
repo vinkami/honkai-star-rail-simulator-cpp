@@ -1,10 +1,10 @@
 #include <iostream>
-#include <fstream>
 #include <sstream>
 #include "setup.h"
 #include "state.h"
 #include "character.h"
 #include "function.h"
+#include "battle.h"
 
 using namespace std;
 
@@ -18,42 +18,21 @@ int searchCharacter(const vector<Character>& characters, const string& target) {
 }
 
 void teamMenu(State &state) {
-    vector<Character> playableCharacter;
+    vector<Character> playableCharacters = getPlayableCharacters();
     cout << "Team Menu" << endl;
-    vector<Character> allies;
-
-    // comma separated values
-    ifstream characterFile("characters.csv");
-    string line;
-    getline(characterFile, line); // Skip the first line (header)
-    while (getline(characterFile, line)) {
-        stringstream ss(line);
-        string name;
-        double speed, hp, atk, def, critRate, critDamage;
-        char comma;
-
-        getline(ss, name, ',');
-        ss >> speed >> comma;
-        ss >> hp >> comma;
-        ss >> atk >> comma;
-        ss >> def >> comma;
-        ss >> critRate >> comma;
-        ss >> critDamage;
-
-        Character temp(name, speed, hp, atk, def, critRate, critDamage);
-        playableCharacter.push_back(temp);
-        temp.print();
-    }
+    vector<Character> team;
+    cout << "Available Characters:" << endl;
+    for (const auto &character : playableCharacters) character.print();
     cout << "A team must have 4 characters." << endl;
-    cout << "Select a character to your allies by typing their names. (Exact word)" << endl;
-    while (allies.size()!=4){
+    cout << "Select a character to your team by typing their names. (Exact word)" << endl;
+    while (team.size() != 4){
         string selection;
         cin >> selection;
-        int temp = searchCharacter(playableCharacter, selection);
-        if (temp > -1 && searchCharacter(allies,selection) == -1) {
-            allies.push_back(playableCharacter[temp]);
+        int temp = searchCharacter(playableCharacters, selection);
+        if (temp > -1 && searchCharacter(team, selection) == -1) {
+            team.push_back(playableCharacters[temp]);
             cout << selection << " has joined the team." << endl;
-        } else if (searchCharacter(allies,selection)!=-1) {
+        } else if (searchCharacter(team, selection) != -1) {
             cout << "Character is already in team! Please choose again."<< endl;
         } else if (selection == "exit") {
             cout << "Character selection terminated." << endl;
@@ -65,10 +44,10 @@ void teamMenu(State &state) {
         }
     }
     cout << "Team formed successfully!" << endl << "Current Team:" << endl;
-    for (const auto &character : allies)
+    for (const auto &character : team)
         cout << character.name << "     ";
     cout << endl;
-    state.allies = allies;
+    state.allies = team;
 }
 
 void battleMenu(State &state) {
@@ -80,3 +59,35 @@ void settingsMenu(State &state) {
     cout << "Settings Menu" << endl;
 }
 
+void debugMenu(State &state) {
+    cout << "Debug Menu" << endl;
+    cout << "Enter command: ";
+    string input;
+    while (getline(cin, input)) {
+        stringstream ss(input);
+        string cmd;
+        ss >> cmd;
+        if (cmd == "exit") {
+            break;
+        } else if (cmd == "start") {
+            // teamMenu
+            auto c = getPlayableCharacters();
+            state.allies = {c[0], c[1], c[2], c[3]};
+            cout << "Using " << c[0].name << ", " << c[1].name << ", " << c[2].name << ", " << c[3].name << " as team." << endl;
+
+            // battleMenu
+            Character dummy = Character("Dummy", 100, 100000, 0, 0, 0, 0);
+            dummy.faction = "enemy";
+            state.enemies = {dummy};
+            cout << "Using " << dummy.name << " as enemy." << endl;
+
+            // battle.cpp
+            battleStart(state);
+            while (gameLoop(state));
+            battleEnd(state);
+        } else {
+            cout << "Unknown command" << endl;
+        }
+        cout << "Enter command: ";
+    }
+}
