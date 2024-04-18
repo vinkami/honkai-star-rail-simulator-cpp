@@ -4,11 +4,13 @@
 #include <chrono>
 #include <thread>
 #include <vector>
+#include "state.h"
 
 using namespace std;
 
 void printHelp(const string& name);
-void slowPrint(const string& text, int delayMS=50, const vector<int>& sgr={0});
-bool hit(double chance);
+void slowPrint(const string& text, const vector<int>& sgr={0}, int delayMS=10);
+int selectTarget(vector<Character>& characters);
+vector<Character> getPlayableCharacters();
 
 #endif //PROJECT_FUNCTION_H
