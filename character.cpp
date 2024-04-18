@@ -25,6 +25,6 @@ void Character::print() const {
     cout << "ATK: " << atk << endl;
     cout << "DEF: " << def << endl;
     cout << "Speed: " << speed << endl;
-    cout << "Crit Ratio: " << critRate << " : " << critDamage << endl;
+    cout << "Crit: " << critRate << "% / " << critDamage << "%" << endl;
     cout << endl;
 }
