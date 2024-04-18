@@ -27,7 +27,8 @@ int main() {
         if (cmd == "exit") {
             break;
         } else if (cmd == "help") {
-            printHelp("main");  // function.cpp
+            printHelp("main");
+            cout << endl;   // function.cpp
         } else if (cmd == "start") {
             if (state.allies.empty()) {
                 cout << "Please form a team first!" << endl;
