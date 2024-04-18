@@ -9,12 +9,14 @@ using namespace std;
 
 class Character{
 public:
-    string name;
+    string name, faction="ally";  // faction: ally / enemy / round
     double speed, hp, atk, def;
     double critRate, critDamage;
     double resetRemTime, remTime;
 
     function<void(State &state)> basicAtk{}, skill{}, ult{};
+    function<void(State &state)> startBattle{}, startRound{}, endRound{};
+
 
     Character(string name, double speed, double hp, double atk, double def, double critRate, double critDamage);
 
