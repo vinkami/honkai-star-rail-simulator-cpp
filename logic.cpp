@@ -8,7 +8,7 @@ using namespace std;
 /* Determine whether something hits in a random chance.
  * chance: err... the chance of something hits, in percents
  * return: whether it hits */
-bool hit(double chance){
+bool hit(double chance){    //simply it is crit rate www
     double min = 1;
     double max = 100;
     random_device rd;
