@@ -14,6 +14,7 @@ int main() {
     vector<Character> allies {};
     vector<Character> enemies {};
     Character round("Round", 100, 0, 0, 0, 0, 0);
+    round.faction = "round";
     State state(allies, enemies, round);
 
     slowPrint("答え、見つけてごらん？\n", 50, {38, 5, 160});
