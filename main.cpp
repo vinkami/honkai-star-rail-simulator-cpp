@@ -26,20 +26,25 @@ int main() {
         if (cmd == "exit") {
             break;
         } else if (cmd == "help") {
-            printHelp("main"); //goes to function.cpp
-        } else if (cmd == "start" && state.allies.size()==4) {
-            battleStart(state); //goes to battle.cpp
-            while (gameLoop(state)); //goes to battle.cpp
-            battleEnd(state); //goes to battle.cpp
-        } else if (cmd == "start" && state.allies.size() !=4) {
-            cout << "Please form a team first!" << endl;
+            printHelp("main");  // function.cpp
+        } else if (cmd == "start") {
+            if (state.allies.empty()) {
+                cout << "Please form a team first!" << endl;
+            } else if (state.enemies.empty()) {
+                cout << "Please pick a situation to fight first!" << endl;
+            } else {
+                // battle.cpp
+                battleStart(state);
+                while (gameLoop(state));
+                battleEnd(state);
+            }
         } else if (cmd == "team") {
-            teamMenu(state); //goes to setup.cpp
+            teamMenu(state);  // setup.cpp
             getline(cin, input);
         } else if (cmd == "battle") {
-            battleMenu(state); //goes to setup.cpp
+            battleMenu(state);  // setup.cpp
         } else if (cmd == "settings") {
-            settingsMenu(state); //goes to setup.cpp
+            settingsMenu(state);  // setup.cpp
         } else {
             cout << "Unknown command" << endl;
         }
