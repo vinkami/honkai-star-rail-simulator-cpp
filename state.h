@@ -19,6 +19,7 @@ public:
     int maxSkillPoint;
     int skillPoint;
     int roundNumber;
+    double difficulty;
     bool victory;
 
     void forward(double time);

@@ -47,7 +47,7 @@ void teamMenu(State &state) {
     cout << "Team formed successfully!" << endl << "Current Team:" << endl;
     for (const auto &character : team)
         cout << character.name << "     ";
-    cout << endl;
+    cout << endl << endl;
     state.allies = team;
 }
 
@@ -62,8 +62,8 @@ void battleMenu(State &state) {
         }
         cout << endl;
     }
-    // Todo: Add help and exit commands, process garbage input
-    cout << "Please choose your situation (1/2/3)   ";
+
+    cout << "Please choose your situation (e.g. 1,2,3)  ";
     bool flag = true;
     while (flag) {
         string selectionStr;
@@ -71,7 +71,7 @@ void battleMenu(State &state) {
         if (selectionStr == "help") {
             cout << endl;
             printHelp("enemy");
-            cout << endl << "Please choose your situation (1/2/3): ";
+            cout << endl << "Please choose your situation (e.g. 1,2,3)  ";
         } else if (selectionStr == "exit") {
             cout << "Situation selection terminated." << endl;
             return;
@@ -81,25 +81,57 @@ void battleMenu(State &state) {
                 if (selection >= 1 && selection <= situations.size()) {
                     state.enemies = situations[selection - 1].enemies;
                     cout << "Situation selected successfully!" << endl;
-                    cout << "You will be facing " ;
+                    cout << "You will be facing ";
                     slowPrint(situations[selection - 1].name, {1,31}, 50);
-                    cout << endl;
+                    cout << endl << endl;
                     flag = false;
                 } else {
                     cout << "No situation found! Please try again." << endl;
-                    cout << "Please choose your situation (1/2/3): ";
+                    cout << "Please choose your situation (e.g. 1,2,3)  ";
                 }
             } catch (std::invalid_argument&) {
                 cout << "Invalid input! Please try again." << endl;
-                cout << "Please choose your situation (1/2/3) or type 'help': ";
+                cout << "Please choose your situation (e.g. 1,2,3) or type 'help': ";
             }
         }
     }
 }
 
 
+
 void settingsMenu(State &state) {
-    cout << "Settings Menu" << endl;
+    cout << "Settings Menu" << endl << "Select a difficulty for your game.(e.g. medium) :   ";
+    string difficulty;
+    bool flag = true;
+    string resetColor="\033[0m";
+    string color;
+    while (flag){
+        cin >> difficulty;
+        cout << endl;
+        if (difficulty=="help"){
+            printHelp("setting");
+            cout << endl << "Select a difficulty for your game.(e.g. medium) :   ";
+        } else if (difficulty=="exit"){
+            cout << "Difficulty selection terminated." << endl;
+            return;
+        } else if (difficulty=="easy" || difficulty=="Easy"){
+            state.difficulty=0.5;
+            color = "\033[32m";
+            flag=false;
+        } else if (difficulty=="medium" || difficulty=="Medium"){
+            state.difficulty=1;
+            color="\033[33m";
+            flag=false;
+        } else if (difficulty=="hard" || difficulty=="Hard"){
+            state.difficulty=1.5;
+            color="\033[31m";
+            flag=false;
+        } else{
+            cout << "Invalid input! Please try again." << endl;
+            cout << "Select a difficulty for your game.(e.g. medium) or type 'help' :   ";
+        }
+    }
+    cout << "Selected Difficulty is " << color << difficulty << resetColor << " mode" << endl << endl;
 }
 
 void debugMenu(State &state) {

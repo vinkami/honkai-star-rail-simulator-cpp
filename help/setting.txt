@@ -1,0 +1,4 @@
+Commands:
+- help: Display this help message
+- difficulty: Easy, Medium, Hard
+- exit: Exit the battle menu and return to main menu
