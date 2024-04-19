@@ -1,4 +1,4 @@
 Commands:
 - help: Display this help message
-- settings: Go to the settings menu, where you can change the difficulty and other settings
+- situation number: Input the number of situation to fight
 - exit: Exit the battle menu and return to main menu

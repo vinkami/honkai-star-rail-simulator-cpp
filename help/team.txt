@@ -1,5 +1,5 @@
 Commands:
 - help: Display this help message
-- settings: Go to the settings menu, where you can change the difficulty and other settings
+- character name: Input the name of Character to join team
 - exit: Exit the team menu and return to main menu
 
