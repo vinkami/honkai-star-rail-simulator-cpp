@@ -6,11 +6,11 @@ This game consists of various characters and enemies, which all have different s
 This is a turn-based RPG game where the speed stat determines how fast each character moves.
 
 ## How to start the game
-To start the game, run the following command in the terminal in the project directory:
+To start the game, run the following commands in the terminal in the project directory:
 ```bash
-make
+bash ./run.sh
 ```
-Yes this is literally it.  
+Yes, that's all you need to do.  
 In the game you can run `help` and see the available commands to work out more.
 
 ## Game rules
