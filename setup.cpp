@@ -5,6 +5,7 @@
 #include "character.h"
 #include "function.h"
 #include "battle.h"
+#include "situation.h"
 
 using namespace std;
 
@@ -51,25 +52,26 @@ void teamMenu(State &state) {
 }
 
 void battleMenu(State &state) {
-    cout << "Battle Menu" << endl<< endl;
-    vector<vector<Character>> enemyTeam = getSituation();
-    for (int i=0;i<enemyTeam.size();i++){
+    cout << "Battle Menu" << endl << endl;
+    vector<Situation> situations = getSituations();
+    for (int i = 0; i < situations.size(); i++) {
         cout << "Situation " << i+1 << endl;
-        string description = setDescription(i,"description");
-        for (const auto& enemy : enemyTeam[i]){
+        string description = situations[i].description;
+        for (const auto& enemy : situations[i].enemies){
             cout << enemy.name << endl;
         }
         cout << endl;
     }
+    // Todo: Add help and exit commands, process garbage input
     cout << "Please choose your situation (1/2/3)   ";
     int selection;
     cin >> selection;
- //   for (const auto& enemy: enemyTeam[selection-1]) enemy.print();
-    state.enemies = enemyTeam[selection-1];
+ //   for (const auto& enemy: situations[selection-1]) enemy.print();
+    state.enemies = situations[selection - 1].enemies;
     cout << "Situation selected successfully!" << endl;
     cout << "You will be facing " ;
-    slowPrint(setDescription(selection-1,"name"),{1,31},50);
-    cout <<endl;
+    slowPrint(situations[selection - 1].name, {1,31}, 50);
+    cout << endl;
 }
 
 
