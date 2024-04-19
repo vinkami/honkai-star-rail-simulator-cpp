@@ -64,14 +64,37 @@ void battleMenu(State &state) {
     }
     // Todo: Add help and exit commands, process garbage input
     cout << "Please choose your situation (1/2/3)   ";
-    int selection;
-    cin >> selection;
- //   for (const auto& enemy: situations[selection-1]) enemy.print();
-    state.enemies = situations[selection - 1].enemies;
-    cout << "Situation selected successfully!" << endl;
-    cout << "You will be facing " ;
-    slowPrint(situations[selection - 1].name, {1,31}, 50);
-    cout << endl;
+    bool flag = true;
+    while (flag) {
+        string selectionStr;
+        cin >> selectionStr;
+        if (selectionStr == "help") {
+            cout << endl;
+            printHelp("enemy");
+            cout << endl << "Please choose your situation (1/2/3): ";
+        } else if (selectionStr == "exit") {
+            cout << "Situation selection terminated." << endl;
+            return;
+        } else {
+            try {
+                int selection = std::stoi(selectionStr);
+                if (selection >= 1 && selection <= situations.size()) {
+                    state.enemies = situations[selection - 1].enemies;
+                    cout << "Situation selected successfully!" << endl;
+                    cout << "You will be facing " ;
+                    slowPrint(situations[selection - 1].name, {1,31}, 50);
+                    cout << endl;
+                    flag = false;
+                } else {
+                    cout << "No situation found! Please try again." << endl;
+                    cout << "Please choose your situation (1/2/3): ";
+                }
+            } catch (std::invalid_argument&) {
+                cout << "Invalid input! Please try again." << endl;
+                cout << "Please choose your situation (1/2/3) or type 'help': ";
+            }
+        }
+    }
 }
 
 
