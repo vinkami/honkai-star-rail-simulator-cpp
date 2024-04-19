@@ -5,6 +5,8 @@
 #include "state.h"
 #include "character.h"
 #include "logic.h"
+#include "situation.h"
+
 using namespace std;
 
 void printHelp(const string& name) {
@@ -108,34 +110,50 @@ void insertCharacterAbility(Character &character) {
     }
     // Todo: Add more characters
 }
-vector<vector<Character>> getSituation() {
-    vector<vector<Character>> enemySituation;
-    vector<Character> enemyTeam;
-    ifstream enemyFile("enemy.csv");
-    string line;
-    vector<string> description;
-    getline(enemyFile,line);
+
+vector<Situation> getSituations() {
+    vector<Situation> situations;
+    ifstream situationFile("situations.txt"), enemyFile("enemies.csv");
+
+    // setup situations without enemies
+    string line, situationName, description;
+    getline(situationFile, line);
+    situationName = line.substr(2);  // first situation name
+    while(getline(situationFile, line)) {
+        if (line[0] == '-') {
+            Situation situation(situationName, description);
+            situations.push_back(situation);
+            situationName = line.substr(2);
+            description = "";
+        } else {
+            description += line + "\n";
+        }
+    }
+    Situation situation(situationName, description);  // last situation
+    situations.push_back(situation);
+    situationFile.close();
+
+    // fill in enemies
+    getline(enemyFile,line);  // Skip the first line which explains the format
     while (getline(enemyFile, line)) {  // comma separated values
         stringstream ss(line);
         string name;
-        double speed, hp, atk, def,critRate=0,critDamage=0;
+        int situationNo;
+        double speed, hp, atk, def;
         char comma;
 
         getline(ss, name, ',');
+        ss >> situationNo >> comma;
         ss >> speed >> comma;
         ss >> hp >> comma;
         ss >> atk >> comma;
         ss >> def;
 
-
-        Character temp(name, speed, hp, atk, def, critRate, critDamage);
-        enemyTeam.push_back(temp);
-        if (enemyTeam.size()==3) {
-            enemySituation.push_back(enemyTeam);
-            enemyTeam={{}};
-        }
+        Character temp(name, speed, hp, atk, def, 0, 0);
+        situations[situationNo].enemies.push_back(temp);
     }
-    return enemySituation;
+    enemyFile.close();
+    return situations;
 }
 
 vector<Character> getPlayableCharacters() {
@@ -163,27 +181,3 @@ vector<Character> getPlayableCharacters() {
     }
     return playableCharacters;
 }
-
-string setDescription(int i, const string& requirement){
-    string description;
-    if (requirement == "description"){  //return the description of situation
-        if (i==0){
-            description = "Violently aggressive, they embody the will of the Destruction\nBasic combat units of the Antimatter Legion \nActing only according to their destructive instincts.";
-        } else if (i==1){
-            description = "to be confirmed";
-        } else if (i==2){
-            description = "to be confirmed";
-        }
-        return description;
-    }
-    else if (requirement== "name"){     //return the name of situation
-        if (i==0){
-            description = "Antimatter Legion";
-        } else if (i==1){
-            description = "to be confirmed";
-        } else if (i==2){
-            description = "to be confirmed";
-        }
-        return description;
-    }
-    }
