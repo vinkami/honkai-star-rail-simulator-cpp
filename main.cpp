@@ -45,6 +45,7 @@ int main() {
             getline(cin, input);
         } else if (cmd == "battle") {
             battleMenu(state);  // setup.cpp
+            getline(cin, input);
         } else if (cmd == "settings") {
             settingsMenu(state);  // setup.cpp
         } else if (cmd == "debug") {
