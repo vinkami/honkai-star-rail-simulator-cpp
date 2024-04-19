@@ -108,8 +108,53 @@ void insertCharacterAbility(Character &character) {
             // Todo: Implement ultimate ability
         };
     }
-    // Todo: Add more characters
+    else if (character.name== "Jingliu") {
+        character.basicAtk = [](Character &self, State &state) {
+            int target = selectTarget(state.enemies);
+            Character &enemy = state.enemies[target];
+            slowPrint("鏡流 : 切先は戻らぬ！\n",{34});
+            attack(self,enemy,1.0);
+        };
+        character.skill = [](Character &self, State &state){
+            if (self.stack < 2) {
+                int target = selectTarget(state.enemies);
+                Character &enemy= state.enemies[target];
+                self.critRate=45;
+                slowPrint("鏡流 : 飛光よ、差せ！\n", {34});
+                self.stack += 1;
+                slowPrint("Syzygy stack: ",{34});
+                string stack= to_string(self.stack);
+                slowPrint(stack,{34});
+                cout << endl;
+                attack(self,enemy,2.0);
+            } if (self.stack >=2){
+                    self.critRate=95;
+                    if (self.stack==2){
+                    self.stack=5+2;   //use 5 stack to present her in talent mode, + the stack remains
+                    slowPrint("鏡流 : 乗月返真。\n",{34});
+                    } int target = selectTarget(state.enemies);
+                    Character &enemy= state.enemies[target];
+                    slowPrint("鏡流 : 月光を剣とせん。\n",{34});
+                    attack(self,enemy,2.5);
+                    if (target>0){
+                        Character &enemy= state.enemies[target-1];
+                        attack(self,enemy,1.25);
+                    } if (target-1<state.enemies.size()){
+                        Character &enemy= state.enemies[target+1];
+                        attack(self,enemy,1.25);
+                    }
+                    self.stack-=1;
+                    slowPrint("Syzygy stack: ",{34});
+                    string stack= to_string(self.stack-5);
+                    slowPrint(stack,{34});
+                    cout << endl;
+                    if (self.stack==5)
+                        self.stack=0;
+                }
+            };
+    }
 }
+    // Todo: Add more characters
 
 vector<Situation> getSituations() {
     vector<Situation> situations;
@@ -176,6 +221,7 @@ vector<Character> getPlayableCharacters() {
         ss >> critDamage;
 
         Character temp(name, speed, hp, atk, def, critRate, critDamage);
+        temp.stack=0;
         insertCharacterAbility(temp);
         playableCharacters.push_back(temp);
     }
