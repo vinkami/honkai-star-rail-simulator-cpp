@@ -16,6 +16,7 @@ public:
     double speed, hp, atk, def;
     double critRate, critDamage;
     double resetRemTime, remTime;
+    int stack;
 
     function<void(Character &self, State &state)> basicAtk = emptyAbility, skill = emptyAbility, ult = emptyAbility;
     function<void(State &state)> startBattle = emptyRoundAction, startRound = emptyRoundAction, endRound = emptyRoundAction;
