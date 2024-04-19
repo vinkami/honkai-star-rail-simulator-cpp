@@ -46,14 +46,15 @@ int main() {
         } else if (cmd == "battle") {
             battleMenu(state);  // setup.cpp
             getline(cin, input);
-        } else if (cmd == "settings") {
-            settingsMenu(state);  // setup.cpp
+        } else if (cmd == "settings" || cmd == "setting") {
+            settingsMenu(state); // setup.cpp
+            getline(cin,input);
         } else if (cmd == "debug") {
-            debugMenu(state);  // setup.cpp
+            debugMenu(state); // setup.cpp
+            getline(cin,input);
         } else {
             cout << "Unknown command" << endl;
         }
-
         cout << "Enter command: ";
     }
     cout << "Goodbye!" << endl;
