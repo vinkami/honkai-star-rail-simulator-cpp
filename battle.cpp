@@ -19,6 +19,15 @@ bool battleEndCheck(State &state) {
     return true;
 }
 
+void tryUlt(Character &ally, State &state) {
+    if (ally.energy >= ally.maxEnergy) {
+        ally.energy = 0;
+        ally.ult(ally, state);
+    } else {
+        slowPrint("Not enough energy!\n", {91});
+    }
+}
+
 void battleStart(State &state) {
     state.maxSkillPoint = 5;
     state.skillPoint = 3;
@@ -26,12 +35,12 @@ void battleStart(State &state) {
     for (auto &ally : state.allies) {
         ally.remTime = 15000.0 / ally.speed;  // First round is longer according to the original game
         ally.resetRemTime = 10000.0 / ally.speed;
-        ally.startBattle(state);
+        ally.startBattle(ally, state);
     }
     for (auto &enemy : state.enemies) {
         enemy.remTime = 15000.0 / enemy.speed;
         enemy.resetRemTime = 10000.0 / enemy.speed;
-        enemy.startBattle(state);
+        enemy.startBattle(enemy, state);
     }
     state.round.remTime = 150.0;  // speed for round is fixed at 100
     state.round.resetRemTime = 100.0;
@@ -40,7 +49,7 @@ void battleStart(State &state) {
 
 bool gameLoop(State &state) {  // return value: whether the battle is still ongoing
     Character &current = state.nextCharacter();
-    current.startRound(state);
+    current.startRound(current, state);
     bool battleContinues = battleEndCheck(state);  // possible that the last character dies to damage over time or something and ends the battle
     if (!battleContinues) return false;
 
@@ -57,7 +66,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
     if (current.faction == "enemy") {
         cout << current.name << "'s turn" << endl;
         current.basicAtk(current, state);
-        current.endRound(state);
+        current.endRound(current, state);
         state.forward(current.remTime);
         current.reset();
         return battleEndCheck(state);
@@ -79,13 +88,13 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
     } else if (move == "e") {
         current.skill(current, state);
     } else if (move == "1") {
-        state.allies[0].ult(current, state);  // Note: ultimates always cut the queue and the timeline will not move forward
+        tryUlt(state.allies[0], state);
     } else if (move == "2") {
-        state.allies[1].ult(current, state);
+        tryUlt(state.allies[1], state);
     } else if (move == "3") {
-        state.allies[2].ult(current, state);
+        tryUlt(state.allies[2], state);
     } else if (move == "4") {
-        state.allies[3].ult(current, state);
+        tryUlt(state.allies[3], state);
     } else
 
     // other commands
@@ -108,7 +117,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         state.enemies.erase(remove_if(state.enemies.begin(), state.enemies.end(), pred), state.enemies.end());
 
         // go to next character
-        current.endRound(state);
+        current.endRound(current, state);
         state.forward(current.remTime);
         current.reset();
         state.timelineProceed = false;
