@@ -20,10 +20,12 @@ public:
     int skillPoint;
     int roundNumber;
     double difficulty;
-    bool victory;
+    bool victory = false, timelineProceed = false;
 
     void forward(double time);
     Character &nextCharacter();
+    bool incSkillPoint(int amount = 1);
+    bool decSkillPoint(int amount = 1);
 };
 
 #endif //PROJECT_STATE_H

@@ -35,3 +35,18 @@ Character &State::nextCharacter() {
     }
     return *next;
 }
+
+bool State::incSkillPoint(int amount) {
+    if (skillPoint + amount > maxSkillPoint) {
+        skillPoint = maxSkillPoint;
+        return false;
+    }
+    skillPoint += amount;
+    return true;
+}
+
+bool State::decSkillPoint(int amount) {
+    if (skillPoint - amount < 0) return false;
+    skillPoint -= amount;
+    return true;
+}
