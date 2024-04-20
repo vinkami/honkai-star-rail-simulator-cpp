@@ -4,8 +4,9 @@
 
 using namespace std;
 
-Character::Character(string name, double speed, double hp, double atk, double def, double critRate, double critDamage):
-    name(std::move(name)), speed(speed), hp(hp), atk(atk), def(def), critRate(critRate), critDamage(critDamage) {
+Character::Character(string name, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy):
+        name(std::move(name)), speed(speed), hp(hp), atk(atk), def(def), critRate(critRate), critDamage(critDamage), energy(50),
+        baseSpeed(speed), baseHp(hp), baseAtk(atk), baseDef(def), baseCritRate(critRate), baseCritDamage(critDamage), maxEnergy(maxEnergy) {
     resetRemTime = 10000.0 / speed;
     remTime = 15000.0 / speed;  // First round is longer according to the original game
 }
