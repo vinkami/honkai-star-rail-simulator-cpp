@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 #include "state.h"
+#include "effect.h"
 
 using namespace std;
 
@@ -13,16 +14,16 @@ private:
     function<void(State &state)> emptyRoundAction = [](State &state) {};
 public:
     string name, faction="ally";  // faction: ally / enemy / round
-    double speed, hp, atk, def;
-    double critRate, critDamage;
+    double baseSpeed, baseHp, baseAtk, baseDef, baseCritRate, baseCritDamage, maxEnergy;
+    double speed, hp, atk, def, critRate, critDamage, energy;
     double resetRemTime, remTime;
-    int stack;
 
+    vector<Effect> effects{};
     function<void(Character &self, State &state)> basicAtk = emptyAbility, skill = emptyAbility, ult = emptyAbility;
     function<void(State &state)> startBattle = emptyRoundAction, startRound = emptyRoundAction, endRound = emptyRoundAction;
 
 
-    Character(string name, double speed, double hp, double atk, double def, double critRate, double critDamage);
+    Character(string name, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy);
 
     void forward(double time);
     void reset();
