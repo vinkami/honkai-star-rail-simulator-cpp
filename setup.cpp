@@ -4,19 +4,10 @@
 #include "state.h"
 #include "character.h"
 #include "function.h"
-#include "battle.h"
 #include "situation.h"
 
 using namespace std;
 
-int searchCharacter(const vector<Character>& characters, const string& target) {
-    for (int i = 0; i < characters.size(); ++i) {
-        if (characters[i].name == target) {
-            return i;
-        }
-    }
-    return -1;
-}
 
 void teamMenu(State &state) {
     vector<Character> playableCharacters = getPlayableCharacters();

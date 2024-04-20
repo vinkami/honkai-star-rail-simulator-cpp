@@ -19,6 +19,15 @@ void printHelp(const string& name) {
     helpFile.close();
 }
 
+int searchCharacter(const vector<Character>& characters, const string& target) {
+    for (int i = 0; i < characters.size(); ++i) {
+        if (characters[i].name == target) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 /* Print text slowly, with a delay between each character
  * text: the text to print
  * delayMS: the delay between each character in milliseconds
@@ -95,12 +104,18 @@ void insertCharacterAbility(Character &character) {
             if (hit(50)) slowPrint("クラーラ：気を付けて、スヴァローグ！\n", {37});
             else slowPrint("スヴァローグ：排除する。\n", {36});
             singleAttack(state, self, target, 1.0);
+            state.incSkillPoint();
+            state.timelineProceed = true;
         };
         character.skill = [](Character &self, State &state) {  // Svarog Watches Over You
-            state.skillPoint--;
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", {91});
+                return;
+            }
             if (hit(50)) slowPrint("スヴァローグ：隠れろ。\n", {36});
             else slowPrint("スヴァローグ：殲滅開始。\n", {36});
             aoeAttack(state, self, 1.2);
+            state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Promise, Not Command
             slowPrint("クラーラ：クラーラも…みんなを守りたい！       \nクラーラ：助けて、スヴァローグ！\n", {37});
@@ -114,13 +129,25 @@ void insertCharacterAbility(Character &character) {
         character.effects.push_back(transmigration);
 
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+            Effect &transmigration = self.getEffect("Spectral Transmigration");
+            if (transmigration.stack == 1) {
+                slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",{91});
+                return;
+            }
             int target = selectTarget(state.enemies);
             slowPrint("鏡流：切先は戻らぬ！\n", {34});
             singleAttack(state, self, target, 1.0);
+            state.incSkillPoint();
+            state.timelineProceed = true;
         };
-        character.skill = [&syzygy, &transmigration](Character &self, State &state){
+        character.skill = [](Character &self, State &state) {
+            Effect &syzygy = self.getEffect("Syzygy");
+            Effect &transmigration = self.getEffect("Spectral Transmigration");
             if (transmigration.stack == 0) {  // Transcendent Flash
-                state.skillPoint--;
+                if (!state.decSkillPoint()) {
+                    slowPrint("No skill points left.\n", {91});
+                    return;
+                }
                 int target = selectTarget(state.enemies);
                 slowPrint("鏡流：飛光よ、差せ！\n", {34});
                 syzygy.stack += 1;
@@ -130,9 +157,10 @@ void insertCharacterAbility(Character &character) {
                 if (syzygy.stack >= 2) {
                     transmigration.stack = 1;
                     self.critRate += 50;
-                    slowPrint("鏡流：乗月返真。\n",{34});
+                    slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", {34});
                 }
             } else {  // Moon On Glacial River
+                // does not consume skill point
                 int target = selectTarget(state.enemies);
                 slowPrint("鏡流：月光を剣とせん。\n",{34});
                 blastAttack(state, self, target, 2.5, 1.25);
@@ -140,9 +168,12 @@ void insertCharacterAbility(Character &character) {
                 if (syzygy.stack == 0) {
                     transmigration.stack = 0;
                     self.critRate -= 50;
+                    slowPrint("Syzygy stack is 0. Special Transmigration mode deactivated.\n", {34});
+                } else {
+                    slowPrint("Syzygy stack: " + to_string(syzygy.stack) + " (Spectral Transmigration mode active)\n",{34});
                 }
-                slowPrint("Syzygy stack: " + to_string(syzygy.stack) + " (Spectral Transmigration mode active)\n",{34});
             }
+            state.timelineProceed = true;
         };
     }
 }
