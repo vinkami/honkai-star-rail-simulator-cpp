@@ -117,4 +117,3 @@ void battleEnd(State &state) {
         slowPrint("Battle Over. You lose. Imagine losing in a simulator.\n", {1,31}, 20);
     }
 }
-
