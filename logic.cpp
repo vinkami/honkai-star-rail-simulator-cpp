@@ -19,15 +19,15 @@ bool hit(double chance){    //simply it is crit rate www
 }
 
 // refer to https://www.prydwen.gg/star-rail/guides/damage-formula/ for all formulas
-double getNonCritDamage(double atk, double skillMultiplier, double def, double defIgnore) {
+double getNonCritDamage(double atk, double skillMultiplier, double def, double defIgnore, double dmgReduction) {
     double trueDef = def * (1 - defIgnore);
     if (trueDef < 0) trueDef = 0;
     double defMultiplier = 1 - trueDef / (trueDef + 1000);
-    return atk * skillMultiplier * defMultiplier;
+    return atk * skillMultiplier * defMultiplier * (1 - dmgReduction);
 }
 
 void attack(Character &attacker, Character &defender, double skillMultiplier) {
-    double damage = getNonCritDamage(attacker.atk, skillMultiplier, defender.def, 0);
+    double damage = getNonCritDamage(attacker.atk, skillMultiplier, defender.def, attacker.defIgnore, attacker.dmgReduction);
     bool crit = hit(attacker.critRate);
     if (crit) damage *= 1 + attacker.critDamage / 100;
     defender.hp -= damage;
