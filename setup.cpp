@@ -48,7 +48,7 @@ void teamMenu(State &state) {
     for (const auto &character : team)
         cout << character.name << "     ";
     cout << endl << endl;
-    state.allies = team;
+    state.allies = std::move(team);
 }
 
 void battleMenu(State &state) {
@@ -79,7 +79,7 @@ void battleMenu(State &state) {
             try {
                 int selection = std::stoi(selectionStr);
                 if (selection >= 1 && selection <= situations.size()) {
-                    state.enemies = situations[selection - 1].enemies;
+                    state.enemies = std::move(situations[selection - 1].enemies);
                     cout << "Situation selected successfully!" << endl;
                     cout << "You will be facing ";
                     slowPrint(situations[selection - 1].name, {1,31}, 50);
@@ -151,7 +151,7 @@ void debugMenu(State &state) {
             cout << "Using " << c[0].name << ", " << c[1].name << ", " << c[2].name << ", " << c[3].name << " as team." << endl;
 
             // battleMenu
-            Character dummy = Character("Dummy", 100, 100000, 0, 0, 0, 0);
+            Character dummy = Character("Dummy", 100, 100000, 0, 0, 0, 0, 100);
             dummy.faction = "enemy";
             state.enemies = {dummy};
             cout << "Using " << dummy.name << " as enemy." << endl;
