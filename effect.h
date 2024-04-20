@@ -7,13 +7,15 @@
 using namespace std;
 
 class Effect {
+private:
+    function<void(State)> empty = [](State state) {};
 public:
     string name;
-    int duration;
+    int duration, stack;
 
-    function<void(State)> startRound{}, endRound{};
+    function<void(State)> startRound = empty, endRound = empty;
 
-    Effect(string name, int duration);
+    explicit Effect(string name, int duration = 1, int stack = 1);
 };
 
 #endif //PROJECT_EFFECT_H
