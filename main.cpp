@@ -13,7 +13,7 @@ using namespace std;
 int main() {
     vector<Character> allies {};
     vector<Character> enemies {};
-    Character round("Round", 100, 0, 0, 0, 0, 0);
+    Character round("Round", 100, 0, 0, 0, 0, 0, 0);
     round.faction = "round";
     State state(allies, enemies, round);
 
