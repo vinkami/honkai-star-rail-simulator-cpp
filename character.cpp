@@ -1,6 +1,7 @@
 #include "character.h"
 #include <iostream>
 #include <utility>
+#include <algorithm>
 
 using namespace std;
 
@@ -43,4 +44,10 @@ Effect &Character::getEffect(const string &efxName) {
         cout << "Internal Error: effect not found." << endl;
     }
     return effects[loc];
+}
+
+void Character::removeEffect(Effect &efx) {
+    auto it = find_if(effects.begin(), effects.end(), [efx](Effect &_efx) { return _efx.name == efx.name; });
+    if (it != effects.end()) effects.erase(it);
+    delete &efx;
 }
