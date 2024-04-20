@@ -29,3 +29,18 @@ void Character::print() const {
     cout << "Crit: " << critRate << "% / " << critDamage << "%" << endl;
     cout << endl;
 }
+
+int Character::getEffectLoc(const string &efxName) {
+    for (int i = 0; i < effects.size(); i++) {
+        if (effects[i].name == efxName) return i;
+    }
+    return -1;
+}
+
+Effect &Character::getEffect(const string &efxName) {
+    int loc = getEffectLoc(efxName);
+    if (loc == -1) {
+        cout << "Internal Error: effect not found." << endl;
+    }
+    return effects[loc];
+}

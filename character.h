@@ -10,7 +10,7 @@ using namespace std;
 
 class Character{
 private:
-    function<void(Character &self, State &state)> emptyAbility = [](Character &self, State &state) {};
+    function<void(Character &self, State &state)> emptyAbility = [](Character &self, State &state) {state.timelineProceed = true;};
     function<void(State &state)> emptyRoundAction = [](State &state) {};
 public:
     string name, faction="ally";  // faction: ally / enemy / round
@@ -28,6 +28,8 @@ public:
     void forward(double time);
     void reset();
     void print() const;
+    int getEffectLoc(const string &efxName);
+    Effect &getEffect(const string &efxName);
 };
 
 #endif //PROJECT_CHARACTER_H
