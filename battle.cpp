@@ -76,14 +76,8 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
     // actions
     if (move == "q") {
         current.basicAtk(current, state);
-        current.endRound(state);
-        state.forward(current.remTime);
-        current.reset();
     } else if (move == "e") {
         current.skill(current, state);
-        current.endRound(state);
-        state.forward(current.remTime);
-        current.reset();
     } else if (move == "1") {
         state.allies[0].ult(current, state);  // Note: ultimates always cut the queue and the timeline will not move forward
     } else if (move == "2") {
@@ -105,6 +99,19 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         printHelp("battle");
     } else {
         cout << "Unknown command" << endl;
+    }
+
+    if (state.timelineProceed) {
+        // remove dead characters
+        auto pred = [](Character &character) { return character.hp <= 0; };
+        state.allies.erase(remove_if(state.allies.begin(), state.allies.end(), pred), state.allies.end());
+        state.enemies.erase(remove_if(state.enemies.begin(), state.enemies.end(), pred), state.enemies.end());
+
+        // go to next character
+        current.endRound(state);
+        state.forward(current.remTime);
+        current.reset();
+        state.timelineProceed = false;
     }
 
     return battleEndCheck(state);
