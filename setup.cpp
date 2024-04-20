@@ -97,14 +97,12 @@ void battleMenu(State &state) {
     }
 }
 
-
-
 void settingsMenu(State &state) {
     cout << "Settings Menu" << endl << "Select a difficulty for your game.(e.g. medium) :   ";
     string difficulty;
     bool flag = true;
     string resetColor="\033[0m";
-    string color;
+    vector<int> color;
     while (flag){
         cin >> difficulty;
         cout << endl;
@@ -114,24 +112,25 @@ void settingsMenu(State &state) {
         } else if (difficulty=="exit"){
             cout << "Difficulty selection terminated." << endl;
             return;
-        } else if (difficulty=="easy" || difficulty=="Easy"){
+        } else if (difficulty=="easy" || difficulty=="Easy") {
             state.difficulty=0.5;
-            color = "\033[32m";
+            color = {32};
             flag=false;
-        } else if (difficulty=="medium" || difficulty=="Medium"){
+        } else if (difficulty=="medium" || difficulty=="Medium") {
             state.difficulty=1;
-            color="\033[33m";
+            color = {33};
             flag=false;
-        } else if (difficulty=="hard" || difficulty=="Hard"){
+        } else if (difficulty=="hard" || difficulty=="Hard") {
             state.difficulty=1.5;
-            color="\033[31m";
+            color = {31};
             flag=false;
         } else{
             cout << "Invalid input! Please try again." << endl;
             cout << "Select a difficulty for your game.(e.g. medium) or type 'help' :   ";
         }
     }
-    cout << "Selected Difficulty is " << color << difficulty << resetColor << " mode" << endl << endl;
+//    cout << "Selected Difficulty is " << color << difficulty << resetColor << " mode" << endl << endl;
+    slowPrint("You selected " + difficulty + " mode\n\n", color, 0);
 }
 
 void debugMenu(State &state) {
@@ -145,21 +144,7 @@ void debugMenu(State &state) {
         if (cmd == "exit") {
             break;
         } else if (cmd == "start") {
-            // teamMenu
-            auto c = getPlayableCharacters();
-            state.allies = {c[0], c[1], c[2], c[3]};
-            cout << "Using " << c[0].name << ", " << c[1].name << ", " << c[2].name << ", " << c[3].name << " as team." << endl;
 
-            // battleMenu
-            Character dummy = Character("Dummy", 100, 100000, 0, 0, 0, 0, 100);
-            dummy.faction = "enemy";
-            state.enemies = {dummy};
-            cout << "Using " << dummy.name << " as enemy." << endl;
-
-            // battle.cpp
-            battleStart(state);
-            while (gameLoop(state));
-            battleEnd(state);
         } else {
             cout << "Unknown command" << endl;
         }
