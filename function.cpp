@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 #include "function.h"
 #include "state.h"
 #include "character.h"
@@ -98,6 +99,9 @@ int selectTarget(vector<Character>& characters) {
 // If u can't 100% copy the ability, just make a similar one and write a comment to explain what changes u made
 void insertCharacterAbility(Character &character) {
     if (character.name == "Clara") {
+        Effect enhancedCounter = Effect("Enhanced Counter", -1, 0);
+        character.effects.push_back(enhancedCounter);
+        character.dmgReduction = 0.1;
         character.basicAtk = [](Character &self, State &state) {  // I Want to Help
             int target = selectTarget(state.enemies);
             Character &enemy = state.enemies[target];
@@ -115,14 +119,55 @@ void insertCharacterAbility(Character &character) {
             }
             if (hit(50)) slowPrint("スヴァローグ：隠れろ。\n", {36});
             else slowPrint("スヴァローグ：殲滅開始。\n", {36});
-            aoeAttack(state, self, 1.2);
+            for (auto &enemy : state.enemies) {
+                if (enemy.getEffectLoc("Mark of Counter") != -1) {
+                    enemy.effects.erase(enemy.effects.begin() + enemy.getEffectLoc("Mark of Counter"));
+                    singleAttack(state, self, searchCharacter(state.enemies, enemy.name), 2.4);
+                } else {
+                    singleAttack(state, self, searchCharacter(state.enemies, enemy.name), 1.2);
+                }
+            }
             self.energy += 30;
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Promise, Not Command
+            Effect enhancedCounter = self.getEffect("Enhanced Counter");
             slowPrint("クラーラ：クラーラも…みんなを守りたい！       \nクラーラ：助けて、スヴァローグ！\n", {37});
             self.energy += 5;
-            // Todo: Implement ultimate ability
+            Effect ultEfx("Promise, Not Command", 2, 0);
+            ultEfx.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration == 0) {
+                    master.dmgReduction -= 0.25;
+                    master.removeEffect(self);
+                }
+            };
+            self.dmgReduction += 0.25;
+            enhancedCounter.stack += 2;
+        };
+        character.onHit = [](Character &self, State &state, Character &attacker) {
+            Effect enhancedCounter = self.getEffect("Enhanced Counter");
+            if (hit(30)) {  // should have determined by damage taken but I'm lazy
+                slowPrint("クラーラ：…痛い。\n", {37});
+            } else {
+                slowPrint("スヴァローグ：平気か？\n", {36});
+                slowPrint("クラーラ：大丈夫。\n", {37});
+            }
+            self.energy += 10;
+            Effect counter("Mark of Counter", -1, 1);
+            attacker.effects.push_back(counter);
+            if (hit(50)) {
+                slowPrint("スヴァローグ：クラーラから離れろ。\n", {36});
+            } else {
+                slowPrint("スヴァローグ：命令執行。\n", {36});
+            }
+            int target = searchCharacter(state.enemies, attacker.name);
+            if (enhancedCounter.stack > 0) {
+                blastAttack(state, self, target, 3.2, 1.6);
+                enhancedCounter.stack--;
+            } else {
+                singleAttack(state, self, target, 1.6);
+            }
         };
     }
 
@@ -199,7 +244,7 @@ void insertCharacterAbility(Character &character) {
             Effect &syzygy = self.getEffect("Syzygy");
             Effect &transmigration = self.getEffect("Spectral Transmigration");
             int target = selectTarget(state.enemies);
-            slowPrint("鏡流：この月華で…       \n鏡流：すべてを照らさん！", {34});
+            slowPrint("鏡流：この月華で…       \n鏡流：すべてを照らさん！\n", {34});
             // talent: drain allies' hp and increase atk
             double totalRemoved = 0;
             for (auto &ally : state.allies) {
