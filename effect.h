@@ -8,12 +8,12 @@ using namespace std;
 
 class Effect {
 private:
-    function<void(State)> empty = [](State state) {};
+    function<void(Effect&, Character&, State&)> empty = [](Effect &self, Character &master, State &state) {};
 public:
     string name;
     int duration, stack;
 
-    function<void(State)> startRound = empty, endRound = empty;
+    function<void(Effect&, Character&, State&)> startRound = empty, endRound = empty;
 
     explicit Effect(string name, int duration = 1, int stack = 1);
 };
