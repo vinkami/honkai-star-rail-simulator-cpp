@@ -122,6 +122,7 @@ void insertCharacterAbility(Character &character) {
             // Todo: Implement ultimate ability
         };
     }
+
     else if (character.name== "Jingliu") {
         Effect syzygy("Syzygy", -1, 0);
         Effect transmigration("Spectral Transmigration", -1, 0);
@@ -174,6 +175,19 @@ void insertCharacterAbility(Character &character) {
                 }
             }
             state.timelineProceed = true;
+        };
+        character.ult = [](Character &self, State &state) {
+            Effect &syzygy = self.getEffect("Syzygy");
+            Effect &transmigration = self.getEffect("Spectral Transmigration");
+            int target = selectTarget(state.enemies);
+            slowPrint("鏡流：この月華で…       \n鏡流：すべてを照らさん！", {34});
+            blastAttack(state, self, target, 3.0, 1.5);
+            syzygy.stack += 1;
+            if (syzygy.stack >= 2) {
+                transmigration.stack = 1;
+                self.critRate += 50;
+                slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", {34});
+            }
         };
     }
 }
