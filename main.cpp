@@ -49,9 +49,21 @@ int main() {
         } else if (cmd == "settings" || cmd == "setting") {
             settingsMenu(state); // setup.cpp
             getline(cin,input);
-        } else if (cmd == "debug") {
-            debugMenu(state); // setup.cpp
-            getline(cin,input);
+        } else if (cmd == "quickstart") {
+            // teamMenu
+            auto c = getPlayableCharacters();
+            state.allies = {c[0], c[1], c[2], c[3]};
+            cout << "Using " << c[0].name << ", " << c[1].name << ", " << c[2].name << ", " << c[3].name << " as team." << endl;
+
+            // battleMenu
+            Situation situation = getSituations()[0];
+            state.enemies = situation.enemies;
+            cout << "Using " << situation.name << " as situation." << endl;
+
+            // battle.cpp
+            battleStart(state);
+            while (gameLoop(state));
+            battleEnd(state);
         } else {
             cout << "Unknown command" << endl;
         }
