@@ -38,3 +38,43 @@ void attack(Character &attacker, Character &defender, double skillMultiplier) {
         cout << defender.name << " is defeated." << endl;
     }
 }
+
+void singleAttack(State &state, Character &attacker, int target, double skillMultiplier) {
+    Character &defender = state.enemies[target];
+    attack(attacker, defender, skillMultiplier);
+}
+
+void blastAttack(State &state, Character &attacker, int target, double mainSkillMultiplier, double adjacentSkillMultiplier) {
+    Character &defender = state.enemies[target];
+    attack(attacker, defender, mainSkillMultiplier);
+    if (target > 0) {
+        Character &adjacent = state.enemies[target - 1];
+        attack(attacker, adjacent, adjacentSkillMultiplier);
+    }
+    if (target + 1 < state.enemies.size()) {
+        Character &adjacent = state.enemies[target + 1];
+        attack(attacker, adjacent, adjacentSkillMultiplier);
+    }
+}
+
+void aoeAttack(State &state, Character &attacker, double skillMultiplier) {
+    for (auto &defender : state.enemies) {
+        attack(attacker, defender, skillMultiplier);
+    }
+}
+
+void bounceAttack(State &state, Character &attacker, int target, double skillMultiplier, int bounceCount) {
+    Character &defender = state.enemies[target];
+    attack(attacker, defender, skillMultiplier);
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dist(0, (int) state.enemies.size() - 1);
+    while (bounceCount > 0) {
+        int newTarget = dist(gen);
+        Character &newDefender = state.enemies[newTarget];
+        if (newDefender.hp > 0) {
+            attack(attacker, newDefender, skillMultiplier);
+            bounceCount--;
+        }
+    }
+}
