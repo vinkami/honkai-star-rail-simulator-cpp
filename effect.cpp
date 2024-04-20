@@ -2,4 +2,4 @@
 
 using namespace std;
 
-Effect::Effect(string name, int duration): name(std::move(name)), duration(duration) {}
+Effect::Effect(string name, int duration, int stack): name(std::move(name)), duration(duration), stack(stack) {}
