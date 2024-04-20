@@ -45,12 +45,12 @@ void singleAttack(State &state, Character &attacker, int target, double skillMul
 }
 
 void blastAttack(State &state, Character &attacker, int target, double mainSkillMultiplier, double adjacentSkillMultiplier) {
-    Character &defender = state.enemies[target];
-    attack(attacker, defender, mainSkillMultiplier);
     if (target > 0) {
         Character &adjacent = state.enemies[target - 1];
         attack(attacker, adjacent, adjacentSkillMultiplier);
     }
+    Character &defender = state.enemies[target];
+    attack(attacker, defender, mainSkillMultiplier);
     if (target + 1 < state.enemies.size()) {
         Character &adjacent = state.enemies[target + 1];
         attack(attacker, adjacent, adjacentSkillMultiplier);
