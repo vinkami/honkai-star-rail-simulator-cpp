@@ -104,6 +104,7 @@ void insertCharacterAbility(Character &character) {
             if (hit(50)) slowPrint("クラーラ：気を付けて、スヴァローグ！\n", {37});
             else slowPrint("スヴァローグ：排除する。\n", {36});
             singleAttack(state, self, target, 1.0);
+            self.energy += 20;
             state.incSkillPoint();
             state.timelineProceed = true;
         };
@@ -115,10 +116,12 @@ void insertCharacterAbility(Character &character) {
             if (hit(50)) slowPrint("スヴァローグ：隠れろ。\n", {36});
             else slowPrint("スヴァローグ：殲滅開始。\n", {36});
             aoeAttack(state, self, 1.2);
+            self.energy += 30;
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Promise, Not Command
             slowPrint("クラーラ：クラーラも…みんなを守りたい！       \nクラーラ：助けて、スヴァローグ！\n", {37});
+            self.energy += 5;
             // Todo: Implement ultimate ability
         };
     }
@@ -138,6 +141,7 @@ void insertCharacterAbility(Character &character) {
             int target = selectTarget(state.enemies);
             slowPrint("鏡流：切先は戻らぬ！\n", {34});
             singleAttack(state, self, target, 1.0);
+            self.energy += 20;
             state.incSkillPoint();
             state.timelineProceed = true;
         };
@@ -154,17 +158,32 @@ void insertCharacterAbility(Character &character) {
                 syzygy.stack += 1;
                 slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",{34});
                 singleAttack(state, self, target, 2.0);
+                self.energy += 20;
 
                 if (syzygy.stack >= 2) {
                     transmigration.stack = 1;
                     self.critRate += 50;
+                    self.remTime = 0;
                     slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", {34});
                 }
             } else {  // Moon On Glacial River
                 // does not consume skill point
                 int target = selectTarget(state.enemies);
                 slowPrint("鏡流：月光を剣とせん。\n",{34});
+                // talent: drain allies' hp and increase atk
+                double totalRemoved = 0;
+                for (auto &ally : state.allies) {
+                    if (&ally != &self) {
+                        double removed = max(ally.baseHp * 0.04, 1.0);
+                        totalRemoved += removed;
+                        ally.hp -= removed;
+                    }
+                }
+                double increasedAtk = max(totalRemoved * 5.4, self.baseAtk * 1.8);
+                self.atk += increasedAtk;
                 blastAttack(state, self, target, 2.5, 1.25);
+                self.atk -= increasedAtk;
+                self.energy += 30;
                 syzygy.stack -= 1;
                 if (syzygy.stack == 0) {
                     transmigration.stack = 0;
@@ -176,16 +195,30 @@ void insertCharacterAbility(Character &character) {
             }
             state.timelineProceed = true;
         };
-        character.ult = [](Character &self, State &state) {
+        character.ult = [](Character &self, State &state) {  // Florephemeral Dreamflux
             Effect &syzygy = self.getEffect("Syzygy");
             Effect &transmigration = self.getEffect("Spectral Transmigration");
             int target = selectTarget(state.enemies);
             slowPrint("鏡流：この月華で…       \n鏡流：すべてを照らさん！", {34});
+            // talent: drain allies' hp and increase atk
+            double totalRemoved = 0;
+            for (auto &ally : state.allies) {
+                if (&ally != &self) {
+                    double removed = max(ally.baseHp * 0.04, 1.0);
+                    totalRemoved += removed;
+                    ally.hp -= removed;
+                }
+            }
+            double increasedAtk = max(totalRemoved * 5.4, self.baseAtk * 1.8);
+            self.atk += increasedAtk;
             blastAttack(state, self, target, 3.0, 1.5);
+            self.atk -= increasedAtk;
+            self.energy += 5;
             syzygy.stack += 1;
             if (syzygy.stack >= 2) {
                 transmigration.stack = 1;
                 self.critRate += 50;
+                self.remTime = 0;
                 slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", {34});
             }
         };
