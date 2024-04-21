@@ -89,7 +89,15 @@ void battleMenu(State &state) {
 }
 
 void settingsMenu(State &state) {
-    cout << "Settings Menu" << endl << "Select a difficulty for your game.(e.g. medium) :   ";
+    cout << "Settings Menu" << endl ;
+    if (state.difficulty == 0.5){
+        cout << "Current difficulty: Easy" << endl;
+    }else if (state.difficulty == 1.0){
+        cout << "Current difficulty: Medium" << endl;
+    }else if (state.difficulty == 1.5){
+        cout << "Current difficulty: Hard" << endl;
+    }
+    cout << "Select a difficulty for your game.(e.g. medium): ";
     string difficulty;
     bool flag = true;
     string resetColor="\033[0m";
