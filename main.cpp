@@ -15,7 +15,7 @@ int main() {
     vector<Character> enemies {};
     vector <Character> tempallies {};
     vector <Character> tempenemies {};
-    Character round("Round", 100, 0, 0, 0, 0, 0, 0);
+    Character round("Round", 100, 0, 0, 0, 0, 0, 0,0);
     round.faction = "round";
     State state(allies, enemies, round);
 
