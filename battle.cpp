@@ -111,6 +111,9 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         exit(0);
     } else if (move == "help") {
         printHelp("battle");
+    } else if (move == "reset") {
+        state.reset = true;
+        return false;
     } else {
         cout << "Unknown command" << endl;
     }
@@ -132,7 +135,9 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 }
 
 void battleEnd(State &state) {
-    if (state.victory){
+    if (state.reset){
+        cout << "Game reset" << endl;
+    } else if (state.victory){
         slowPrint("Battle Over. Victory!\n", {1,34}, 20);
     } else {
         slowPrint("Battle Over. You lose. Imagine losing in a simulator.\n", {1,31}, 20);
