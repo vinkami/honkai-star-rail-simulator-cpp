@@ -1,6 +1,7 @@
 Commands:
 - help: Display this help message
 - escape: Escape from the fight
+- reset: Restart with all same setting
 - exit: Exit the battle menu and return to the main menu
 
 - q: Do a normal attack

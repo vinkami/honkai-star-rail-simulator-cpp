@@ -16,6 +16,7 @@ int main() {
     vector <Character> tempallies {};
     vector <Character> tempenemies {};
     Character round("Round", 100, 0, 0, 0, 0, 0, 0);
+    Character tempround("Round", 100, 0, 0, 0, 0, 0, 0);
     round.faction = "round";
     State state(allies, enemies, round);
 
@@ -81,6 +82,16 @@ int main() {
             battleEnd(state);
         } else {
             cout << "Unknown command" << endl;
+        }
+        while (state.reset){
+            state.reset = false;
+            allies = tempallies;
+            enemies = tempenemies;
+            round = tempround;
+            round.faction = "round";
+            battleStart(state);
+            while (gameLoop(state));
+            battleEnd(state);
         }
         cout << "Enter command: ";
     }
