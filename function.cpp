@@ -53,6 +53,11 @@ void slowPrint(const string& text, const vector<int>& sgr, int delayMS) {
     cout << "\033[0m";
 }
 
+void addEnergy(double maxEnergy, double &energy, double increase){
+    if (energy+increase<maxEnergy)
+        energy+=increase;
+    else energy=maxEnergy;
+}
 
 int selectTarget(vector<Character>& characters) {
     do {
@@ -108,7 +113,7 @@ void insertCharacterAbility(Character &character) {
             if (hit(50)) slowPrint("クラーラ：気を付けて、スヴァローグ！\n", {37});
             else slowPrint("スヴァローグ：排除する。\n", {36});
             singleAttack(state, self, target, 1.0);
-            self.energy += 20;
+            addEnergy(self.maxEnergy,self.energy,20);
             state.incSkillPoint();
             state.timelineProceed = true;
         };
@@ -127,13 +132,13 @@ void insertCharacterAbility(Character &character) {
                     singleAttack(state, self, searchCharacter(state.enemies, enemy.name), 1.2);
                 }
             }
-            self.energy += 30;
+            addEnergy(self.maxEnergy,self.energy,30);
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Promise, Not Command
             Effect enhancedCounter = self.getEffect("Enhanced Counter");
             slowPrint("クラーラ：クラーラも…みんなを守りたい！       \nクラーラ：助けて、スヴァローグ！\n", {37});
-            self.energy += 5;
+            addEnergy(self.maxEnergy,self.energy,5);
             Effect ultEfx("Promise, Not Command", 2, 0);
             ultEfx.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
@@ -153,7 +158,7 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("スヴァローグ：平気か？\n", {36});
                 slowPrint("クラーラ：大丈夫。\n", {37});
             }
-            self.energy += 10;
+            addEnergy(self.maxEnergy,self.energy,10);
             Effect counter("Mark of Counter", -1, 1);
             attacker.effects.push_back(counter);
             if (hit(50)) {
@@ -186,7 +191,7 @@ void insertCharacterAbility(Character &character) {
             int target = selectTarget(state.enemies);
             slowPrint("鏡流：切先は戻らぬ！\n", {34});
             singleAttack(state, self, target, 1.0);
-            self.energy += 20;
+            addEnergy(self.maxEnergy,self.energy,20);
             state.incSkillPoint();
             state.timelineProceed = true;
         };
@@ -203,7 +208,7 @@ void insertCharacterAbility(Character &character) {
                 syzygy.stack += 1;
                 slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",{34});
                 singleAttack(state, self, target, 2.0);
-                self.energy += 20;
+                addEnergy(self.maxEnergy,self.energy,20);
 
                 if (syzygy.stack >= 2) {
                     transmigration.stack = 1;
@@ -211,7 +216,7 @@ void insertCharacterAbility(Character &character) {
                     self.remTime = 0;
                     slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", {34});
                 }
-            } else {  // Moon On Glacial River
+            } if (transmigration.stack !=0 ) {  // Moon On Glacial River
                 // does not consume skill point
                 int target = selectTarget(state.enemies);
                 slowPrint("鏡流：月光を剣とせん。\n",{34});
@@ -228,7 +233,7 @@ void insertCharacterAbility(Character &character) {
                 self.atk += increasedAtk;
                 blastAttack(state, self, target, 2.5, 1.25);
                 self.atk -= increasedAtk;
-                self.energy += 30;
+                addEnergy(self.maxEnergy,self.energy,30);
                 syzygy.stack -= 1;
                 if (syzygy.stack == 0) {
                     transmigration.stack = 0;
@@ -260,6 +265,7 @@ void insertCharacterAbility(Character &character) {
             self.atk -= increasedAtk;
             self.energy += 5;
             syzygy.stack += 1;
+            slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",{34});
             if (syzygy.stack >= 2) {
                 transmigration.stack = 1;
                 self.critRate += 50;
