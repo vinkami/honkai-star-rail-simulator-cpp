@@ -20,7 +20,7 @@ public:
     int skillPoint;
     int roundNumber;
     double difficulty;
-    bool victory = false, timelineProceed = false;
+    bool victory = false, timelineProceed = false, previous = false;
 
     void forward(double time);
     Character &nextCharacter();

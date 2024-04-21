@@ -9,6 +9,7 @@ State::State(vector<Character> &allies, vector<Character> &enemies, Character &r
     roundNumber = 1;
     victory = false;
     difficulty = 0.5;
+    previous = false;
 }
 
 void State::forward(double time) {

@@ -13,6 +13,8 @@ using namespace std;
 int main() {
     vector<Character> allies {};
     vector<Character> enemies {};
+    vector <Character> tempallies {};
+    vector <Character> tempenemies {};
     Character round("Round", 100, 0, 0, 0, 0, 0, 0);
     round.faction = "round";
     State state(allies, enemies, round);
@@ -36,6 +38,9 @@ int main() {
                 cout << "Please pick a situation to fight first!" << endl;
             } else {
                 // battle.cpp
+                state.previous=true;
+                tempallies = allies;
+                tempenemies = enemies;
                 battleStart(state);
                 while (gameLoop(state));
                 battleEnd(state);
@@ -49,6 +54,16 @@ int main() {
         } else if (cmd == "settings" || cmd == "setting") {
             settingsMenu(state); // setup.cpp
             getline(cin,input);
+        } else if (cmd == "restart"){
+            if (not state.previous){
+                cout << "There is no previous match." << endl;
+            } else{
+                allies = tempallies;
+                enemies = tempenemies;
+                battleStart(state);
+                while (gameLoop(state));
+                battleEnd(state);
+            }
         } else if (cmd == "quickstart") {
             // teamMenu
             auto c = getPlayableCharacters();
