@@ -41,26 +41,52 @@ void attack(Character &attacker, Character &defender, double skillMultiplier) {
 }
 
 void singleAttack(State &state, Character &attacker, int target, double skillMultiplier) {
-    Character &defender = state.enemies[target];
-    attack(attacker, defender, skillMultiplier);
+    if (attacker.faction=="ally") {
+        Character &defender = state.enemies[target];
+        attack(attacker, defender, skillMultiplier);
+    } else {
+        Character &defender = state.allies[target];
+        attack(attacker,defender,skillMultiplier);
+    }
 }
 
 void blastAttack(State &state, Character &attacker, int target, double mainSkillMultiplier, double adjacentSkillMultiplier) {
-    if (target > 0) {
-        Character &adjacent = state.enemies[target - 1];
-        attack(attacker, adjacent, adjacentSkillMultiplier);
+    if (attacker.faction=="ally") {
+        if (target > 0) {
+            Character &adjacent = state.enemies[target - 1];
+            attack(attacker, adjacent, adjacentSkillMultiplier);
+        }
+        Character &defender = state.enemies[target];
+        attack(attacker, defender, mainSkillMultiplier);
+        if (target + 1 < state.enemies.size()) {
+            Character &adjacent = state.enemies[target + 1];
+            attack(attacker, adjacent, adjacentSkillMultiplier);
+        }
     }
-    Character &defender = state.enemies[target];
-    attack(attacker, defender, mainSkillMultiplier);
-    if (target + 1 < state.enemies.size()) {
-        Character &adjacent = state.enemies[target + 1];
-        attack(attacker, adjacent, adjacentSkillMultiplier);
+    else {
+        if (target > 0) {
+            Character &adjacent = state.allies[target - 1];
+            attack(attacker, adjacent, adjacentSkillMultiplier);
+        }
+        Character &defender = state.allies[target];
+        attack(attacker, defender, mainSkillMultiplier);
+        if (target + 1 < state.allies.size()) {
+            Character &adjacent = state.allies[target + 1];
+            attack(attacker, adjacent, adjacentSkillMultiplier);
+        }
     }
 }
 
 void aoeAttack(State &state, Character &attacker, double skillMultiplier) {
-    for (auto &defender : state.enemies) {
-        attack(attacker, defender, skillMultiplier);
+    if (attacker.faction=="ally"){
+        for (auto &defender : state.enemies) {
+            attack(attacker, defender, skillMultiplier);
+        }
+    }
+    else {
+        for (auto &defender : state.allies) {
+            attack(attacker, defender, skillMultiplier);
+        }
     }
 }
 
