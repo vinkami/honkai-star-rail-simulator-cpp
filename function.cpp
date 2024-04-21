@@ -211,7 +211,7 @@ void insertCharacterAbility(Character &character) {
                     self.remTime = 0;
                     slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", {34});
                 }
-            } else {  // Moon On Glacial River
+            } if (transmigration.stack !=0 ) {  // Moon On Glacial River
                 // does not consume skill point
                 int target = selectTarget(state.enemies);
                 slowPrint("鏡流：月光を剣とせん。\n",{34});
@@ -260,6 +260,7 @@ void insertCharacterAbility(Character &character) {
             self.atk -= increasedAtk;
             self.energy += 5;
             syzygy.stack += 1;
+            slowPrint("Syzygy stack: " + to_string(syzygy.stack) + " (Spectral Transmigration mode active)\n",{34});
             if (syzygy.stack >= 2) {
                 transmigration.stack = 1;
                 self.critRate += 50;
