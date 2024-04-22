@@ -118,14 +118,14 @@ int aiTarget(vector<Character>& character){
 
 
 void insertEnemyAbility(Character &enemy){
-    if (enemy.name== "Antibaryon") {
+    if (enemy.name== "\033[37mAntibaryon\033[0m") {
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             slowPrint("消滅\n",{31});
             singleAttack(state, self, target, 2.5);
             state.timelineProceed = true;
         };
-    } else if (enemy.name== "Trampler"){
+    } else if (enemy.name== "\033[37mTrampler\033[0m"){
         enemy.basicAtk = [](Character &self, State &state){
             Effect lockOn("lockOn", -1,1);  //idk what happen
             int target= aiTarget(state.allies);
@@ -159,7 +159,7 @@ void insertEnemyAbility(Character &enemy){
             }
             state.timelineProceed = true;
         };
-    } else if (enemy.name== "Reaver"){
+    } else if (enemy.name== "\033[37mReaver\033[0m"){
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             if (hit(50)) {
@@ -179,7 +179,7 @@ void insertEnemyAbility(Character &enemy){
 // For character abilities see https://www.prydwen.gg/star-rail/characters
 // If u can't 100% copy the ability, just make a similar one and write a comment to explain what changes u made
 void insertCharacterAbility(Character &character) {
-    if (character.name == "Clara") {
+    if (character.name == "\033[91mClara\033[0m") {
         Effect enhancedCounter = Effect("Enhanced Counter", -1, 0);
         character.effects.push_back(enhancedCounter);
         character.dmgReduction = 0.1;
@@ -254,7 +254,7 @@ void insertCharacterAbility(Character &character) {
         };
     }
 
-    else if (character.name== "Jingliu") {
+    else if (character.name== "\033[34mJingliu\033[0m") {
         Effect syzygy("Syzygy", -1, 0);
         Effect transmigration("Spectral Transmigration", -1, 0);
         character.effects.push_back(syzygy);

@@ -36,7 +36,7 @@ void attack(Character &attacker, Character &defender, double skillMultiplier) {
     cout << "." << endl;
     if (defender.hp <= 0) {
         attacker.energy += 10;
-        cout << defender.name << " is defeated." << endl;
+        cout << defender.name << " \033[91mis defeated.\033[0m" << endl;
     }
 }
 
