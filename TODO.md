@@ -4,14 +4,14 @@ Note for anyone who reads this: most likely all functions here will be void func
 the State should be passed around as a reference to the functions. and be modified in the functions.
 
 ## main.cpp
-- [ ] include everything needed from battle.cpp and setup.cpp
+- [x] include everything needed from battle.cpp and setup.cpp
 ### commands
-- [ ] `team` - go to the team menu -> calls `teamMenu()`
-- [ ] `battle` - go to the battle menu -> calls `battleMenu()`
-- [ ] `settings` - go to the settings menu -> calls `settingsMenu()`
-- [ ] `start` - starts the game -> calls `battleStart()` and while loop `gameLoop()`
+- [x] `team` - go to the team menu -> calls `teamMenu()`
+- [x] `battle` - go to the battle menu -> calls `battleMenu()`
+- [x] `settings` - go to the settings menu -> calls `settingsMenu()`
+- [x] `start` - starts the game -> calls `battleStart()` and while loop `gameLoop()`
 - [x] `exit` - exits the game
-- [ ] `help` - shows the help menu
+- [x] `help` - shows the help menu
 
 
 ## setup.cpp
@@ -20,12 +20,12 @@ asks the user what playable characters they want to use and what enemies they wa
 - [x] provides a list of playable characters with their skills and stats
 - [x] ask the user what characters they want to use
 ### `battleMenu()`
-- [ ] provides a list of situations, with a description of the enemies
-- [ ] ask the user what situation they want to fight and return the enemies
+- [x] provides a list of situations, with a description of the enemies
+- [x] ask the user what situation they want to fight and return the enemies
 ### `settingsMenu()`
-- [ ] difficulty settings
+- [x] difficulty settings
 ### `loadCharacters()`
-- [ ] load the character stats from a file (maybe a json file if we're fancy. have to `#include nlohmann/json` tho)
+- [x] load the character stats from a file (maybe a json file if we're fancy. have to `#include nlohmann/json` tho)
 
 
 ## battle.cpp
