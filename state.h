@@ -11,9 +11,9 @@ using namespace std;
 class Character;
 class State {
 public:
-    State(vector<Character> &allies, vector<Character> &enemies, Character &round);
-    vector<Character> &allies;
-    vector<Character> &enemies;
+    State(vector<Character> &allies, vector<Character> &enemies, Character &round, vector<Character> &alliesOriginal, vector<Character> &enemiesOriginal);
+    vector<Character> &allies, &enemies;
+    vector<Character> &alliesOriginal, &enemiesOriginal;
     Character &round;
 
     int maxSkillPoint;
