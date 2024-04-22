@@ -16,9 +16,9 @@ void teamMenu(State &state) {
     cout << "Team Menu" << endl;
     vector<Character> team;
     cout << "Available Characters:" << endl;
-    VariadicTable<string, double, double, double,double, double, double> vt({"name", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
+    VariadicTable<string, int, double, double, double,double, double, double> vt({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
     for (const auto& character: playableCharacters)
-        vt.addRow(character.name, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
+    vt.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
     vt.print(std::cout);
 //    for (const auto &character : playableCharacters) character.print();
     cout << "A team must have 4 characters." << endl;
@@ -140,6 +140,55 @@ void settingsMenu(State &state) {
 //    cout << "Selected Difficulty is " << color << difficulty << resetColor << " mode" << endl << endl;
     slowPrint("You selected " + difficulty + " mode\n\n", color, 0);
 }
+
+void levelsetting(State &state){
+    int level, position;
+    string input;
+    cout << "Command: ";
+    while (getline(cin, input)) {
+        stringstream ss(input);
+        string cmd;
+        ss >> cmd;
+        if (cmd == "exit"){
+            break;
+        } else if (cmd == "help"){
+            printHelp("Level");
+        } else if (cmd == "choose"){
+            if (state.allies.empty()) {
+                cout << "Please select a character first." << endl;
+            }   else {
+                cout << "Current statistic" << endl;
+                VariadicTable<string, int, double, double, double,double, double, double> original({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
+                for (const auto& character: state.allies)
+                    original.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
+                original.print(std::cout);
+                cout << "Choose a character(1-4): ";
+                cin >> position;
+                cout << "Choose level(1-80): ";
+                cin >> level;
+                state.allies[position - 1].level = level;
+                int newhp =
+                        (state.allies[position - 1].baseHp * 7.4 * level - state.allies[position - 1].baseHp * level -
+                         state.allies[position - 1].baseHp * 7.4 + 80 * state.allies[position - 1].baseHp) / 79;
+                int newatk =
+                        (state.allies[position - 1].baseAtk * 7.4 * level - state.allies[position - 1].baseAtk * level -
+                         state.allies[position - 1].baseAtk * 7.4 + 80 * state.allies[position - 1].baseAtk) / 79;
+                int newdef =
+                        (state.allies[position - 1].baseDef * 7.4 * level - state.allies[position - 1].baseDef * level -
+                         state.allies[position - 1].baseDef * 7.4 + 80 * state.allies[position - 1].baseDef) / 79;
+                state.allies[position - 1].hp = newhp;
+                state.allies[position - 1].atk = newatk;
+                state.allies[position - 1].def = newdef;
+                VariadicTable<string, int, double, double, double,double, double, double> update({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
+                for (const auto& character: state.allies)
+                    update.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
+                update.print(std::cout);
+            }
+        }
+        cout << "Command: " ;
+    }
+}
+
 
 void debugMenu(State &state) {
     cout << "Debug Menu" << endl;

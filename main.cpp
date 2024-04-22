@@ -13,7 +13,7 @@ using namespace std;
 int main() {
     vector<Character> allies {}, enemies {};
     vector<Character> alliesOriginal {}, enemiesOriginal {};
-    Character round("Round", 100, 0, 0, 0, 0, 0, 0,0);
+    Character round("Round", 0,100, 0, 0, 0, 0, 0, 0,0);
     round.faction = "round";
     State state(allies, enemies, round, alliesOriginal, enemiesOriginal);
 
@@ -48,6 +48,9 @@ int main() {
             getline(cin, input);
         } else if (cmd == "battle") {
             battleMenu(state);  // setup.cpp
+            getline(cin, input);
+        } else if (cmd == "level"){
+            levelsetting(state);
             getline(cin, input);
         } else if (cmd == "settings" || cmd == "setting") {
             settingsMenu(state); // setup.cpp
