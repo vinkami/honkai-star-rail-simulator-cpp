@@ -386,13 +386,12 @@ vector<Situation> getSituations() {
     while (getline(enemyFile, line)) {  // comma separated values
         stringstream ss(line);
         string name;
-        int situationNo, level;
+        int situationNo, level=85;
         double speed, hp, atk, def;
         char comma;
 
         getline(ss, name, ',');
         ss >> situationNo >> comma;
-        ss >> level >> comma;
         ss >> speed >> comma;
         ss >> hp >> comma;
         ss >> atk >> comma;
