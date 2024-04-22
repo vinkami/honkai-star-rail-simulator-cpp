@@ -22,6 +22,6 @@ void battleMenu(State &state);
 void settingsMenu(State &state);
 void debugMenu(State &state);
 void levelsetting(State &state);
-void characterlist(State &state);
+void characterList(State &state);
 
 #endif //PROJECT_SETUP_H
