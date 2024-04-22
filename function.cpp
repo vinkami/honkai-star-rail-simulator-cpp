@@ -179,7 +179,7 @@ void insertEnemyAbility(Character &enemy){
 // For character abilities see https://www.prydwen.gg/star-rail/characters
 // If u can't 100% copy the ability, just make a similar one and write a comment to explain what changes u made
 void insertCharacterAbility(Character &character) {
-    if (character.name == "\033[91mClara\033[0m") {
+    if (character.name == "Clara") {
         Effect enhancedCounter = Effect("Enhanced Counter", -1, 0);
         character.effects.push_back(enhancedCounter);
         character.dmgReduction = 0.1;
@@ -254,7 +254,7 @@ void insertCharacterAbility(Character &character) {
         };
     }
 
-    else if (character.name== "\033[34mJingliu\033[0m") {
+    else if (character.name== "Jingliu") {
         Effect syzygy("Syzygy", -1, 0);
         Effect transmigration("Spectral Transmigration", -1, 0);
         character.effects.push_back(syzygy);
