@@ -2,6 +2,8 @@
 #include <iostream>
 #include "logic.h"
 #include "character.h"
+#include "function.h"
+
 using namespace std;
 
 
@@ -26,7 +28,7 @@ double getNonCritDamage(double atk, double skillMultiplier, double def, double d
     return atk * skillMultiplier * defMultiplier * (1 - dmgReduction);
 }
 
-void attack(Character &attacker, Character &defender, double skillMultiplier) {
+void attack(Character &attacker, Character &defender, double skillMultiplier, State &state) {
     double damage = getNonCritDamage(attacker.atk, skillMultiplier, defender.def, attacker.defIgnore, attacker.dmgReduction);
     bool crit = hit(attacker.critRate);
     if (crit) damage *= 1 + attacker.critDamage / 100;
@@ -36,41 +38,43 @@ void attack(Character &attacker, Character &defender, double skillMultiplier) {
     cout << "." << endl;
     if (defender.hp <= 0) {
         attacker.energy += 10;
-        cout << "\033[91m"<< defender.name << "is defeated.\033[0m" << endl;
+        slowPrint(defender.name + " is defeated!\n", {91});
+    } else {
+        defender.onHit(defender, state, attacker);
     }
 }
 
 void singleAttack(State &state, Character &attacker, int target, double skillMultiplier) {
-    std::vector<Character>& team = (attacker.faction == "ally") ? state.allies : state.enemies;
+    std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
     Character &defender = team[target];
-    attack(attacker,defender,skillMultiplier);
+    attack(attacker,defender,skillMultiplier, state);
 }
 
 void blastAttack(State &state, Character &attacker, int target, double mainSkillMultiplier, double adjacentSkillMultiplier) {
-    std::vector<Character> &team = (attacker.faction == "ally") ? state.allies : state.enemies;
+    std::vector<Character> &team = (attacker.faction == "ally") ? state.enemies : state.allies;
     if (target > 0) {
         Character &adjacent = team[target - 1];
-        attack(attacker, adjacent, adjacentSkillMultiplier);
+        attack(attacker, adjacent, adjacentSkillMultiplier, state);
     }
     Character &defender = team[target];
-    attack(attacker, defender, mainSkillMultiplier);
+    attack(attacker, defender, mainSkillMultiplier, state);
     if (target + 1 < team.size()) {
         Character &adjacent = team[target + 1];
-        attack(attacker, adjacent, adjacentSkillMultiplier);
+        attack(attacker, adjacent, adjacentSkillMultiplier, state);
     }
 }
 
 void aoeAttack(State &state, Character &attacker, double skillMultiplier) {
-    std::vector<Character>& team = (attacker.faction == "ally") ? state.allies : state.enemies;
+    std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
     for (auto &defender : team)
-    attack(attacker, defender, skillMultiplier);
+    attack(attacker, defender, skillMultiplier, state);
 }
 
 
 void bounceAttack(State &state, Character &attacker, int target, double skillMultiplier, int bounceCount) {
-    std::vector<Character>& team = (attacker.faction == "ally") ? state.allies : state.enemies;
+    std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
     Character &defender = team[target];
-    attack(attacker, defender, skillMultiplier);
+    attack(attacker, defender, skillMultiplier, state);
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<int> dist(0, (int) team.size() - 1);
@@ -78,7 +82,7 @@ void bounceAttack(State &state, Character &attacker, int target, double skillMul
         int newTarget = dist(gen);
         Character &newDefender = team[newTarget];
         if (newDefender.hp > 0) {
-            attack(attacker, newDefender, skillMultiplier);
+            attack(attacker, newDefender, skillMultiplier, state);
             bounceCount--;
         }
     }
