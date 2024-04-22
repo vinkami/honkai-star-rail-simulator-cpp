@@ -55,7 +55,8 @@ void teamMenu(State &state) {
 }
 
 void characterlist(State &state){
-    cout << "Character List";
+    cout << "Character List" << endl;
+    cout << "You can see character's abilities by typing number.";
     vector<Character> playableCharacters = getPlayableCharacters();
     VariadicTable<int, string, int, double, double, double,double, double, double> vt({"number", "name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
     for (int i = 1; i <= playableCharacters.size(); i++ )
@@ -170,7 +171,7 @@ void levelsetting(State &state){
         if (cmd == "exit"){
             break;
         } else if (cmd == "help"){
-            printHelp("Level");
+            printHelp("level");
         } else if (cmd == "choose"){
             if (state.allies.empty()) {
                 cout << "Please select a character first." << endl;

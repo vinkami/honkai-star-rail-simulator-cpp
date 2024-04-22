@@ -3,6 +3,8 @@ Commands:
 - settings: Go to the settings menu, where you can change the difficulty and other settings
 - exit: Exit the game
 
+- list: Show the details of each character.
+- level: Set the level of each character.
 - team: Go to the team selection menu, where you pick your playable characters and check their skills and stats
 - battle: Go to the battle menu, where you can pick a situation to fight in
 - restart: Play again with all same settings
