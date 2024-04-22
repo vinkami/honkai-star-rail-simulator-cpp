@@ -15,30 +15,34 @@ void teamMenu(State &state) {
     cout << "Team Menu" << endl;
     vector<Character> team;
     cout << "Available Characters:" << endl;
-    VariadicTable<string, int, double, double, double,double, double, double> vt({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
-    for (const auto& character: playableCharacters)
-    vt.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
-    vt.print(std::cout);
+    for (int i = 1; i <= playableCharacters.size(); i++)
+        cout << i << ". " << playableCharacters[i-1].name << endl;
 //    for (const auto &character : playableCharacters) character.print();
     cout << "A team must have 4 characters." << endl;
     //Ask the user what characters they want to use
-    cout << "Select a character to your team by typing their names. (Exact word)" << endl;
+    cout << "Select a character to your team by typing their names. (1-4)" << endl;
     while (team.size() != 4){
         string selection;
         cin >> selection;
-        int temp = searchCharacter(playableCharacters, selection);
-        if (temp > -1 && searchCharacter(team, selection) == -1) {
-            team.push_back(playableCharacters[temp]);
-            cout << selection << " has joined the team." << endl;
-        } else if (searchCharacter(team, selection) != -1) {
-            cout << "Character is already in team! Please choose again."<< endl;
+        if (selection != "exit" && selection != "help" && !all_of(selection.begin(), selection.end(), ::isdigit)) {
+            cout << "Selected Character not found! Please input appropriate number!" << endl;
         } else if (selection == "exit") {
             cout << "Character selection terminated." << endl;
             return;
         } else if (selection == "help") {
             printHelp("team");
         } else {
-            cout << "Selected Character not found! Check whether there is a typo." << endl;
+            int characternumber = stoi(selection);
+            if (characternumber > playableCharacters.size() || characternumber < 0){
+                cout << "Please input appropriate number! " << endl;
+            }
+            else if (playableCharacters[characternumber-1].name != "Used"){
+                team.push_back(playableCharacters[characternumber-1]);
+                cout << playableCharacters[characternumber-1].name << " joined!" << endl;
+                playableCharacters[characternumber-1].name = "Used";
+            } else{
+                cout << "Character already chosen. Please choose another! " << endl;
+            }
         }
     }
     cout << "Team formed successfully!" << endl << "Current Team:" << endl;
@@ -46,6 +50,18 @@ void teamMenu(State &state) {
         cout << character.name << "     ";
     cout << endl << endl;
     state.allies = std::move(team);
+}
+
+void characterlist(State &state){
+    cout << "Character List";
+    vector<Character> playableCharacters = getPlayableCharacters();
+    VariadicTable<int, string, int, double, double, double,double, double, double> vt({"number", "name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
+    for (int i = 1; i <= playableCharacters.size(); i++ )
+        vt.addRow(i,playableCharacters[i-1].name, playableCharacters[i-1].level, playableCharacters[i-1].speed, playableCharacters[i-1].hp, playableCharacters[i-1].atk, playableCharacters[i-1].def,playableCharacters[i-1].critRate,playableCharacters[i-1].critDamage);
+    vt.print(std::cout);
+    cout << "Enter number to see more details."<< endl;
+    int number;
+    cin >> number;
 }
 
 //Player can choose different situations with different enemies.

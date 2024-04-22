@@ -46,6 +46,9 @@ int main() {
         } else if (cmd == "team") {
             teamMenu(state);  // setup.cpp
             getline(cin, input);
+        } else if (cmd == "list") {
+            characterlist(state);
+            getline(cin, input);
         } else if (cmd == "battle") {
             battleMenu(state);  // setup.cpp
             getline(cin, input);
