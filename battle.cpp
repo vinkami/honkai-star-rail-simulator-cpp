@@ -53,76 +53,70 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
     bool battleContinues = battleEndCheck(state);  // possible that the last character dies to damage over time or something and ends the battle
     if (!battleContinues) return false;
 
-    // new round starts
-    if (current.faction == "round") {
+    if (current.faction == "round") {  // new round starts
         state.roundNumber++;
         slowPrint("Round " + to_string(state.roundNumber) + " starts\n", {1, 33}, 20);
-        state.forward(current.remTime);
-        current.reset();
-        return true;
-    }
-
-    // enemy's turn
-    if (current.faction == "enemy") {
+        state.timelineProceed = true;
+    } else if (current.faction == "enemy") {  // enemy's turn
         cout << current.name << "'s turn" << endl;
         current.basicAtk(current, state);
-        current.endRound(current, state);
-        state.forward(current.remTime);
-        current.reset();
-        return battleEndCheck(state);
-    }
+    } else { // player's turn
+        cout << current.name << "'s turn" << endl;
+        cout << "Skill Points: " << state.skillPoint << " / " << state.maxSkillPoint << endl;
+        cout << "Energy: ";
+        for (auto &ally: state.allies) {
+            cout << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "   ";
+        }
+        cout << endl;
 
-    // player's turn
-    cout << current.name << "'s turn" << endl;
-    cout << "Skill Points: " << state.skillPoint << " / " << state.maxSkillPoint << endl;
-    cout << "Energy: ";
-    for (auto &ally : state.allies) {
-        cout << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "   ";
-    }
-    cout << endl;
+        string line, move;
+        cout << "Action: ";
+        getline(cin, line);
+        stringstream ss(line);
+        ss >> move;
 
-    string line, move;
-    cout << "Action: ";
-    getline(cin, line);
-    stringstream ss(line);
-    ss >> move;
+        // actions
+        if (move == "q") {
+            current.basicAtk(current, state);
+        } else if (move == "e") {
+            current.skill(current, state);
+            //    } else if (move == "1") {  // Todo: fix error may happen if user uses ult after someone dies
+            //        tryUlt(state.allies[0], state);
+            //    } else if (move == "2") {
+            //        tryUlt(state.allies[1], state);
+            //    } else if (move == "3") {
+            //        tryUlt(state.allies[2], state);
+            //    } else if (move == "4") {
+            //        tryUlt(state.allies[3], state);
+        } else
 
-    // actions
-    if (move == "q") {
-        current.basicAtk(current, state);
-    } else if (move == "e") {
-        current.skill(current, state);
-    } else if (move == "1") {
-        tryUlt(state.allies[0], state);
-    } else if (move == "2") {
-        tryUlt(state.allies[1], state);
-    } else if (move == "3") {
-        tryUlt(state.allies[2], state);
-    } else if (move == "4") {
-        tryUlt(state.allies[3], state);
-    } else
-
-    // other commands
-    if (move == "escape") {
-        cout << "You escaped. Battle terminated." << endl;
-        return false;
-    } else if (move == "exit") {
-        cout << "Goodbye!" << endl;
-        exit(0);
-    } else if (move == "help") {
-        printHelp("battle");
-    } else if (move == "reset") {
-        state.reset = true;
-        return false;
-    } else {
-        cout << "Unknown command" << endl;
+            // other commands
+        if (move == "escape") {
+            cout << "You escaped. Battle terminated." << endl;
+            return false;
+        } else if (move == "exit") {
+            cout << "Goodbye!" << endl;
+            exit(0);
+        } else if (move == "help") {
+            printHelp("battle");
+        } else if (move == "reset") {
+            state.reset = true;
+            return false;
+        } else {
+            cout << "Unknown command" << endl;
+        }
     }
 
     if (state.timelineProceed) {
         // remove dead characters
-        auto pred = [](Character &character) { return character.hp <= 0; };
-        state.allies.erase(remove_if(state.allies.begin(), state.allies.end(), pred), state.allies.end());
-        state.enemies.erase(remove_if(state.enemies.begin(), state.enemies.end(), pred), state.enemies.end());
+        for (int i=0;i<state.allies.size();i++){
+            if (state.allies[i].hp<=0)
+                state.allies.erase(next(state.allies.begin(), i));
+        }
+        for (int i=0;i<state.enemies.size();i++){
+            if (state.enemies[i].hp<=0)
+                state.enemies.erase(next(state.enemies.begin(), i));
+        }
 
         // go to next character
         current.endRound(current, state);
@@ -130,7 +124,6 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         current.reset();
         state.timelineProceed = false;
     }
-
     return battleEndCheck(state);
 }
 
