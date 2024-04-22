@@ -1,4 +1,5 @@
 #include "character.h"
+#include "VariadicTable.h"
 #include <iostream>
 #include <utility>
 #include <algorithm>
@@ -22,13 +23,13 @@ void Character::reset() {
 }
 
 void Character::print() const {
-    cout << "Name: " << name << endl;
-    cout << "HP: " << hp << endl;
-    cout << "ATK: " << atk << endl;
-    cout << "DEF: " << def << endl;
-    cout << "Speed: " << speed << endl;
-    cout << "Crit: " << critRate << "% / " << critDamage << "%" << endl;
-    cout << endl;
+//    cout << "Name: " << name << endl;
+//    cout << "HP: " << hp << endl;
+//    cout << "ATK: " << atk << endl;
+//    cout << "DEF: " << def << endl;
+//    cout << "Speed: " << speed << endl;
+//    cout << "Crit: " << critRate << "% / " << critDamage << "%" << endl;
+//    cout << endl;
 }
 
 int Character::getEffectLoc(const string &efxName) {

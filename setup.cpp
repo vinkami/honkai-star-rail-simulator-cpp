@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include "VariadicTable.h"
 #include "setup.h"
 #include "state.h"
 #include "character.h"
@@ -15,7 +16,11 @@ void teamMenu(State &state) {
     cout << "Team Menu" << endl;
     vector<Character> team;
     cout << "Available Characters:" << endl;
-    for (const auto &character : playableCharacters) character.print();
+    VariadicTable<string, double, double, double,double, double, double> vt({"name", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
+    for (const auto& character: playableCharacters)
+        vt.addRow(character.name, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
+    vt.print(std::cout);
+//    for (const auto &character : playableCharacters) character.print();
     cout << "A team must have 4 characters." << endl;
     //Ask the user what characters they want to use
     cout << "Select a character to your team by typing their names. (Exact word)" << endl;
