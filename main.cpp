@@ -37,8 +37,6 @@ int main() {
             } else {
                 // battle.cpp
                 state.previous=true;
-                alliesOriginal = allies;
-                enemiesOriginal = enemies;
                 battleStart(state);
                 while (gameLoop(state));
                 battleEnd(state);
@@ -47,7 +45,7 @@ int main() {
             teamMenu(state);  // setup.cpp
             getline(cin, input);
         } else if (cmd == "list") {
-            characterlist(state);
+            characterList(state);
             getline(cin, input);
         } else if (cmd == "battle") {
             battleMenu(state);  // setup.cpp
@@ -61,7 +59,7 @@ int main() {
         } else if (cmd == "restart"){
             if (not state.previous){
                 cout << "There is no previous match." << endl;
-            } else{
+            } else {
                 allies = alliesOriginal;
                 enemies = enemiesOriginal;
                 battleStart(state);
@@ -72,11 +70,13 @@ int main() {
             // teamMenu
             auto c = getPlayableCharacters();
             state.allies = {c[0], c[1], c[2], c[3]};
+            state.alliesOriginal = state.allies;
             cout << "Using " << c[0].name << ", " << c[1].name << ", " << c[2].name << ", " << c[3].name << " as team." << endl;
 
             // battleMenu
             Situation situation = getSituations()[0];
             state.enemies = situation.enemies;
+            state.enemiesOriginal = state.enemies;
             cout << "Using " << situation.name << " as situation." << endl;
 
             // battle.cpp
