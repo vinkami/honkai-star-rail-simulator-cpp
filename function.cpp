@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <random>
 #include "function.h"
 #include "state.h"
 #include "character.h"
@@ -99,6 +100,81 @@ int selectTarget(vector<Character>& characters) {
     } while (true);
 }
 
+int aiTarget(vector<Character>& character){
+    int total=0,temp=0;
+    for (const auto& characters : character)
+        total+=characters.taunt;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distribution(0, total- 1);
+    int randomNumber = distribution(gen);
+    for (int i=0;i<character.size();i++){
+        temp+=character[i].taunt;
+        if (temp>randomNumber)
+            return i;
+    }
+    return -1;
+}
+
+
+void insertEnemyAbility(Character &enemy){
+    if (enemy.name== "Antibaryon") {
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            slowPrint("消滅\n",{31});
+            singleAttack(state, self, target, 2.5);
+            state.timelineProceed = true;
+        };
+    } else if (enemy.name== "Trampler"){
+        enemy.basicAtk = [](Character &self, State &state){
+            Effect lockOn("lockOn", -1,1);  //idk what happen
+            int target= aiTarget(state.allies);
+            bool locked= false;
+            for (int i=0;i<state.allies.size();i++){
+                for (const auto &effect : state.allies[i].effects){
+                    if (effect.name=="lockOn"){
+                        target=i;
+                        locked= true;
+                    }
+                }
+            }
+            if (locked) {
+                slowPrint("Trampler:強弓の終末\n");
+                singleAttack(state, self, target, 6.0);
+                state.allies[target].removeEffect(lockOn);
+            } else {
+                if (hit(20)) {
+                    slowPrint("Trampler:螺旋の弓矢\nTrampler locks on to "+state.allies[target].name+"!\n"+"Cast End of Bow to this target in the next action.\n",{37});
+                    state.allies[target].effects.push_back(lockOn);
+                } else if (hit(37.5)){
+                    slowPrint("侵略の鉄蹄\n",{37});
+                    singleAttack(state,self,target,4.0);
+                } else if (hit(60)){
+                    slowPrint("戦争の蹂躙\n",{37});
+                    blastAttack(state,self,target,2.5,2.5);
+                }else {
+                    slowPrint("虚実の投影\n",{37});
+                    singleAttack(state,self,target,3.0);
+                }
+            }
+            state.timelineProceed = true;
+        };
+    } else if (enemy.name== "Reaver"){
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            if (hit(50)) {
+                slowPrint("略奪の斬撃\n", {31});
+                singleAttack(state, self, target, 2.5);
+            } else {
+                slowPrint("狩猟の刃\n",{31});
+                blastAttack(state,self,target,1.5,1.5);
+            }
+            state.timelineProceed = true;
+        };
+    }
+}
+
+
 // For character voice lines see https://wiki.biligame.com/sr/%E8%A7%92%E8%89%B2%E8%AF%AD%E9%9F%B3
 // For character abilities see https://www.prydwen.gg/star-rail/characters
 // If u can't 100% copy the ability, just make a similar one and write a comment to explain what changes u made
@@ -137,12 +213,14 @@ void insertCharacterAbility(Character &character) {
         };
         character.ult = [](Character &self, State &state) {  // Promise, Not Command
             Effect enhancedCounter = self.getEffect("Enhanced Counter");
+            self.taunt*=5;
             slowPrint("クラーラ：クラーラも…みんなを守りたい！       \nクラーラ：助けて、スヴァローグ！\n", {37});
             addEnergy(self.maxEnergy,self.energy,5);
             Effect ultEfx("Promise, Not Command", 2, 0);
             ultEfx.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 if (self.duration == 0) {
+                    master.taunt/=5;
                     master.dmgReduction -= 0.25;
                     master.removeEffect(self);
                 }
@@ -315,8 +393,9 @@ vector<Situation> getSituations() {
         ss >> atk >> comma;
         ss >> def;
 
-        Character temp(name, speed, hp, atk, def, 0, 0, 0);
+        Character temp(name, speed, hp, atk, def, 0, 0, 0,0);
         temp.faction = "enemy";
+        insertEnemyAbility(temp);
         situations[situationNo].enemies.push_back(temp);
     }
     enemyFile.close();
@@ -333,6 +412,7 @@ vector<Character> getPlayableCharacters() {
         string name;
         double speed, hp, atk, def, critRate, critDamage, maxEnergy;
         char comma;
+        int taunt;
 
         getline(ss, name, ',');
         ss >> speed >> comma;
@@ -341,9 +421,10 @@ vector<Character> getPlayableCharacters() {
         ss >> def >> comma;
         ss >> critRate >> comma;
         ss >> critDamage >> comma;
-        ss >> maxEnergy;
+        ss >> maxEnergy >> comma;
+        ss >> taunt;
 
-        Character temp(name, speed, hp, atk, def, critRate, critDamage, maxEnergy);
+        Character temp(name, speed, hp, atk, def, critRate, critDamage, maxEnergy,taunt);
         insertCharacterAbility(temp);
         playableCharacters.push_back(temp);
     }
