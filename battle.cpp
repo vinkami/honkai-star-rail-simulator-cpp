@@ -100,7 +100,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             tryUlt(3, state);
         } else
 
-            // other commands
+        // other commands
         if (move == "escape") {
             cout << "You escaped. Battle terminated." << endl;
             return false;
