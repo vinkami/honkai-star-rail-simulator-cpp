@@ -19,12 +19,24 @@ bool battleEndCheck(State &state) {
     return true;
 }
 
-void tryUlt(Character &ally, State &state) {
-    if (ally.energy >= ally.maxEnergy) {
+void tryUlt(int allyTarget, State &state) {
+    // Todo: fix it
+    // idea: from state.alliesOriginal (which is a copy of state.allies) find the name of the ally, then search for the ally in state.allies to get the correct character and uses ult if it's not dead
+    slowPrint("IT'S BUGGED AND PENDING FIXING\n", {91});
+    return;
+
+    string allyName = state.alliesOriginal[allyTarget].name;
+    int allyPos = searchCharacter(state.allies, allyName);
+    if (allyPos == -1) {
+        slowPrint(allyName + "has been defeated. Ultimate cannot be used!\n", {91});
+        return;
+    }
+    Character ally = state.allies[allyPos];
+    if (ally.energy < ally.maxEnergy) {
+        slowPrint("Not enough energy!\n", {91});
+    } else {
         ally.energy = 0;
         ally.ult(ally, state);
-    } else {
-        slowPrint("Not enough energy!\n", {91});
     }
 }
 
@@ -80,14 +92,14 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             current.basicAtk(current, state);
         } else if (move == "e") {
             current.skill(current, state);
-            //    } else if (move == "1") {  // Todo: fix error may happen if user uses ult after someone dies
-            //        tryUlt(state.allies[0], state);
-            //    } else if (move == "2") {
-            //        tryUlt(state.allies[1], state);
-            //    } else if (move == "3") {
-            //        tryUlt(state.allies[2], state);
-            //    } else if (move == "4") {
-            //        tryUlt(state.allies[3], state);
+                } else if (move == "1") {
+                    tryUlt(0, state);
+                } else if (move == "2") {
+                    tryUlt(1, state);
+                } else if (move == "3") {
+                    tryUlt(2, state);
+                } else if (move == "4") {
+                    tryUlt(3, state);
         } else
 
             // other commands

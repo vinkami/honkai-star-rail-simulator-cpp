@@ -11,13 +11,11 @@
 using namespace std;
 
 int main() {
-    vector<Character> allies {};
-    vector<Character> enemies {};
-    vector <Character> tempallies {};
-    vector <Character> tempenemies {};
+    vector<Character> allies {}, enemies {};
+    vector<Character> alliesOriginal {}, enemiesOriginal {};
     Character round("Round", 100, 0, 0, 0, 0, 0, 0,0);
     round.faction = "round";
-    State state(allies, enemies, round);
+    State state(allies, enemies, round, alliesOriginal, enemiesOriginal);
 
 //    slowPrint("答え、見つけてごらん？\n", {38, 5, 160}, 50);
     slowPrint("Welcome to Honkai: Star Rail battle simulator.\nType 'help' for a list of commands.\nEnter command: ");
@@ -39,8 +37,8 @@ int main() {
             } else {
                 // battle.cpp
                 state.previous=true;
-                tempallies = allies;
-                tempenemies = enemies;
+                alliesOriginal = allies;
+                enemiesOriginal = enemies;
                 battleStart(state);
                 while (gameLoop(state));
                 battleEnd(state);
@@ -58,8 +56,8 @@ int main() {
             if (not state.previous){
                 cout << "There is no previous match." << endl;
             } else{
-                allies = tempallies;
-                enemies = tempenemies;
+                allies = alliesOriginal;
+                enemies = enemiesOriginal;
                 battleStart(state);
                 while (gameLoop(state));
                 battleEnd(state);

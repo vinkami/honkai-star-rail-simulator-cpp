@@ -3,7 +3,7 @@
 
 using namespace std;
 
-State::State(vector<Character> &allies, vector<Character> &enemies, Character &round): allies(allies), enemies(enemies), round(round) {
+State::State(vector<Character> &allies, vector<Character> &enemies, Character &round, vector<Character> &alliesOriginal, vector<Character> &enemiesOriginal): allies(allies), enemies(enemies), round(round), alliesOriginal(alliesOriginal), enemiesOriginal(enemiesOriginal) {
     maxSkillPoint = 5;
     skillPoint = 3;
     roundNumber = 1;
