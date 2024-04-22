@@ -20,15 +20,10 @@ bool battleEndCheck(State &state) {
 }
 
 void tryUlt(int allyTarget, State &state) {
-    // Todo: fix it
-    // idea: from state.alliesOriginal (which is a copy of state.allies) find the name of the ally, then search for the ally in state.allies to get the correct character and uses ult if it's not dead
-    slowPrint("IT'S BUGGED AND PENDING FIXING\n", {91});
-    return;
-
     string allyName = state.alliesOriginal[allyTarget].name;
     int allyPos = searchCharacter(state.allies, allyName);
     if (allyPos == -1) {
-        slowPrint(allyName + "has been defeated. Ultimate cannot be used!\n", {91});
+        slowPrint(allyName + " has been defeated. Ultimate cannot be used!\n", {91});
         return;
     }
     Character ally = state.allies[allyPos];
@@ -47,6 +42,7 @@ void battleStart(State &state) {
     for (auto &ally : state.allies) {
         ally.remTime = 15000.0 / ally.speed;  // First round is longer according to the original game
         ally.resetRemTime = 10000.0 / ally.speed;
+        ally.energy = 50;  // Memory of chaos uses 50 energy at start
         ally.startBattle(ally, state);
     }
     for (auto &enemy : state.enemies) {
@@ -69,9 +65,11 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         state.roundNumber++;
         slowPrint("Round " + to_string(state.roundNumber) + " starts\n", {1, 33}, 20);
         state.timelineProceed = true;
+
     } else if (current.faction == "enemy") {  // enemy's turn
         cout << current.name << "'s turn" << endl;
         current.basicAtk(current, state);
+
     } else { // player's turn
         cout << current.name << "'s turn" << endl;
         cout << "Skill Points: " << state.skillPoint << " / " << state.maxSkillPoint << endl;
@@ -92,14 +90,14 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             current.basicAtk(current, state);
         } else if (move == "e") {
             current.skill(current, state);
-                } else if (move == "1") {
-                    tryUlt(0, state);
-                } else if (move == "2") {
-                    tryUlt(1, state);
-                } else if (move == "3") {
-                    tryUlt(2, state);
-                } else if (move == "4") {
-                    tryUlt(3, state);
+        } else if (move == "1") {
+            tryUlt(0, state);
+        } else if (move == "2") {
+            tryUlt(1, state);
+        } else if (move == "3") {
+            tryUlt(2, state);
+        } else if (move == "4") {
+            tryUlt(3, state);
         } else
 
             // other commands
