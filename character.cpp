@@ -1,5 +1,4 @@
 #include "character.h"
-#include "VariadicTable.h"
 #include <iostream>
 #include <utility>
 #include <algorithm>

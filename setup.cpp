@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include "VariadicTable.h"
+#include "external/VariadicTable.h"
 #include "setup.h"
 #include "state.h"
 #include "character.h"
