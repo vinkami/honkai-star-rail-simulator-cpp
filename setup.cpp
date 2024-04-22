@@ -10,12 +10,14 @@ using namespace std;
 
 
 void teamMenu(State &state) {
+    //This function provides a list of playable characters with their skills and stats
     vector<Character> playableCharacters = getPlayableCharacters();
     cout << "Team Menu" << endl;
     vector<Character> team;
     cout << "Available Characters:" << endl;
     for (const auto &character : playableCharacters) character.print();
     cout << "A team must have 4 characters." << endl;
+    //Ask the user what characters they want to use
     cout << "Select a character to your team by typing their names. (Exact word)" << endl;
     while (team.size() != 4){
         string selection;
@@ -43,6 +45,7 @@ void teamMenu(State &state) {
 }
 
 void battleMenu(State &state) {
+    //Player can choose different situations with different enemies.
     cout << "Battle Menu" << endl << endl;
     vector<Situation> situations = getSituations();
     for (int i = 0; i < situations.size(); i++) {
@@ -89,6 +92,7 @@ void battleMenu(State &state) {
 }
 
 void settingsMenu(State &state) {
+    //Player can choose difficulty of the game.
     cout << "Settings Menu" << endl ;
     if (state.difficulty == 0.5){
         cout << "Current difficulty: Easy" << endl;
