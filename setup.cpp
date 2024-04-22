@@ -51,12 +51,13 @@ void teamMenu(State &state) {
     for (const auto &character : team)
         cout << character.name << "     ";
     cout << endl << endl;
+    state.alliesOriginal = team;
     state.allies = std::move(team);
 }
 
-void characterlist(State &state){
+void characterList(State &state){
     cout << "Character List" << endl;
-    cout << "You can see character's abilities by typing number.";
+    cout << "You can see character's abilities by typing number." << endl;
     vector<Character> playableCharacters = getPlayableCharacters();
     VariadicTable<int, string, int, double, double, double,double, double, double> vt({"number", "name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
     for (int i = 1; i <= playableCharacters.size(); i++ )
@@ -96,6 +97,7 @@ void battleMenu(State &state) {
             try {
                 int selection = std::stoi(selectionStr);
                 if (selection >= 1 && selection <= situations.size()) {
+                    state.enemiesOriginal = situations[selection - 1].enemies;
                     state.enemies = std::move(situations[selection - 1].enemies);
                     cout << "Situation selected successfully!" << endl;
                     cout << "You will be facing ";
