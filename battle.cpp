@@ -20,18 +20,18 @@ bool battleEndCheck(State &state) {
 }
 
 void tryUlt(int allyTarget, State &state) {
-    string allyName = state.alliesOriginal[allyTarget].name;
+    string &allyName = state.alliesOriginal[allyTarget].name;
     int allyPos = searchCharacter(state.allies, allyName);
     if (allyPos == -1) {
         slowPrint(allyName + " has been defeated. Ultimate cannot be used!\n", {91});
         return;
     }
-    Character ally = state.allies[allyPos];
+    Character &ally = state.allies[allyPos];
     if (ally.energy < ally.maxEnergy) {
         slowPrint("Not enough energy!\n", {91});
     } else {
-        ally.energy = 0;
         ally.ult(ally, state);
+        ally.energy = 0;
     }
 }
 
