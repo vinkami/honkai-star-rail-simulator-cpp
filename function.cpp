@@ -384,18 +384,19 @@ vector<Situation> getSituations() {
     while (getline(enemyFile, line)) {  // comma separated values
         stringstream ss(line);
         string name;
-        int situationNo;
+        int situationNo, level;
         double speed, hp, atk, def;
         char comma;
 
         getline(ss, name, ',');
         ss >> situationNo >> comma;
+        ss >> level >> comma;
         ss >> speed >> comma;
         ss >> hp >> comma;
         ss >> atk >> comma;
         ss >> def;
 
-        Character temp(name, speed, hp, atk, def, 0, 0, 0,0);
+        Character temp(name, level, speed, hp, atk, def, 0, 0, 0,0);
         temp.faction = "enemy";
         insertEnemyAbility(temp);
         situations[situationNo].enemies.push_back(temp);
@@ -414,9 +415,10 @@ vector<Character> getPlayableCharacters() {
         string name;
         double speed, hp, atk, def, critRate, critDamage, maxEnergy;
         char comma;
-        int taunt;
+        int taunt, level;
 
         getline(ss, name, ',');
+        ss >> level >> comma;
         ss >> speed >> comma;
         ss >> hp >> comma;
         ss >> atk >> comma;
@@ -426,7 +428,7 @@ vector<Character> getPlayableCharacters() {
         ss >> maxEnergy >> comma;
         ss >> taunt;
 
-        Character temp(name, speed, hp, atk, def, critRate, critDamage, maxEnergy,taunt);
+        Character temp(name, level, speed, hp, atk, def, critRate, critDamage, maxEnergy,taunt);
         insertCharacterAbility(temp);
         playableCharacters.push_back(temp);
     }

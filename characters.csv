@@ -1,5 +1,5 @@
-name, speed, hp, atk, def, critRate, critDamage, maxEnergy, taunt
-Jingliu, 96, 1435, 679, 485, 45, 200, 140, 125
-Huohuo, 98, 1358, 601, 509, 10, 79, 140, 100
-Kafka, 100, 1086, 679, 485, 5, 50, 120, 100
-Clara, 90, 1241, 737, 485, 75, 136, 110, 125
+name, level, speed, hp, atk, def, critRate, critDamage, maxEnergy, taunt
+Jingliu, 1, 96, 1435, 679, 485, 45, 200, 140, 125
+Huohuo, 1, 98, 1358, 601, 509, 10, 79, 140, 100
+Kafka, 1, 100, 1086, 679, 485, 5, 50, 120, 100
+Clara, 1, 90, 1241, 737, 485, 75, 136, 110, 125
