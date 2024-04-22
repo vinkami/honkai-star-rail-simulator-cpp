@@ -66,6 +66,7 @@ void characterList(State &state){
     cout << "Enter number to see more details."<< endl;
     int number;
     cin >> number;
+    //  add files to save different character abilities and show it when player input.
 }
 
 //Player can choose different situations with different enemies.
@@ -187,19 +188,13 @@ void levelsetting(State &state){
                 cin >> position;
                 cout << "Choose level(1-80): ";
                 cin >> level;
-                state.allies[position - 1].level = level;
-                int newhp =
-                        (state.allies[position - 1].baseHp * 7.4 * level - state.allies[position - 1].baseHp * level -
-                         state.allies[position - 1].baseHp * 7.4 + 80 * state.allies[position - 1].baseHp) / 79;
-                int newatk =
-                        (state.allies[position - 1].baseAtk * 7.4 * level - state.allies[position - 1].baseAtk * level -
-                         state.allies[position - 1].baseAtk * 7.4 + 80 * state.allies[position - 1].baseAtk) / 79;
-                int newdef =
-                        (state.allies[position - 1].baseDef * 7.4 * level - state.allies[position - 1].baseDef * level -
-                         state.allies[position - 1].baseDef * 7.4 + 80 * state.allies[position - 1].baseDef) / 79;
-                state.allies[position - 1].hp = newhp;
-                state.allies[position - 1].atk = newatk;
-                state.allies[position - 1].def = newdef;
+                Character &ally = state.allies[position - 1];
+                ally.level = level;
+                ally.hp = levelscaling(ally.baseHp, level);
+                ally.atk  = levelscaling(ally.baseAtk, level);
+                ally.def  = levelscaling(ally.baseDef, level);
+
+
                 VariadicTable<string, int, double, double, double,double, double, double> update({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
                 for (const auto& character: state.allies)
                     update.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);

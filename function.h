@@ -15,4 +15,6 @@ int searchCharacter(const vector<Character>& characters, const string& target);
 int selectTarget(vector<Character>& characters);
 vector<Character> getPlayableCharacters();
 vector<Situation> getSituations();
+int levelscaling(double statistic, int level);
+
 #endif //PROJECT_FUNCTION_H

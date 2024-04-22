@@ -435,3 +435,8 @@ vector<Character> getPlayableCharacters() {
     }
     return playableCharacters;
 }
+
+int levelscaling(double statistic, int level){
+    int newstat = static_cast<int>(statistic * 7.4 * level - statistic * level - statistic * 7.4 + 80 * statistic) / 79;
+    return newstat;
+}
