@@ -41,64 +41,42 @@ void attack(Character &attacker, Character &defender, double skillMultiplier) {
 }
 
 void singleAttack(State &state, Character &attacker, int target, double skillMultiplier) {
-    if (attacker.faction=="ally") {
-        Character &defender = state.enemies[target];
-        attack(attacker, defender, skillMultiplier);
-    } else {
-        Character &defender = state.allies[target];
-        attack(attacker,defender,skillMultiplier);
-    }
+    std::vector<Character>& team = (attacker.faction == "ally") ? state.allies : state.enemies;
+    Character &defender = team[target];
+    attack(attacker,defender,skillMultiplier);
 }
 
 void blastAttack(State &state, Character &attacker, int target, double mainSkillMultiplier, double adjacentSkillMultiplier) {
-    if (attacker.faction=="ally") {
-        if (target > 0) {
-            Character &adjacent = state.enemies[target - 1];
-            attack(attacker, adjacent, adjacentSkillMultiplier);
-        }
-        Character &defender = state.enemies[target];
-        attack(attacker, defender, mainSkillMultiplier);
-        if (target + 1 < state.enemies.size()) {
-            Character &adjacent = state.enemies[target + 1];
-            attack(attacker, adjacent, adjacentSkillMultiplier);
-        }
+    std::vector<Character> &team = (attacker.faction == "ally") ? state.allies : state.enemies;
+    if (target > 0) {
+        Character &adjacent = team[target - 1];
+        attack(attacker, adjacent, adjacentSkillMultiplier);
     }
-    else {
-        if (target > 0) {
-            Character &adjacent = state.allies[target - 1];
-            attack(attacker, adjacent, adjacentSkillMultiplier);
-        }
-        Character &defender = state.allies[target];
-        attack(attacker, defender, mainSkillMultiplier);
-        if (target + 1 < state.allies.size()) {
-            Character &adjacent = state.allies[target + 1];
-            attack(attacker, adjacent, adjacentSkillMultiplier);
-        }
+    Character &defender = team[target];
+    attack(attacker, defender, mainSkillMultiplier);
+    if (target + 1 < team.size()) {
+        Character &adjacent = team[target + 1];
+        attack(attacker, adjacent, adjacentSkillMultiplier);
     }
 }
 
 void aoeAttack(State &state, Character &attacker, double skillMultiplier) {
-    if (attacker.faction=="ally"){
-        for (auto &defender : state.enemies) {
-            attack(attacker, defender, skillMultiplier);
-        }
-    }
-    else {
-        for (auto &defender : state.allies) {
-            attack(attacker, defender, skillMultiplier);
-        }
-    }
+    std::vector<Character>& team = (attacker.faction == "ally") ? state.allies : state.enemies;
+    for (auto &defender : team)
+    attack(attacker, defender, skillMultiplier);
 }
 
+
 void bounceAttack(State &state, Character &attacker, int target, double skillMultiplier, int bounceCount) {
-    Character &defender = state.enemies[target];
+    std::vector<Character>& team = (attacker.faction == "ally") ? state.allies : state.enemies;
+    Character &defender = team[target];
     attack(attacker, defender, skillMultiplier);
     random_device rd;
     mt19937 gen(rd());
-    uniform_int_distribution<int> dist(0, (int) state.enemies.size() - 1);
+    uniform_int_distribution<int> dist(0, (int) team.size() - 1);
     while (bounceCount > 0) {
         int newTarget = dist(gen);
-        Character &newDefender = state.enemies[newTarget];
+        Character &newDefender = team[newTarget];
         if (newDefender.hp > 0) {
             attack(attacker, newDefender, skillMultiplier);
             bounceCount--;
