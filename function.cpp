@@ -11,6 +11,7 @@
 
 using namespace std;
 
+//Show the help list in different setting.
 void printHelp(const string& name) {
     ifstream helpFile("help/" + name + ".txt");
     if (helpFile.is_open()) {
@@ -21,6 +22,7 @@ void printHelp(const string& name) {
     helpFile.close();
 }
 
+//To find whether character is available.
 int searchCharacter(const vector<Character>& characters, const string& target) {
     for (int i = 0; i < characters.size(); ++i) {
         if (characters[i].name == target) {

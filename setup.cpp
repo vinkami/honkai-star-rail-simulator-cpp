@@ -9,9 +9,8 @@
 
 using namespace std;
 
-
+//This function provides a list of playable characters with their skills and stats
 void teamMenu(State &state) {
-    //This function provides a list of playable characters with their skills and stats
     vector<Character> playableCharacters = getPlayableCharacters();
     cout << "Team Menu" << endl;
     vector<Character> team;
@@ -49,8 +48,8 @@ void teamMenu(State &state) {
     state.allies = std::move(team);
 }
 
+//Player can choose different situations with different enemies.
 void battleMenu(State &state) {
-    //Player can choose different situations with different enemies.
     cout << "Battle Menu" << endl << endl;
     vector<Situation> situations = getSituations();
     for (int i = 0; i < situations.size(); i++) {
@@ -96,8 +95,8 @@ void battleMenu(State &state) {
     }
 }
 
+//Player can choose difficulty of the game.
 void settingsMenu(State &state) {
-    //Player can choose difficulty of the game.
     cout << "Settings Menu" << endl ;
     if (state.difficulty == 0.5){
         cout << "Current difficulty: Easy" << endl;
@@ -141,6 +140,7 @@ void settingsMenu(State &state) {
     slowPrint("You selected " + difficulty + " mode\n\n", color, 0);
 }
 
+//Allows player to set character level.
 void levelsetting(State &state){
     int level, position;
     string input;
