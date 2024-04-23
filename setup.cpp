@@ -33,14 +33,15 @@ void teamMenu(State &state) {
         } else if (selection == "help") {
             printHelp("team");
         } else {
-            int characternumber = stoi(selection);
-            if (characternumber > playableCharacters.size() || characternumber < 0){
+            int number = stoi(selection);
+            Character ally = playableCharacters[number-1];
+            if (number > playableCharacters.size() || number < 0){
                 cout << "Please input appropriate number! " << endl;
             }
-            else if (playableCharacters[characternumber-1].name != "Used"){
-                team.push_back(playableCharacters[characternumber-1]);
-                cout << playableCharacters[characternumber-1].name << " joined!" << endl;
-                playableCharacters[characternumber-1].name = "Used";
+            else if (ally.name != "Used"){
+                team.push_back(ally);
+                cout << ally.name << " joined!" << endl;
+                ally.name = "Used";
             } else{
                 cout << "Character already chosen. Please choose another! " << endl;
             }
@@ -164,45 +165,44 @@ void settingsMenu(State &state) {
 
 //Allows player to set character level.
 void levelsetting(State &state){
-    int level, position;
+    int level, number;
     string input;
-    cout << "Command: ";
-    while (getline(cin, input)) {
-        stringstream ss(input);
-        string cmd;
-        ss >> cmd;
-        if (cmd == "exit"){
-            break;
-        } else if (cmd == "help"){
-            printHelp("level");
-        } else if (cmd == "choose"){
-            if (state.allies.empty()) {
-                cout << "Please select a character first." << endl;
-            }   else {
-                cout << "Current statistic" << endl;
-                VariadicTable<string, int, double, double, double,double, double, double> original({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
-                for (const auto& character: state.allies)
-                    original.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
-                original.print(std::cout);
-                cout << "Choose a character(1-4): ";
-                cin >> position;
-                cout << "Choose level(1-80): ";
-                cin >> level;
-                Character &ally = state.allies[position - 1];
-                ally.level = level;
-                ally.hp = levelscaling(ally.baseHp, level);
-                ally.atk  = levelscaling(ally.baseAtk, level);
-                ally.def  = levelscaling(ally.baseDef, level);
-
-
-                VariadicTable<string, int, double, double, double,double, double, double> update({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
-                for (const auto& character: state.allies)
-                    update.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
-                update.print(std::cout);
-            }
-        }
-        cout << "Command: " ;
+    cout << "Current statistic" << endl;
+    VariadicTable<string, int, double, double, double,double, double, double> original({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
+    for (const auto& character: state.allies)
+        original.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
+    original.print(std::cout);
+    if (state.allies.empty()){
+        cout << "Please select a character first!" << endl;
+    } else{
+        cout << "Choose a character(1-4): ";
     }
+    cin >> input;
+    while (input != "exit") {
+        if (state.allies.empty()){
+            cout << "Please select a character first!" << endl;
+        } else if (input == "help"){
+            printHelp("level");
+        } else if (input != "help"  && all_of(input.begin(), input.end(), ::isdigit)){
+            number = stoi(input);
+            cout << "Choose level(1-80): ";
+            cin >> level;
+            Character &ally = state.allies[number - 1];
+            ally.level = level;
+            ally.hp = levelscaling(ally.baseHp, level);
+            ally.atk  = levelscaling(ally.baseAtk, level);
+            ally.def  = levelscaling(ally.baseDef, level);
+            VariadicTable<string, int, double, double, double,double, double, double> update({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
+            for (const auto& character: state.allies)
+                update.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
+                update.print(std::cout);
+            cout << "Choose a character(1-4): ";
+        } else{
+            cout << "Please enter appropriate number!" << endl;
+        }
+        cin >> input;
+    }
+    cout << "Level setting terminated." << endl;
 }
 
 
