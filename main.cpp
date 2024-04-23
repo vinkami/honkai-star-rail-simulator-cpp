@@ -7,6 +7,7 @@
 #include "state.h"
 #include "setup.h"
 #include "function.h"
+#include "external/VariadicTable.h"
 
 using namespace std;
 
@@ -16,9 +17,12 @@ int main() {
     Character round("Round", 0,100, 0, 0, 0, 0, 0, 0,0);
     round.faction = "round";
     State state(allies, enemies, round, alliesOriginal, enemiesOriginal);
+    VariadicTable<double, double, double, double,  double,  double,  double,  double,  double> vt({"help", "start", "team", "list", "battle", "level", "settings", "restart", "quickstart"}, 9);
 
 //    slowPrint("答え、見つけてごらん？\n", {38, 5, 160}, 50);
-    slowPrint("Welcome to Honkai: Star Rail battle simulator.\nType 'help' for a list of commands.\nEnter command: ");
+    slowPrint("Welcome to Honkai: Star Rail battle simulator.\nPlease choose one of the following commands, or type 'help' for details.\n");
+    vt.print(cout);
+    slowPrint("Enter command: ");
     string input;
     while (getline(cin, input)) {
         stringstream ss(input);
