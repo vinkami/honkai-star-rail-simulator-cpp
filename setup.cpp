@@ -65,12 +65,25 @@ void characterList(State &state){
         vt.addRow(i,playableCharacters[i-1].name, playableCharacters[i-1].level, playableCharacters[i-1].speed, playableCharacters[i-1].hp, playableCharacters[i-1].atk, playableCharacters[i-1].def,playableCharacters[i-1].critRate,playableCharacters[i-1].critDamage);
     vt.print(std::cout);
     cout << "Enter number to see more details."<< endl;
-    string input;
+    string input, exit;
     cin >> input;
-    int number = stoi(input);
-    vector <Character> character = getPlayableCharacters();
-    printDescription(character[number - 1].name);
-
+    while (input != "exit") {
+        if (all_of(input.begin(), input.end(), ::isdigit)) {
+            int number = stoi(input);
+            if (number < playableCharacters.size()) {
+                printDescription(playableCharacters[number - 1].name);
+                cout << "\n\n" << "Type any button return to list." << endl;
+                cin >> exit;
+            } else{
+                cout << "Please input appropriate number." << endl;
+            }
+        } else if (input == "help"){
+            printHelp("list");
+        }
+        vt.print(std::cout);
+        cout << "Enter number to see more details."<< endl;
+        cin >> input;
+    }
 
         //  add files to save different character abilities and show it when player input.
 
