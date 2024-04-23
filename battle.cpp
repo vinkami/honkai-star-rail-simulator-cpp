@@ -71,8 +71,9 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         current.basicAtk(current, state);
 
     } else { // player's turn
-        cout << current.name << "'s turn" << endl;
-        cout << "Skill Points: " << state.skillPoint << " / " << state.maxSkillPoint << endl;
+//        cout << current.name << "'s turn" << endl;
+        slowPrint(current.name,{current.color},0);
+        cout << "'s turn\nSkill Points: " << state.skillPoint << " / " << state.maxSkillPoint << endl;
         cout << "Energy: ";
         for (auto &ally: state.allies) {
             cout << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "   ";
