@@ -1,4 +1,4 @@
-name, situationNo, speed, hp, atk, def
-[37mAntibaryon[0m, 0, 110, 13000, 663, 900
-[37mTrampler[0m, 0, 120, 15100, 552, 900
-[37mReaver[0m, 0, 120, 10000, 552,900
+name, situationNo, level, speed, hp, atk, def
+Antibaryon, 0, 1, 110, 13000, 663, 900
+Trampler, 0, 1, 120, 15100, 552, 900
+Reaver, 0, 1, 120, 10000, 552,900
