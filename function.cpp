@@ -22,6 +22,16 @@ void printHelp(const string& name) {
     helpFile.close();
 }
 
+void printMainCommandSelected(int num) {
+    vector<string> list = {"help","start", "team", "list", "battle", "level", "settings", "restart", "quickstart"};
+    for (int i=0;i<9;i++){
+        if (num == i) slowPrint("["+list[i]+"]", {31}, 0);
+        else cout << list[i];
+        if (i !=8) cout << " | ";
+        else cout << endl;
+    }
+}
+
 //To find whether character is available.
 int searchCharacter(const vector<Character>& characters, const string& target) {
     for (int i = 0; i < characters.size(); ++i) {
