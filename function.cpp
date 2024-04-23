@@ -22,6 +22,26 @@ void printHelp(const string& name) {
     helpFile.close();
 }
 
+void printCharacterPortrait(const string &name) {
+    ifstream portraitFile("ANSI/" + name + ".txt");
+    if (portraitFile.is_open()) {
+        string l;
+        while (getline(portraitFile, l)) {
+            for (int i = 0; i < l.size(); i++) {
+                if (l[i] == '\\' && l[i + 1] == 'e') {
+                    l[i] = '\033';
+                    l.erase(i + 1, 1);
+                }
+            }
+            cout << l << endl;
+        }
+    } else {
+        cout << "Portrait file not found." << endl;
+    }
+    portraitFile.close();
+}
+
+
 void printMainCommandSelected(int num) {
     vector<string> list = {"help","start", "team", "list", "battle", "level", "settings", "restart", "quickstart"};
     for (int i=0;i<9;i++){

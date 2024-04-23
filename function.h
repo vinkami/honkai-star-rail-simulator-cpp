@@ -10,6 +10,7 @@
 using namespace std;
 
 void printHelp(const string& name);
+void printCharacterPortrait(const string& name);
 void slowPrint(const string& text, const vector<int>& sgr={0}, int delayMS=10);
 int searchCharacter(const vector<Character>& characters, const string& target);
 int selectTarget(vector<Character>& characters);

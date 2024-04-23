@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <fstream>
 #include "battle.h"
 #include "character.h"
 #include "state.h"
@@ -20,6 +21,7 @@ int main() {
 //    slowPrint("答え、見つけてごらん？\n", {38, 5, 160}, 50);
     slowPrint("Welcome to Honkai: Star Rail battle simulator.\nPlease choose one of the following commands, or type 'help' for details.\n");
     slowPrint("help | start | team | list | battle | level | settings | restart | quickstart\nEnter command: ");
+//    printCharacterPortrait("clara");
     string input;
     while (getline(cin, input)) {
         stringstream ss(input);
