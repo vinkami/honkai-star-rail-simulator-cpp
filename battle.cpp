@@ -72,8 +72,13 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 
     } else { // player's turn
         cout << current.name << "'s turn" << endl;
-        cout << "Skill Points: " << state.skillPoint << " / " << state.maxSkillPoint << endl;
-        cout << "Energy: ";
+        cout << "Skill Points: "; //<< state.skillPoint << " / " << state.maxSkillPoint << endl;
+        for (int i=0;i<state.maxSkillPoint;i++){
+            if (i<state.skillPoint){cout << "■";}
+            else cout << "□";
+//            if(i!=state.maxSkillPoint-1) cout << " ";
+        }
+        cout << endl << "Energy: ";
         for (auto &ally: state.allies) {
             cout << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "   ";
         }
