@@ -15,7 +15,7 @@ private:
 public:
     string name, faction="ally";  // faction: ally / enemy / round
     double baseSpeed, baseHp, baseAtk, baseDef, baseCritRate, baseCritDamage, maxEnergy;
-    double speed, hp, atk, def, critRate, critDamage, energy;
+    double speed, hp, atk, def, critRate, critDamage, energy, dmgBonus=0.0;
     double dmgReduction = 0.0, defIgnore = 0.0;
     double resetRemTime, remTime;
     int taunt, level;
