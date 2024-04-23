@@ -407,7 +407,7 @@ vector<Situation> getSituations() {
         ss >> atk >> comma;
         ss >> def;
 
-        Character temp(name, level, speed, hp, atk, def, 0, 0, 0, 0, 0);
+        Character temp(name, level, speed, hp, atk, def, 0, 0, 0,0);
         temp.faction = "enemy";
         insertEnemyAbility(temp);
         situations[situationNo].enemies.push_back(temp);
@@ -426,7 +426,7 @@ vector<Character> getPlayableCharacters() {
         string name;
         double speed, hp, atk, def, critRate, critDamage, maxEnergy;
         char comma;
-        int taunt, level, color;
+        int taunt, level;
 
         getline(ss, name, ',');
         ss >> level >> comma;
@@ -438,9 +438,8 @@ vector<Character> getPlayableCharacters() {
         ss >> critDamage >> comma;
         ss >> maxEnergy >> comma;
         ss >> taunt;
-        ss >> color;
 
-        Character temp(name, level, speed, hp, atk, def, critRate, critDamage, maxEnergy,taunt, color);
+        Character temp(name, level, speed, hp, atk, def, critRate, critDamage, maxEnergy,taunt);
         insertCharacterAbility(temp);
         playableCharacters.push_back(temp);
     }

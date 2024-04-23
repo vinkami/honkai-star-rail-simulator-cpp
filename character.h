@@ -18,7 +18,7 @@ public:
     double speed, hp, atk, def, critRate, critDamage, energy;
     double dmgReduction = 0.0, defIgnore = 0.0;
     double resetRemTime, remTime;
-    int taunt, level, color;
+    int taunt, level;
 
     vector<Effect> effects{};
     function<void(Character&, State&)>
@@ -31,7 +31,7 @@ public:
     function<void(Character&, State&, Character&)> onHit = [](Character &self, State &state, Character &attacker) {self.energy += 5;};
 
 
-    Character(string name, int level, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy, int taunt, int color);
+    Character(string name, int level, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy, int taunt);
 
     void forward(double time);
     void reset();
