@@ -3,6 +3,7 @@
 
 #include <string>
 #include <functional>
+
 #include "state.h"
 using namespace std;
 
@@ -12,6 +13,7 @@ private:
 public:
     string name;
     int duration, stack;
+    vector<double> values{};
 
     function<void(Effect&, Character&, State&)> startRound = empty, endRound = empty;
 
