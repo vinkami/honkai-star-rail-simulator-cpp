@@ -22,6 +22,16 @@ void printHelp(const string& name) {
     helpFile.close();
 }
 
+void printMainCommandSelected(int num) {
+    vector<string> list = {"help","start", "team", "list", "battle", "level", "settings", "restart", "quickstart"};
+    for (int i=0;i<9;i++){
+        if (num == i) slowPrint("["+list[i]+"]", {31}, 0);
+        else cout << list[i];
+        if (i !=8) cout << " | ";
+        else cout << endl;
+    }
+}
+
 //To find whether character is available.
 int searchCharacter(const vector<Character>& characters, const string& target) {
     for (int i = 0; i < characters.size(); ++i) {
@@ -397,7 +407,7 @@ vector<Situation> getSituations() {
         ss >> atk >> comma;
         ss >> def;
 
-        Character temp(name, level, speed, hp, atk, def, 0, 0, 0,0);
+        Character temp(name, level, speed, hp, atk, def, 0, 0, 0, 0, 0);
         temp.faction = "enemy";
         insertEnemyAbility(temp);
         situations[situationNo].enemies.push_back(temp);
@@ -416,7 +426,7 @@ vector<Character> getPlayableCharacters() {
         string name;
         double speed, hp, atk, def, critRate, critDamage, maxEnergy;
         char comma;
-        int taunt, level;
+        int taunt, level, color;
 
         getline(ss, name, ',');
         ss >> level >> comma;
@@ -428,8 +438,9 @@ vector<Character> getPlayableCharacters() {
         ss >> critDamage >> comma;
         ss >> maxEnergy >> comma;
         ss >> taunt;
+        ss >> color;
 
-        Character temp(name, level, speed, hp, atk, def, critRate, critDamage, maxEnergy,taunt);
+        Character temp(name, level, speed, hp, atk, def, critRate, critDamage, maxEnergy,taunt, color);
         insertCharacterAbility(temp);
         playableCharacters.push_back(temp);
     }
