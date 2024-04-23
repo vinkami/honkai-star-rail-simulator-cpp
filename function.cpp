@@ -222,15 +222,16 @@ void insertEnemyAbility(Character &enemy){
 // If u can't 100% copy the ability, just make a similar one and write a comment to explain what changes u made
 void insertCharacterAbility(Character &character) {
     if (character.name == "Clara") {
-//        character.name= "\033[91mClara\033[0m";
+        //        character.name= "\033[91mClara\033[0m";
+        character.nameColor = {36};
         Effect enhancedCounter = Effect("Enhanced Counter", -1, 0);
         character.effects.push_back(enhancedCounter);
         character.dmgReduction = 0.1;
         character.basicAtk = [](Character &self, State &state) {  // I Want to Help
             int target = selectTarget(state.enemies);
             Character &enemy = state.enemies[target];
-            if (hit(50)) slowPrint("クラーラ：気を付けて、スヴァローグ！\n", {37});
-            else slowPrint("スヴァローグ：排除する。\n", {36});
+            if (hit(50)) slowPrint("クラーラ：気を付けて、スヴァローグ！\n", self.nameColor);
+            else slowPrint("スヴァローグ：排除する。\n", self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self.maxEnergy,self.energy,20);
             state.incSkillPoint();
@@ -241,8 +242,8 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("No skill points left.\n", {91});
                 return;
             }
-            if (hit(50)) slowPrint("スヴァローグ：隠れろ。\n", {36});
-            else slowPrint("スヴァローグ：殲滅開始。\n", {36});
+            if (hit(50)) slowPrint("スヴァローグ：隠れろ。\n", self.nameColor);
+            else slowPrint("スヴァローグ：殲滅開始。\n", self.nameColor);
             for (auto &enemy : state.enemies) {
                 if (enemy.getEffectLoc("Mark of Counter") != -1) {
                     enemy.effects.erase(enemy.effects.begin() + enemy.getEffectLoc("Mark of Counter"));
@@ -298,7 +299,8 @@ void insertCharacterAbility(Character &character) {
     }
 
     else if (character.name== "Jingliu") {
-//        character.name="\033[34mJingliu\033[0m";
+        //        character.name="\033[34mJingliu\033[0m";
+        character.nameColor = {34};
         Effect syzygy("Syzygy", -1, 0);
         Effect transmigration("Spectral Transmigration", -1, 0);
         character.effects.push_back(syzygy);
@@ -311,7 +313,7 @@ void insertCharacterAbility(Character &character) {
                 return;
             }
             int target = selectTarget(state.enemies);
-            slowPrint("鏡流：切先は戻らぬ！\n", {34});
+            slowPrint("鏡流：切先は戻らぬ！\n", self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self.maxEnergy,self.energy,20);
             state.incSkillPoint();
@@ -326,9 +328,9 @@ void insertCharacterAbility(Character &character) {
                     return;
                 }
                 int target = selectTarget(state.enemies);
-                slowPrint("鏡流：飛光よ、差せ！\n", {34});
+                slowPrint("鏡流：飛光よ、差せ！\n", self.nameColor);
                 syzygy.stack += 1;
-                slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",{34});
+                slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",self.nameColor);
                 singleAttack(state, self, target, 2.0);
                 addEnergy(self.maxEnergy,self.energy,20);
 
@@ -336,12 +338,12 @@ void insertCharacterAbility(Character &character) {
                     transmigration.stack = 1;
                     self.critRate += 50;
                     self.remTime = 0;
-                    slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", {34});
+                    slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", self.nameColor);
                 }
             } if (transmigration.stack !=0 ) {  // Moon On Glacial River
                 // does not consume skill point
                 int target = selectTarget(state.enemies);
-                slowPrint("鏡流：月光を剣とせん。\n",{34});
+                slowPrint("鏡流：月光を剣とせん。\n",self.nameColor);
                 // talent: drain allies' hp and increase atk
                 double totalRemoved = 0;
                 for (auto &ally : state.allies) {
@@ -360,9 +362,9 @@ void insertCharacterAbility(Character &character) {
                 if (syzygy.stack == 0) {
                     transmigration.stack = 0;
                     self.critRate -= 50;
-                    slowPrint("Syzygy stack is 0. Special Transmigration mode deactivated.\n", {34});
+                    slowPrint("Syzygy stack is 0. Special Transmigration mode deactivated.\n", self.nameColor);
                 } else {
-                    slowPrint("Syzygy stack: " + to_string(syzygy.stack) + " (Spectral Transmigration mode active)\n",{34});
+                    slowPrint("Syzygy stack: " + to_string(syzygy.stack) + " (Spectral Transmigration mode active)\n", self.nameColor);
                 }
             }
             state.timelineProceed = true;
@@ -371,7 +373,7 @@ void insertCharacterAbility(Character &character) {
             Effect &syzygy = self.getEffect("Syzygy");
             Effect &transmigration = self.getEffect("Spectral Transmigration");
             int target = selectTarget(state.enemies);
-            slowPrint("鏡流：この月華で…       \n鏡流：すべてを照らさん！\n", {34});
+            slowPrint("鏡流：この月華で…       \n鏡流：すべてを照らさん！\n",  self.nameColor);
             // talent: drain allies' hp and increase atk
             double totalRemoved = 0;
             for (auto &ally : state.allies) {
@@ -387,18 +389,112 @@ void insertCharacterAbility(Character &character) {
             self.atk -= increasedAtk;
             self.energy += 5;
             syzygy.stack += 1;
-            slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",{34});
+            slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n", self.nameColor);
             if (syzygy.stack >= 2) {
                 transmigration.stack = 1;
                 self.critRate += 50;
                 self.remTime = 0;
-                slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", {34});
+                slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n",  self.nameColor);
             }
         };
     }
-}
-    // Todo: Add more characters
+    else if (character.name == "Tingyun") {
+        //        character.name= "\033[91mClara\033[0m";
+        //Effect enhancedCounter = Effect("Enhanced Counter", -1, 0);
+        character.nameColor ={95};
+        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+            Effect &transmigration = self.getEffect("Spectral Transmigration");
+            if (transmigration.stack == 1) {
+                slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",self.nameColor);
+                return;
+            }
+            int target = selectTarget(state.enemies);
+            slowPrint("落ち着いて。\n",  self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            addEnergy(self.maxEnergy,self.energy,20);
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+        character.skill = [](Character &self, State &state) {
+            Effect blessing ("Blessing", 3,0);//blessing for allies
+            Effect speed_up ("Speed up",1,0);//self speed up
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", self.nameColor);
+                return;
+            }
+            // blessing part
+            slowPrint("停云:万事順調～       \n停云：諸悪退散～\n",  self.nameColor);
+            int target = selectTarget(state.allies);// selecting target
+            Character &allies = state.allies[target];
+            double increased_atk = allies.baseAtk * 0.5;
+            if(increased_atk > self.atk*0.25) {
+                increased_atk = self.atk*0.25;
+            }
+            blessing.values.push_back(increased_atk);
+            allies.getEffect("Blessing");
+            allies.atk+=increased_atk;
+            blessing.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration == 0) {
+                    master.atk-=self.values[0];
+                    master.removeEffect(self);
+                }
+            };
+            // blessing part end
+            // speed up
+            self.getEffect("Speed up");
+            double increased_speed = self.baseSpeed*0.2;
+            self.speed += increased_speed;
+            speed_up.values.push_back((increased_speed));
+            speed_up.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration == 0) {
+                    master.speed -= self.values[0];
+                    master.removeEffect((self));
+                }
+            };
+        };
+        character.ult = [](Character &self, State &state) {
+            int target = selectTarget(state.allies);
+            Character &allies = state.allies[target];
+            slowPrint("停云:万事吉とならん、一心同帰。      \n",  self.nameColor);
+            allies.energy+= 50;
+            Effect ultEfx ("Amidst the Rejoicing Clouds",2,0);
+            allies.effects.push_back(ultEfx);
+            double dmg_b = 0.5;
+            allies.dmgBonus += dmg_b;
+            ultEfx.values.push_back(dmg_b);
+            ultEfx.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration == 0) {
+                    master.dmgBonus -= self.values[0];
+                    master.removeEffect((self));
+                }
+            };
+            // Todo: Add more characters
+        };
+    }
+    else if (character.name == "Kafka") {
+        character.nameColor ={35};
+        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+            Effect &transmigration = self.getEffect("Spectral Transmigration");
+            if (transmigration.stack == 1) {
+                slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",self.nameColor);
+                return;
+            }
+            int target = selectTarget(state.enemies);
+            slowPrint("一瞬よ。\n",  self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            addEnergy(self.maxEnergy,self.energy,20);
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+        //Todo: follow up attack
+        character.skill = [](Character &self, State &state) {
 
+        };
+    }
+}
 vector<Situation> getSituations() {
     vector<Situation> situations;
     ifstream situationFile("situations.txt"), enemyFile("enemies.csv");
