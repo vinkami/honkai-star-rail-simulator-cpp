@@ -1,0 +1,10 @@
+Q: Basic attack Lucent Moonglow
+   Deals Ice DMG equal to 100% of Jingliu's ATK to a single enemy.
+
+E: Ability Transcendent Flash
+   Deals Ice DMG equal to 200% of Jingliu's ATK to a single enemy and obtains 1 stack(s) of Syzygy.
+
+Ultimate: Florephemeral Dreamflux
+   Deals Ice DMG equal to 300% of Jingliu's ATK to a single enemy,
+   and deals Ice DMG equal to 150% of Jingliu's ATK to any adjacent enemies.
+   Gains 1 stack(s) of Syzygy after attack ends.
