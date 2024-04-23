@@ -167,7 +167,7 @@ void settingsMenu(State &state) {
 void levelsetting(State &state){
     int level, number;
     string input;
-    cout << "Current statistic" << endl;
+    cout << "Current statistic " << endl;
     VariadicTable<string, int, double, double, double,double, double, double> original({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
     for (const auto& character: state.allies)
         original.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
@@ -195,7 +195,7 @@ void levelsetting(State &state){
             VariadicTable<string, int, double, double, double,double, double, double> update({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
             for (const auto& character: state.allies)
                 update.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
-                update.print(std::cout);
+            update.print(std::cout);
             cout << "Choose a character(1-4): ";
         } else{
             cout << "Please enter appropriate number!" << endl;
