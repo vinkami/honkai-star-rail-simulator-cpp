@@ -1,4 +1,5 @@
 #include "character.h"
+#include "function.h"
 #include <iostream>
 #include <utility>
 #include <algorithm>
@@ -51,4 +52,8 @@ void Character::removeEffect(Effect &efx) {
     auto it = find_if(effects.begin(), effects.end(), [efx](Effect &_efx) { return _efx.name == efx.name; });
     if (it != effects.end()) effects.erase(it);
     delete &efx;
+}
+
+void Character::printColorName(int delayMS) {
+    slowPrint(name, nameColor, delayMS);
 }

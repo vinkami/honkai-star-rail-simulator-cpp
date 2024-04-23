@@ -19,6 +19,7 @@ public:
     double dmgReduction = 0.0, defIgnore = 0.0;
     double resetRemTime, remTime;
     int taunt, level;
+    vector<int> nameColor = {0};
 
     vector<Effect> effects{};
     function<void(Character&, State&)>
@@ -39,6 +40,7 @@ public:
     int getEffectLoc(const string &efxName);
     Effect &getEffect(const string &efxName);  // NOTE: DO NOT USE WHEN YOU ARE NOT SURE THAT THE EFFECT EXISTS
     void removeEffect(Effect &efx);
+    void printColorName(int delayMS=10);
 };
 
 #endif //PROJECT_CHARACTER_H
