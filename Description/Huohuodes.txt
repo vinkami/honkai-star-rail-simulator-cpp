@@ -1,0 +1,14 @@
+Basic attack: Banner: Stormcaller (Q)
+Deals Wind DMG equal to 50% of Huohuo's Max HP to a target enemy.
+
+Skill: Talisman: Protection (E)
+Dispels 1 debuff(s) from a single target ally and immediately
+restores this ally's HP by an amount equal to 21% of Huohuo's
+Max HP plus 560. At the same time, restores HP for allies that
+are adjacent to this target ally by an amount equal to 16.8% of
+Huohuo's Max HP plus 448.
+
+Ultimate: Tail: Spiritual Domination (140 energy cost)
+Regenerates Energy for all allies (excluding this character) by an
+amount equal to 20% of their respective Max Energy. At the same time,
+increases their ATK by 40% for 2 turn(s).

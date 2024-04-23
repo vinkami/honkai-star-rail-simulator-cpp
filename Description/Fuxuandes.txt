@@ -1,0 +1,18 @@
+Basic attack: Novaburst (Q)
+Deals Quantum DMG equal to 50% of Fu Xuan's Max HP to a single enemy.
+
+Skill: Known by Stars, Shown by Hearts (E)
+Activates Matrix of Prescience, via which other team members
+will Distribute 65% of the DMG they receive (before this DMG
+is mitigated by any Shields) to Fu Xuan for 3 turn(s).
+
+While affected by Matrix of Prescience, all team members gain
+the Knowledge effect, which increases their respective Max HP
+by 6% of Fu Xuan's Max HP, and increases CRIT Rate by 12%.
+When Fu Xuan is knocked down, the Matrix of Prescience will be
+dispelled.
+
+Ultimate: Woes of Many Morphed to One (135 energy cost)
+Deals Quantum DMG equal to 100% of Fu Xuan's Max HP to all
+enemies and obtains 1 trigger count for the HP Restore effect
+granted by Fu Xuan's Talent.

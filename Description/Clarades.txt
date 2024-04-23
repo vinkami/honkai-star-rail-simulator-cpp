@@ -1,0 +1,18 @@
+Basic attack: I Want to Help (Q)
+Deals Physical DMG equal to 100% of Clara's ATK to a single enemy.
+
+Skill: Svarog Watches Over You (E)
+Deals Physical DMG equal to 120% of Clara's ATK to all enemies,
+and additionally deals Physical DMG equal to 120% of Clara's ATK
+to enemies marked by Svarog with a Mark of Counter.
+All Marks of Counter will be removed after this Skill is used.
+
+Ultimate: Promise, Not Command (110 energy cost)
+After Clara uses Ultimate, DMG dealt to her is reduced by an
+extra 25%, and she has greatly increased chances of being
+attacked by enemies for 2 turn(s).
+In addition, Svarog's Counter is enhanced. When an ally is
+attacked, Svarog immediately launches a Counter, and its DMG
+multiplier against the enemy increases by 160%. Enemies
+adjacent to it take 50% of the DMG dealt to the target enemy.
+Enhanced Counter(s) can take effect 2 time(s).

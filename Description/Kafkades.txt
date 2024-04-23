@@ -1,0 +1,18 @@
+Basic attack: Midnight Tumult (Q)
+Deals Lightning DMG equal to 100% of Kafka's ATK to a single enemy.
+
+Skill: Caressing Moonlight (E)
+Deals Lightning DMG equal to 160% of Kafka's ATK to a target
+enemy and Lightning DMG equal to 60% of Kafka's ATK to enemies
+adjacent to it.
+If the target enemy is currently receiving DoT, all DoTs currently
+placed on that enemy immediately produce DMG equal to 75% of their
+original DMG.
+
+Ultimate: Twilight Trill (120 energy cost)
+Deals Lightning DMG equal to 80% of Kafka's ATK to all enemies,
+with a 100% base chance for enemies hit to become Shocked and
+immediately take DMG from their current Shock state, equal
+to 100% of its original DMG. Shock lasts for 2 turn(s).
+While Shocked, enemies receive Lightning DoT equal to 290% of
+Kafka's ATK at the beginning of each turn.

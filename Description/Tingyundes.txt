@@ -1,0 +1,14 @@
+Skill: Dislodged (Q)
+Tingyun deals Lightning DMG equal to 100% of her ATK to a single enemy.
+
+Skill: Soothing Melody (E)
+Grants a single ally with Benediction to increase their ATK
+by 50%, up to 25% of Tingyun's current ATK.
+When the ally with Benediction attacks, they will deal Additional
+Lightning DMG equal to 40% of that ally's ATK for 1 time.
+Benediction lasts for 3 turn(s) and is only effective on the
+most recent receiver of Tingyun's Skill.
+
+Ultimate: Amidst the Rejoicing Clouds (130 energy cost)
+Regenerates 50 Energy for a single ally and increases the target's
+DMG by 50% for 2 turn(s).
