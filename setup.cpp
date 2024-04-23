@@ -121,14 +121,15 @@ void battleMenu(State &state) {
 //Player can choose difficulty of the game.
 void settingsMenu(State &state) {
     cout << "Settings Menu" << endl ;
-    if (state.difficulty == 0.5){
-        cout << "Current difficulty: Easy" << endl;
-    }else if (state.difficulty == 1.0){
-        cout << "Current difficulty: Medium" << endl;
-    }else if (state.difficulty == 1.5){
-        cout << "Current difficulty: Hard" << endl;
+    switch(state.difficulty){
+        case 1:cout << "Current difficulty: I" << endl; break;
+        case 2:cout << "Current difficulty: II" << endl; break;
+        case 3:cout << "Current difficulty: III" << endl; break;
+        case 4:cout << "Current difficulty: IV" << endl; break;
+        case 5:cout << "Current difficulty: V" << endl; break;
+        case 6:cout << "Current difficulty: VI" << endl; break;
     }
-    cout << "Select a difficulty for your game.(e.g. medium): ";
+    cout << "Select a difficulty for your game.(1-6): ";
     string difficulty;
     bool flag = true;
     string resetColor="\033[0m";
@@ -138,29 +139,41 @@ void settingsMenu(State &state) {
         cout << endl;
         if (difficulty=="help"){
             printHelp("setting");
-            cout << endl << "Select a difficulty for your game.(e.g. medium) :   ";
+            cout << endl << "Select a difficulty for your game.(1-6): ";
         } else if (difficulty=="exit"){
             cout << "Difficulty selection terminated." << endl;
             return;
-        } else if (difficulty=="easy" || difficulty=="Easy") {
-            state.difficulty=0.5;
+        } else if (difficulty == "1" || difficulty == "I") {
+            state.difficulty = 1;
             color = {32};
             flag=false;
-        } else if (difficulty=="medium" || difficulty=="Medium") {
-            state.difficulty=1;
+        } else if (difficulty == "2" || difficulty == "II") {
+            state.difficulty = 2;
+            color = {32};
+            flag=false;
+        } else if (difficulty == "3" || difficulty == "III") {
+            state.difficulty = 3;
             color = {33};
             flag=false;
-        } else if (difficulty=="hard" || difficulty=="Hard") {
-            state.difficulty=1.5;
+        } else if (difficulty == "4" || difficulty == "IV") {
+            state.difficulty = 4;
+            color = {33};
+            flag=false;
+        } else if (difficulty == "5" || difficulty == "V") {
+            state.difficulty = 5;
+            color = {31};
+            flag=false;
+        } else if (difficulty == "6" || difficulty == "VI") {
+            state.difficulty = 6;
             color = {31};
             flag=false;
         } else{
             cout << "Invalid input! Please try again." << endl;
-            cout << "Select a difficulty for your game.(e.g. medium) or type 'help' :   ";
+            cout << "Select a difficulty for your game.(1-6) or type 'help': ";
         }
     }
 //    cout << "Selected Difficulty is " << color << difficulty << resetColor << " mode" << endl << endl;
-    slowPrint("You selected " + difficulty + " mode\n\n", color, 0);
+    slowPrint("You have selected difficulty " + difficulty + "\n\n" , color, 0);
 }
 
 //Allows player to set character level.
