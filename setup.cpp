@@ -65,8 +65,9 @@ void characterList(State &state){
         vt.addRow(i,playableCharacters[i-1].name, playableCharacters[i-1].level, playableCharacters[i-1].speed, playableCharacters[i-1].hp, playableCharacters[i-1].atk, playableCharacters[i-1].def,playableCharacters[i-1].critRate,playableCharacters[i-1].critDamage);
     vt.print(std::cout);
     cout << "Enter number to see more details."<< endl;
-    int number;
-    cin >> number;
+    string input;
+    cin >> input;
+    int number = stoi(input);
     //  add files to save different character abilities and show it when player input.
 }
 
