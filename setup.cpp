@@ -21,7 +21,7 @@ void teamMenu(State &state) {
     cout << "More details of character can be found in list." << endl;
     cout << "A team must have 4 characters." << endl;
     //Ask the user what characters they want to use
-    cout << "Select a character to your team by typing their names. (1-4)" << endl;
+    cout << "Select a character to your team by typing their number. (1-4)" << endl;
     while (team.size() != 4){
         string selection;
         cin >> selection;
@@ -34,7 +34,7 @@ void teamMenu(State &state) {
             printHelp("team");
         } else {
             int number = stoi(selection);
-            Character ally = playableCharacters[number-1];
+            Character &ally = playableCharacters[number-1];
             if (number > playableCharacters.size() || number < 0){
                 cout << "Please input appropriate number! " << endl;
             }
@@ -46,7 +46,7 @@ void teamMenu(State &state) {
                 cout << "Character already chosen. Please choose another! " << endl;
             }
         }
-        cout << "Select a character to your team by typing their names. (1-4)" << endl;
+        cout << "Select a character to your team by typing their number. (1-4)" << endl;
     }
     cout << "Team formed successfully!" << endl << "Current Team:" << endl;
     for (const auto &character : team)
