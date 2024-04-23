@@ -22,6 +22,16 @@ void printHelp(const string& name) {
     helpFile.close();
 }
 
+void printDescription(const string &name){
+    ifstream description("Description/" + name + "des.txt");
+    if (description.is_open()){
+        cout << description.rdbuf();
+    } else{
+        cout << "Character not found." << endl;
+    }
+    description.close();
+}
+
 void printCharacterPortrait(const string &name) {
     ifstream portraitFile("ANSI/" + name + ".txt");
     if (portraitFile.is_open()) {

@@ -68,7 +68,12 @@ void characterList(State &state){
     string input;
     cin >> input;
     int number = stoi(input);
-    //  add files to save different character abilities and show it when player input.
+    vector <Character> character = getPlayableCharacters();
+    printDescription(character[number - 1].name);
+
+
+        //  add files to save different character abilities and show it when player input.
+
 }
 
 //Player can choose different situations with different enemies.
