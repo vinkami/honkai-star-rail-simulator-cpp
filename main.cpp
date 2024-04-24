@@ -99,7 +99,6 @@ int main() {
             cout << "Unknown command, usage: help | start | team | list | battle | level | settings | restart | quickstart" << endl;
         }
         slowPrint("help | start | team | list | battle | level | settings | restart | quickstart\nEnter command: ");
-        cout << "Enter command: ";
     }
     cout << "Goodbye!" << endl;
 }
