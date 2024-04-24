@@ -155,6 +155,7 @@ void settingsMenu(State &state) {
     vector<int> color;
     if (state.enemies.empty()){
         slowPrint( "Please select situation first!\n" );
+        return;
         }
     vector<Character> &enemy = state.enemies;
     while (flag){
@@ -216,13 +217,12 @@ void levelsetting(State &state){
     original.print(std::cout);
     if (state.allies.empty()){
         slowPrint( "Please select a character first!\n" );
+        return;
     }
     cout << "Choose a character(1-4): ";
     cin >> input;
     while (input != "exit") {
-        if (state.allies.empty()){
-            cout << "Please select a character first!" << endl;
-        } else if (input == "help"){
+        if (input == "help"){
             printHelp("level");
         } else if (input != "help"  && all_of(input.begin(), input.end(), ::isdigit)){
             number = stoi(input);
