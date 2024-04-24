@@ -1,0 +1,4 @@
+This place is for you to customise characters' level.
+Enter the number to choose character.
+Start from top (1-4).
+After choosing character, enter the level you want (1-80).
