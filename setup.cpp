@@ -64,7 +64,7 @@ void characterList(State &state){
     for (int i = 1; i <= playableCharacters.size(); i++ )
         vt.addRow(i,playableCharacters[i-1].name, playableCharacters[i-1].level, playableCharacters[i-1].speed, playableCharacters[i-1].hp, playableCharacters[i-1].atk, playableCharacters[i-1].def,playableCharacters[i-1].critRate,playableCharacters[i-1].critDamage);
     vt.print(std::cout);
-    cout << "Enter number to see more details."<< endl;
+    cout << "Enter number to see more details, or enter exit to leave."<< endl;
     string input, exit;
     cin >> input;
     while (input != "exit") {
@@ -81,7 +81,7 @@ void characterList(State &state){
             printHelp("list");
         }
         vt.print(std::cout);
-        cout << "Enter number to see more details."<< endl;
+        cout << "Enter number to see more details, or enter exit to leave."<< endl;
         cin >> input;
     }
 
