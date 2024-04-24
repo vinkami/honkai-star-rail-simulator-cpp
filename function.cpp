@@ -230,7 +230,7 @@ void insertEnemyAbility(Character &enemy){
                     self.duration--;
                     if (self.duration == 0) {
                         int target = aiTarget(state.allies);
-                        blastAttack(state,master,target,1.5,1.5);
+                        blastAttack(state,master,target,1.5,1.5); //todo: check the stat of bomber idk how the damage count
                         master.hp = 0;
                     }
                 };
