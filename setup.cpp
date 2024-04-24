@@ -70,7 +70,7 @@ void characterList(State &state){
     while (input != "exit") {
         if (all_of(input.begin(), input.end(), ::isdigit)) {
             int number = stoi(input);
-            if (number < playableCharacters.size()) {
+            if (number <= playableCharacters.size()) {
                 printDescription(playableCharacters[number - 1].name);
                 cout << "\n\n" << "Type any button return to list." << endl;
                 cin >> exit;
