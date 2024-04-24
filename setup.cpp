@@ -57,8 +57,8 @@ void teamMenu(State &state) {
 }
 
 void characterList(State &state){
-    cout << "Character List" << endl;
-    cout << "You can see character's abilities by typing number." << endl;
+    cout << "Character List Menu" << endl;
+    cout << "You can see character's abilities by typing number. (1-6)" << endl;
     vector<Character> playableCharacters = getPlayableCharacters();
     VariadicTable<int, string, int, double, double, double,double, double, double> vt({"number", "name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
     for (int i = 1; i <= playableCharacters.size(); i++ )
@@ -102,7 +102,7 @@ void battleMenu(State &state) {
         cout << endl;
     }
 
-    cout << "Please choose your situation (e.g. 1,2,3)  ";
+    cout << "Please choose your situation (1-)  "; //TODO:ADD MORE SITUATION AND CHANGE THIS PART
     bool flag = true;
     while (flag) {
         string selectionStr;
