@@ -213,6 +213,32 @@ void insertEnemyAbility(Character &enemy){
             }
             state.timelineProceed = true;
         };
+        // i don't what the 自爆仔name todo:Find Bombmer name and add comment
+    } else if (enemy.name == "BOMBER") {
+        enemy.basicAtk = [](Character &self, State &state) {
+            //enemy.nameColor = {34}; todo: IDK why there is bug in this line
+            int target= aiTarget(state.allies);
+            if (hit(50)) {
+                slowPrint("Attack ku!\n",self.nameColor);
+                singleAttack(state, self, target, 2.5);
+            } else {
+                slowPrint("Self-destruct Program activated!!!\n");
+                //idk is there any lyris so i put in megumin lyris from konosuba
+                Effect explosion = Effect("Self-destruct",1,0);
+                self.effects.push_back(explosion);
+                explosion.endRound = [](Effect &self, Character &master, State &state) {
+                    self.duration--;
+                    if (self.duration == 0) {
+                        int target = aiTarget(state.allies);
+                        blastAttack(state,master,target,1.5,1.5); //todo: check the stat of bomber idk how the damage count
+                        master.hp = 0;
+                    }
+                };
+            }
+        };
+
+    } else if (enemy.name == " ") {
+
     }
 }
 
@@ -475,6 +501,11 @@ void insertCharacterAbility(Character &character) {
         };
     }
     else if (character.name == "Kafka") {
+        Effect elecshock = Effect("電觸", 2 ,0);
+        elecshock.endRound = [](Effect &self, Character &master, State &state) {
+            self.duration--;
+            singleAttack(state, )
+        };
         character.nameColor ={35};
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
             Effect &transmigration = self.getEffect("Spectral Transmigration");
@@ -491,6 +522,14 @@ void insertCharacterAbility(Character &character) {
         };
         //Todo: follow up attack
         character.skill = [](Character &self, State &state) {
+            int target = selectTarget(state.enemies);
+            singleAttack(state, self, target, 2.0);
+            blastAttack(state, self, target, 2.0, 0.75);
+            //slowPrint((" ")); seem there are no lyris when kafka use skill
+            self.energy += 30;
+        };
+        character.ult = [](Character &self, State &state) {
+            aoeAttack(state, self, 0.8);
 
         };
     }
