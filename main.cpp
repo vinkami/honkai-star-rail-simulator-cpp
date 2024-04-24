@@ -96,7 +96,7 @@ int main() {
             while (gameLoop(state));
             battleEnd(state);
         } else {
-            cout << "Unknown command, usage: help | start | team | list | battle | level | settings | restart | quickstart" << endl;
+            cout << "Unknown command, please select from the following:" << endl;
         }
         slowPrint("help | start | team | list | battle | level | settings | restart | quickstart\nEnter command: ");
     }
