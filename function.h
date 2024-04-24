@@ -18,6 +18,7 @@ int selectTarget(vector<Character>& characters);
 vector<Character> getPlayableCharacters();
 vector<Situation> getSituations();
 int levelscaling(double statistic, int level);
+void enemyscaling(vector <Character> &enemy, int level);
 void printMainCommandSelected(int num);
 
 #endif //PROJECT_FUNCTION_H

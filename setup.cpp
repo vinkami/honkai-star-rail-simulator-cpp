@@ -153,6 +153,10 @@ void settingsMenu(State &state) {
     bool flag = true;
     string resetColor="\033[0m";
     vector<int> color;
+    if (state.enemies.empty()){
+        slowPrint( "Please select situation first!\n" );
+        }
+    vector<Character> &enemy = state.enemies;
     while (flag){
         cin >> difficulty;
         cout << endl;
@@ -166,30 +170,36 @@ void settingsMenu(State &state) {
             state.difficulty = 1;
             color = {32};
             flag=false;
+            enemyscaling(enemy, 1);
         } else if (difficulty == "2" || difficulty == "II") {
             state.difficulty = 2;
             color = {32};
             flag=false;
+            enemyscaling(enemy, 30);
         } else if (difficulty == "3" || difficulty == "III") {
             state.difficulty = 3;
             color = {33};
             flag=false;
+            enemyscaling(enemy, 40);
         } else if (difficulty == "4" || difficulty == "IV") {
             state.difficulty = 4;
             color = {33};
             flag=false;
+            enemyscaling(enemy, 50);
         } else if (difficulty == "5" || difficulty == "V") {
             state.difficulty = 5;
             color = {31};
             flag=false;
+            enemyscaling(enemy, 60);
         } else if (difficulty == "6" || difficulty == "VI") {
             state.difficulty = 6;
             color = {31};
             flag=false;
+            enemyscaling(enemy, 70);
         } else{
             cout << "Invalid input! Please try again." << endl;
-            cout << "Select a difficulty for your game.(1-6) or type 'help': ";
         }
+        cout << "Select a difficulty for your game.(1-6) or type 'help': ";
     }
 //    cout << "Selected Difficulty is " << color << difficulty << resetColor << " mode" << endl << endl;
     slowPrint("You have selected difficulty " + difficulty + "\n\n" , color, 0);
@@ -205,10 +215,9 @@ void levelsetting(State &state){
         original.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
     original.print(std::cout);
     if (state.allies.empty()){
-        cout << "Please select a character first!" << endl;
-    } else{
-        cout << "Choose a character(1-4): ";
+        slowPrint( "Please select a character first!\n" );
     }
+    cout << "Choose a character(1-4): ";
     cin >> input;
     while (input != "exit") {
         if (state.allies.empty()){

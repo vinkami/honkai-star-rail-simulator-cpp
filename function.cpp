@@ -504,7 +504,7 @@ void insertCharacterAbility(Character &character) {
         Effect elecshock = Effect("電觸", 2 ,0);
         elecshock.endRound = [](Effect &self, Character &master, State &state) {
             self.duration--;
-            singleAttack(state, )
+            //singleAttack(state, )
         };
         character.nameColor ={35};
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
@@ -615,4 +615,13 @@ vector<Character> getPlayableCharacters() {
 int levelscaling(double statistic, int level){
     int newstat = static_cast<int>(statistic * 7.4 * level - statistic * level - statistic * 7.4 + 80 * statistic) / 79;
     return newstat;
+}
+
+void enemyscaling(vector <Character> &enemy, int level){
+    for (auto & character : enemy){
+        character.level = level;
+        character.hp = levelscaling(character.baseHp, level);
+        character.atk = levelscaling(character.baseAtk, level);
+        character.def = levelscaling(character.baseDef, level);
+    }
 }
