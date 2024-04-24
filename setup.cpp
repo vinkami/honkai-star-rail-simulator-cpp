@@ -157,7 +157,7 @@ void settingsMenu(State &state) {
         cin >> difficulty;
         cout << endl;
         if (difficulty=="help"){
-            printHelp("setting");
+            printHelp("difficulty");
             cout << endl << "Select a difficulty for your game.(1-6): ";
         } else if (difficulty=="exit"){
             cout << "Difficulty selection terminated." << endl;
