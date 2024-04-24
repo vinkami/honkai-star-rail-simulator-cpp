@@ -21,7 +21,7 @@ void teamMenu(State &state) {
     cout << "More details of character can be found in list." << endl;
     cout << "A team must have 4 characters." << endl;
     //Ask the user what characters they want to use
-    cout << "Select a character to your team by typing their number. (1-4)" << endl;
+    cout << "Select a character to your team by typing their number. (1-6)" << endl;
     while (team.size() != 4){
         string selection;
         cin >> selection;
@@ -46,7 +46,7 @@ void teamMenu(State &state) {
                 cout << "Character already chosen. Please choose another! " << endl;
             }
         }
-        cout << "Select a character to your team by typing their number. (1-4)" << endl;
+        cout << "Select a character to your team by typing their number. (1-6)" << endl;
     }
     cout << "Team formed successfully!" << endl << "Current Team:" << endl;
     for (const auto &character : team)
@@ -110,7 +110,7 @@ void battleMenu(State &state) {
         if (selectionStr == "help") {
             cout << endl;
             printHelp("enemy");
-            cout << endl << "Please choose your situation (e.g. 1,2,3)  ";
+            cout << endl << "Please choose your situation (1-)  "; //TODO:ADD MORE SITUATION AND CHANGE THIS PART
         } else if (selectionStr == "exit") {
             cout << "Situation selection terminated." << endl;
             return;
