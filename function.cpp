@@ -96,10 +96,10 @@ void slowPrint(const string& text, const vector<int>& sgr, int delayMS) {
     cout << "\033[0m";
 }
 
-void addEnergy(double maxEnergy, double &energy, double increase){
-    if (energy+increase<maxEnergy)
-        energy+=increase;
-    else energy=maxEnergy;
+void addEnergy(Character target, double increase){
+    if (target.energy+increase<target.maxEnergy)
+        target.energy+=increase;
+    else target.energy=target.maxEnergy;
 }
 
 int selectTarget(vector<Character>& characters) {
@@ -260,7 +260,7 @@ void insertCharacterAbility(Character &character) {
             if (hit(50)) slowPrint("クラーラ：気を付けて、スヴァローグ！\n", self.nameColor);
             else slowPrint("スヴァローグ：排除する。\n", self.nameColor);
             singleAttack(state, self, target, 1.0);
-            addEnergy(self.maxEnergy,self.energy,20);
+            addEnergy(self,20);
             state.incSkillPoint();
             state.timelineProceed = true;
         };
@@ -279,14 +279,14 @@ void insertCharacterAbility(Character &character) {
                     singleAttack(state, self, searchCharacter(state.enemies, enemy.name), 1.2);
                 }
             }
-            addEnergy(self.maxEnergy,self.energy,30);
+            addEnergy(self,30);
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Promise, Not Command
             Effect enhancedCounter = self.getEffectOrCrash("Enhanced Counter");
             self.taunt*=5;
             slowPrint("クラーラ：クラーラも…みんなを守りたい！       \nクラーラ：助けて、スヴァローグ！\n", {37});
-            addEnergy(self.maxEnergy,self.energy,5);
+            addEnergy(self,5);
             Effect ultEfx("Promise, Not Command", 2, 0);
             ultEfx.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
@@ -307,7 +307,7 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("スヴァローグ：平気か？\n", {36});
                 slowPrint("クラーラ：大丈夫。\n", {37});
             }
-            addEnergy(self.maxEnergy,self.energy,10);
+            addEnergy(self,10);
             Effect counter("Mark of Counter", -1, 1);
             attacker.effects.push_back(counter);
             if (hit(50)) {
@@ -342,7 +342,7 @@ void insertCharacterAbility(Character &character) {
             int target = selectTarget(state.enemies);
             slowPrint("鏡流：切先は戻らぬ！\n", self.nameColor);
             singleAttack(state, self, target, 1.0);
-            addEnergy(self.maxEnergy,self.energy,20);
+            addEnergy(self,20);
             state.incSkillPoint();
             state.timelineProceed = true;
         };
@@ -359,7 +359,7 @@ void insertCharacterAbility(Character &character) {
                 syzygy.stack += 1;
                 slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",self.nameColor);
                 singleAttack(state, self, target, 2.0);
-                addEnergy(self.maxEnergy,self.energy,20);
+                addEnergy(self,20);
 
                 if (syzygy.stack >= 2) {
                     transmigration.stack = 1;
@@ -384,7 +384,7 @@ void insertCharacterAbility(Character &character) {
                 self.atk += increasedAtk;
                 blastAttack(state, self, target, 2.5, 1.25);
                 self.atk -= increasedAtk;
-                addEnergy(self.maxEnergy,self.energy,30);
+                addEnergy(self,30);
                 syzygy.stack -= 1;
                 if (syzygy.stack == 0) {
                     transmigration.stack = 0;
@@ -414,7 +414,7 @@ void insertCharacterAbility(Character &character) {
             self.atk += increasedAtk;
             blastAttack(state, self, target, 3.0, 1.5);
             self.atk -= increasedAtk;
-            self.energy += 5;
+            addEnergy(self,5);
             syzygy.stack += 1;
             slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n", self.nameColor);
             if (syzygy.stack >= 2) {
@@ -438,7 +438,7 @@ void insertCharacterAbility(Character &character) {
             int target = selectTarget(state.enemies);
             slowPrint("落ち着いて。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
-            addEnergy(self.maxEnergy,self.energy,20);
+            addEnergy(self,20);
             state.incSkillPoint();
             state.timelineProceed = true;
         };
@@ -485,7 +485,7 @@ void insertCharacterAbility(Character &character) {
             int target = selectTarget(state.allies);
             Character &allies = state.allies[target];
             slowPrint("停云:万事吉とならん、一心同帰。      \n",  self.nameColor);
-            allies.energy+= 50;
+            addEnergy(allies,50);
             Effect ultEfx ("Amidst the Rejoicing Clouds",2,0);
             allies.effects.push_back(ultEfx);
             double dmg_b = 0.5;
@@ -508,12 +508,12 @@ void insertCharacterAbility(Character &character) {
             //singleAttack(state, )
         };
         character.nameColor ={35};
-        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+        character.basicAtk = [](Character &self, State &state) {  // midnight tumult
 
             int target = selectTarget(state.enemies);
             slowPrint("一瞬よ。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
-            addEnergy(self.maxEnergy,self.energy,20);
+            addEnergy(self,20);
             state.incSkillPoint();
             state.timelineProceed = true;
         };
@@ -523,12 +523,40 @@ void insertCharacterAbility(Character &character) {
             singleAttack(state, self, target, 2.0);
             blastAttack(state, self, target, 2.0, 0.75);
             //slowPrint((" ")); seem there are no lyris when kafka use skill
-            self.energy += 30;
+            addEnergy(self,30);
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {
             aoeAttack(state, self, 0.8);
 
+        };
+    } else if (character.name=="Huohuo") {
+        character.nameColor = {32};
+        character.basicAtk = [](Character &self, State &state) {  // Banner: Storm caller
+            int target = selectTarget(state.enemies);
+            if (hit(50)) slowPrint("シッポ：ほーらよっと。\nフォフォ：やあああ――\n", self.nameColor);
+            else slowPrint("フォフォ：いやあ助けてええっ――\n", self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            addEnergy(self, 20);
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+        character.skill = [](Character &self, State &state) {
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", self.nameColor);
+                return;
+            }
+            int target = selectTarget(state.allies);
+            clearDebuff(state, self, target);
+            blastHealing(state, self, target, 0.21, 0.168, 560, 448);
+            addEnergy(self, 30);
+            state.timelineProceed = true; //TODO: add huohuo two stack of Divine Provision that can heal when allies on hit
+        };
+        character.ult = [](Character &self, State &state) {
+            for (const auto &ally: state.allies) {
+                double charge = 0.2 * ally.maxEnergy;
+                addEnergy(ally, charge);
+            } //TODO: add effect that huohuo add 20% atk to allies
         };
     }
 }
