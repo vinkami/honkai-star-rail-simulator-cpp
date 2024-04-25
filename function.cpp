@@ -523,6 +523,7 @@ void insertCharacterAbility(Character &character) {
             blastAttack(state, self, target, 2.0, 0.75);
             //slowPrint((" ")); seem there are no lyris when kafka use skill
             self.energy += 30;
+            state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {
             aoeAttack(state, self, 0.8);
