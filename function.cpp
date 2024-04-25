@@ -96,7 +96,7 @@ void slowPrint(const string& text, const vector<int>& sgr, int delayMS) {
     cout << "\033[0m";
 }
 
-void addEnergy(Character target, double increase){
+void addEnergy(Character &target, double increase){
     if (target.energy+increase<target.maxEnergy)
         target.energy+=increase;
     else target.energy=target.maxEnergy;
@@ -450,7 +450,7 @@ void insertCharacterAbility(Character &character) {
                 return;
             }
             // blessing part
-            slowPrint("停云:万事順調～       \n停云：諸悪退散～\n",  self.nameColor);
+            slowPrint("停云:万事順調～\n停云：諸悪退散～\n",  self.nameColor);
             int target = selectTarget(state.allies);// selecting target
             Character &allies = state.allies[target];
             double increased_atk = allies.baseAtk * 0.5;
@@ -551,15 +551,22 @@ void insertCharacterAbility(Character &character) {
                 return;
             }
             int target = selectTarget(state.allies);
+            if (hit(50)) slowPrint("フォフォ：邪を払い...魅を縛らん...\n", self.nameColor);
+            else slowPrint("フォフォ：霊符よ...守りたまえ...\n", self.nameColor);
+            addEnergy(self,30);
             clearDebuff(state, self, target);
             blastHealing(state, self, target, 0.21, 0.168, 560, 448);
-            addEnergy(self, 30);
             state.timelineProceed = true; //TODO: add huohuo two stack of Divine Provision that can heal when allies on hit
         };
         character.ult = [](Character &self, State &state) {
-            for (const auto &ally: state.allies) {
-                double charge = 0.2 * ally.maxEnergy;
-                addEnergy(ally, charge);
+            slowPrint("フォフォ：こ、来ないで...",self.nameColor);
+            slowPrint("",{},200);
+            slowPrint("シッポ：うろちょろと目障りなんだよ…\n悪鬼は、俺様だけで充分だ！\n",self.nameColor);
+            for (auto &ally: state.allies) {
+                if (ally.name!=self.name) {
+                    double charge = 0.2 * ally.maxEnergy;
+                    addEnergy(ally,charge);
+                } else addEnergy(self,5);
             } //TODO: add effect that huohuo add 20% atk to allies
         };
     }
