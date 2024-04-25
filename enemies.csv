@@ -1,4 +1,4 @@
-name, situationNo, level, speed, hp, atk, def
-Antibaryon, 0, 1, 110, 13000, 663, 900, 500
-Trampler, 0, 1, 120, 15100, 552, 900, 500
-Reaver, 0, 1, 120, 10000, 552, 900, 500
+name, situationNo, speed, hp, atk, def
+Antibaryon, 0, 110, 7355, 155, 700
+Trampler, 0, 120, 53937, 155, 700
+Reaver, 0, 120, 5300, 155, 700
