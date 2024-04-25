@@ -43,6 +43,7 @@ void battleStart(State &state) {
         ally.remTime = 15000.0 / ally.speed;  // First round is longer according to the original game
         ally.resetRemTime = 10000.0 / ally.speed;
         ally.energy = 50;  // Memory of chaos uses 50 energy at start
+        ally.maxHp = ally.hp;
         ally.startBattle(ally, state);
     }
     for (auto &enemy : state.enemies) {
@@ -97,7 +98,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         }
         cout << endl << "Health: ";
         for (auto &ally: state.allies) {
-            cout << ally.name << " " << ally.hp << "   ";
+            cout << ally.name << " " << ally.hp << " / " << ally.maxHp << "   ";
         }
         printCharacterQueue(state);
 

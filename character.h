@@ -14,7 +14,7 @@ private:
     function<void(Character&, State&)> emptyAbility = [](Character &self, State &state) {};
 public:
     string name, faction="ally";  // faction: ally / enemy / round
-    double baseSpeed, baseHp, baseAtk, baseDef, baseCritRate, baseCritDamage, maxEnergy;
+    double baseSpeed, baseHp, baseAtk, baseDef, baseCritRate, baseCritDamage, maxEnergy, maxHp;
     double speed, hp, atk, def, critRate, critDamage, energy, dmgBonus=0.0;
     double dmgReduction = 0.0, defIgnore = 0.0;
     double resetRemTime, remTime;
@@ -32,7 +32,7 @@ public:
     function<void(Character&, State&, Character&)> onHit = [](Character &self, State &state, Character &attacker) {self.energy += 5;};
 
 
-    Character(string name, int level, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy, int taunt);
+    Character(string name, int level, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy, int taunt, int maxHp);
 
     void forward(double time);
     void reset();

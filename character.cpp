@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Character::Character(string name, int level, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy, int taunt):
+Character::Character(string name, int level, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy, int taunt, int maxHp):
         name(std::move(name)), level(level),speed(speed), hp(hp), atk(atk), def(def), critRate(critRate), critDamage(critDamage), energy(50),
         baseSpeed(speed), baseHp(hp), baseAtk(atk), baseDef(def), baseCritRate(critRate), baseCritDamage(critDamage), maxEnergy(maxEnergy), taunt(taunt) {
     resetRemTime = 10000.0 / speed;
