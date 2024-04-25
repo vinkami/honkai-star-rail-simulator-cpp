@@ -519,6 +519,10 @@ void insertCharacterAbility(Character &character) {
         };
         //Todo: follow up attack
         character.skill = [](Character &self, State &state) {
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", self.nameColor);
+                return;
+            }
             int target = selectTarget(state.enemies);
             singleAttack(state, self, target, 2.0);
             blastAttack(state, self, target, 2.0, 0.75);
