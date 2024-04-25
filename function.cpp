@@ -565,7 +565,6 @@ vector<Situation> getSituations() {
 
         getline(ss, name, ',');
         ss >> situationNo >> comma;
-        ss >> level >> comma;
         ss >> speed >> comma;
         ss >> hp >> comma;
         ss >> atk >> comma;
