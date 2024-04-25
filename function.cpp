@@ -160,14 +160,14 @@ int aiTarget(vector<Character>& character){
 
 
 void insertEnemyAbility(Character &enemy){
-    if (enemy.name== "\033[37mAntibaryon\033[0m") {
+    if (enemy.name== "Antibaryon") {
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             slowPrint("消滅\n",{31});
             singleAttack(state, self, target, 2.5);
             state.timelineProceed = true;
         };
-    } else if (enemy.name== "\033[37mTrampler\033[0m"){
+    } else if (enemy.name== "Trampler"){
         enemy.basicAtk = [](Character &self, State &state){
             Effect lockOn("lockOn", -1,1);  //idk what happen
             int target= aiTarget(state.allies);
@@ -201,7 +201,7 @@ void insertEnemyAbility(Character &enemy){
             }
             state.timelineProceed = true;
         };
-    } else if (enemy.name== "\033[37mReaver\033[0m"){
+    } else if (enemy.name== "Reaver"){
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             if (hit(50)) {
