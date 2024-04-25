@@ -28,6 +28,25 @@ double getNonCritDamage(double atk, double skillMultiplier, double def, double d
     return atk * skillMultiplier * defMultiplier * (1 - dmgReduction) * (1 + dmgBonus);
 }
 
+void clearDebuff(State &state, Character &attacker, int target){
+    std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
+    Character &defender = team[target];
+    for (int i=0; i<defender.effects.size();i++){
+        if (defender.effects[i].type){ //true if debuff, default: false
+            defender.effects.erase(next(defender.effects.begin(),i));
+            return;
+        }
+    }
+}
+
+void heal(Character &healer, Character &target, double skillMultiplier, double plus, State &state){
+    double healing = healer.baseHp*skillMultiplier+plus;
+    double maxHP= target.baseHp;
+    if (healing+target.hp>maxHP) target.hp=maxHP;
+    else target.hp+=healing;
+    cout << healer.name << " heals " << target.name << " for " << healing << " hp\n";
+}
+
 void attack(Character &attacker, Character &defender, double skillMultiplier, State &state) {
     double damage = getNonCritDamage(attacker.atk, skillMultiplier, defender.def, attacker.defIgnore, attacker.dmgReduction, attacker.dmgBonus);
     bool crit = hit(attacker.critRate);
@@ -43,6 +62,27 @@ void attack(Character &attacker, Character &defender, double skillMultiplier, St
         defender.onHit(defender, state, attacker);
     }
 }
+
+void singleHeal(State &state, Character &healer, int target, double skillMultiplier, double plus){
+    std::vector<Character>& team = (healer.faction == "ally") ? state.allies : state.enemies;
+    Character &receiver =team[target] ;
+    heal(healer,receiver,skillMultiplier,plus,state);
+}
+
+void blastHealing(State &state, Character &healer, int target, double mainSkillMultiplier, double adjacentSkillMultiplier,double mainPlus, double adjacentPlus){
+    std::vector<Character>& team = (healer.faction == "ally") ? state.allies : state.enemies;
+    if (target > 0) {
+        Character &adjacent = team[target - 1];
+        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus,state);
+    }
+    Character &receiver = team[target];
+    heal(healer, receiver, mainSkillMultiplier, mainPlus, state);
+    if (target + 1 < team.size()) {
+        Character &adjacent = team[target + 1];
+        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus,state);
+    }
+}
+
 
 void singleAttack(State &state, Character &attacker, int target, double skillMultiplier) {
     std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
