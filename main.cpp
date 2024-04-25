@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <fstream>
 #include "battle.h"
 #include "character.h"
 #include "state.h"
