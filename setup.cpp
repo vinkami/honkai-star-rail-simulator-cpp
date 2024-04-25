@@ -228,19 +228,25 @@ void levelsetting(State &state){
             number = stoi(input);
             cout << "Choose level(1-80): ";
             cin >> level;
-            Character &ally = state.allies[number - 1];
-            ally.level = level;
-            ally.hp = levelscaling(ally.baseHp, level);
-            ally.atk  = levelscaling(ally.baseAtk, level);
-            ally.def  = levelscaling(ally.baseDef, level);
-            VariadicTable<string, int, double, double, double,double, double, double> update({"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
-            for (const auto& character: state.allies)
-                update.addRow(character.name, character.level, character.speed, character.hp, character.atk, character.def,character.critRate,character.critDamage);
-            update.print(std::cout);
-            cout << "Choose a character(1-4): ";
+            if (level >= 1 && level <= 80) {
+                Character &ally = state.allies[number - 1];
+                ally.level = level;
+                ally.hp = levelscaling(ally.baseHp, level);
+                ally.atk = levelscaling(ally.baseAtk, level);
+                ally.def = levelscaling(ally.baseDef, level);
+                VariadicTable<string, int, double, double, double, double, double, double> update(
+                        {"name", "level", "speed", "hp", "atk", "def", "critRate", "critDamage"}, 5);
+                for (const auto &character: state.allies)
+                    update.addRow(character.name, character.level, character.speed, character.hp, character.atk,
+                                  character.def, character.critRate, character.critDamage);
+                update.print(std::cout);
+            } else {
+                cout << "Please enter appropriate number!" << endl;
+            }
         } else{
             cout << "Please enter appropriate number!" << endl;
         }
+        cout << "Choose a character(1-4): ";
         cin >> input;
     }
     cout << "Level setting terminated." << endl;
