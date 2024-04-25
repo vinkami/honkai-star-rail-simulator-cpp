@@ -55,6 +55,19 @@ void battleStart(State &state) {
     slowPrint("Round 1 starts\n", {1, 33}, 20);
 }
 
+void printCharacterQueue(State &state) {
+    auto characters = state.allies;
+    characters.insert(characters.end(),state.enemies.begin(), state.enemies.end());
+    sort(characters.begin(), characters.end(), [](const Character &a, const Character &b) { return a.remTime < b.remTime; });
+    slowPrint("\nNext in line ",{93}, 10);
+    for (int i=1;i<5;i++){
+        slowPrint(" [ ", {0}, 10);
+        slowPrint(characters[i].name, {characters[i].nameColor}, 10);
+        slowPrint(" ] ", {0}, 10);
+        if(i!=4)slowPrint("->",{93},10);
+    }
+}
+
 bool gameLoop(State &state) {  // return value: whether the battle is still ongoing
     Character &current = state.nextCharacter();
     current.startRound(current, state);
@@ -86,10 +99,10 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         for (auto &ally: state.allies) {
             cout << ally.name << " " << ally.hp << "   ";
         }
-        cout << endl;
+        printCharacterQueue(state);
 
         string line, move;
-        cout << "Action: ";
+        cout << endl << "Action: ";
         getline(cin, line);
         stringstream ss(line);
         ss >> move;
