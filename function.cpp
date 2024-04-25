@@ -282,7 +282,7 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Promise, Not Command
-            Effect enhancedCounter = self.getEffect("Enhanced Counter");
+            Effect enhancedCounter = self.getEffectOrCrash("Enhanced Counter");
             self.taunt*=5;
             slowPrint("クラーラ：クラーラも…みんなを守りたい！       \nクラーラ：助けて、スヴァローグ！\n", {37});
             addEnergy(self.maxEnergy,self.energy,5);
@@ -299,7 +299,7 @@ void insertCharacterAbility(Character &character) {
             enhancedCounter.stack += 2;
         };
         character.onHit = [](Character &self, State &state, Character &attacker) {
-            Effect enhancedCounter = self.getEffect("Enhanced Counter");
+            Effect enhancedCounter = self.getEffectOrCrash("Enhanced Counter");
             if (hit(30)) {  // should have determined by damage taken but I'm lazy
                 slowPrint("クラーラ：…痛い。\n", {37});
             } else {
@@ -333,7 +333,7 @@ void insertCharacterAbility(Character &character) {
         character.effects.push_back(transmigration);
 
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
-            Effect &transmigration = self.getEffect("Spectral Transmigration");
+            Effect &transmigration = self.getEffectOrCrash("Spectral Transmigration");
             if (transmigration.stack == 1) {
                 slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",{91});
                 return;
@@ -346,8 +346,8 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed = true;
         };
         character.skill = [](Character &self, State &state) {
-            Effect &syzygy = self.getEffect("Syzygy");
-            Effect &transmigration = self.getEffect("Spectral Transmigration");
+            Effect &syzygy = self.getEffectOrCrash("Syzygy");
+            Effect &transmigration = self.getEffectOrCrash("Spectral Transmigration");
             if (transmigration.stack == 0) {  // Transcendent Flash
                 if (!state.decSkillPoint()) {
                     slowPrint("No skill points left.\n", {91});
@@ -396,8 +396,8 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Florephemeral Dreamflux
-            Effect &syzygy = self.getEffect("Syzygy");
-            Effect &transmigration = self.getEffect("Spectral Transmigration");
+            Effect &syzygy = self.getEffectOrCrash("Syzygy");
+            Effect &transmigration = self.getEffectOrCrash("Spectral Transmigration");
             int target = selectTarget(state.enemies);
             slowPrint("鏡流：この月華で…       \n鏡流：すべてを照らさん！\n",  self.nameColor);
             // talent: drain allies' hp and increase atk
@@ -429,7 +429,7 @@ void insertCharacterAbility(Character &character) {
         //Effect enhancedCounter = Effect("Enhanced Counter", -1, 0);
         character.nameColor ={95};
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
-            Effect &transmigration = self.getEffect("Spectral Transmigration");
+            Effect &transmigration = self.getEffectOrCrash("Spectral Transmigration");
             if (transmigration.stack == 1) {
                 slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",self.nameColor);
                 return;
@@ -457,7 +457,7 @@ void insertCharacterAbility(Character &character) {
                 increased_atk = self.atk*0.25;
             }
             blessing.values.push_back(increased_atk);
-            allies.getEffect("Blessing");
+            allies.getEffectOrCrash("Blessing");
             allies.atk+=increased_atk;
             blessing.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
@@ -468,7 +468,7 @@ void insertCharacterAbility(Character &character) {
             };
             // blessing part end
             // speed up
-            self.getEffect("Speed up");
+            self.getEffectOrCrash("Speed up");
             double increased_speed = self.baseSpeed*0.2;
             self.speed += increased_speed;
             speed_up.values.push_back((increased_speed));
@@ -508,11 +508,7 @@ void insertCharacterAbility(Character &character) {
         };
         character.nameColor ={35};
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
-            Effect &transmigration = self.getEffect("Spectral Transmigration");
-            if (transmigration.stack == 1) {
-                slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",self.nameColor);
-                return;
-            }
+
             int target = selectTarget(state.enemies);
             slowPrint("一瞬よ。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);

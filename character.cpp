@@ -40,7 +40,7 @@ int Character::getEffectLoc(const string &efxName) {
     return -1;
 }
 
-Effect &Character::getEffect(const string &efxName) {
+Effect &Character::getEffectOrCrash(const string &efxName) {
     int loc = getEffectLoc(efxName);
     if (loc == -1) {
         cout << "Internal Error: effect not found." << endl;

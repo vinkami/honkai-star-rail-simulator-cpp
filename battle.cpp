@@ -82,6 +82,10 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         for (auto &ally: state.allies) {
             cout << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "   ";
         }
+        cout << endl << "Health: ";
+        for (auto &ally: state.allies) {
+            cout << ally.name << " " << ally.hp << "   ";
+        }
         cout << endl;
 
         string line, move;

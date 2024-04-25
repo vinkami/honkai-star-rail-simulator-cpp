@@ -37,8 +37,8 @@ public:
     void forward(double time);
     void reset();
     void print() const;
-    int getEffectLoc(const string &efxName);
-    Effect &getEffect(const string &efxName);  // NOTE: DO NOT USE WHEN YOU ARE NOT SURE THAT THE EFFECT EXISTS
+    int getEffectLoc(const string &efxName);  // NOTE: CAN RETURN -1 AND WILL NOT CRASH NO MATTER WHAT SO USE THIS INSTEAD
+    Effect &getEffectOrCrash(const string &efxName);  // NOTE: DO NOT USE WHEN YOU ARE NOT SURE THAT THE EFFECT EXISTS
     void removeEffect(Effect &efx);
     void printColorName(int delayMS=10);
 };
