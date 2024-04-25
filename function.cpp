@@ -213,16 +213,17 @@ void insertEnemyAbility(Character &enemy){
             }
             state.timelineProceed = true;
         };
-        // i don't what the 自爆仔name todo:Find Bombmer name and add comment
-    } else if (enemy.name == "BOMBER") {
+        // https://honkai-star-rail.fandom.com/wiki/Automaton_Spider
+        // AutomationSpider, 1, 100, 10000, 552, 900, 500
+    } else if (enemy.name == "AutomatonSpider") {
         enemy.basicAtk = [](Character &self, State &state) {
             //enemy.nameColor = {34}; todo: IDK why there is bug in this line
             int target= aiTarget(state.allies);
             if (hit(50)) {
-                slowPrint("Attack ku!\n",self.nameColor);
-                singleAttack(state, self, target, 2.5);
+                slowPrint("突進！\n",self.nameColor);
+                singleAttack(state, self, target, 2.0);
             } else {
-                slowPrint("Self-destruct Program activated!!!\n");
+                slowPrint("時限モジュール!!!\nThe next action uses \"自爆モジュール\"\n");
                 //idk is there any lyris so i put in megumin lyris from konosuba
                 Effect explosion = Effect("Self-destruct",1,0);
                 self.effects.push_back(explosion);
@@ -230,7 +231,7 @@ void insertEnemyAbility(Character &enemy){
                     self.duration--;
                     if (self.duration == 0) {
                         int target = aiTarget(state.allies);
-                        blastAttack(state,master,target,1.5,1.5); //todo: check the stat of bomber idk how the damage count
+                        blastAttack(state,master,target,5.0,5.0);
                         master.hp = 0;
                     }
                 };
