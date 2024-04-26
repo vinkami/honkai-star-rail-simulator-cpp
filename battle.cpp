@@ -61,11 +61,13 @@ void printCharacterQueue(State &state) {
     characters.insert(characters.end(),state.enemies.begin(), state.enemies.end());
     sort(characters.begin(), characters.end(), [](const Character &a, const Character &b) { return a.remTime < b.remTime; });
     slowPrint("\nNext in line ",{93}, 10);
-    for (int i=1;i<5;i++){
+    int repeatedTimes = 5;
+    if (characters.size()<4) repeatedTimes = characters.size()+1;
+    for (int i=1;i<(repeatedTimes);i++){
         slowPrint(" [ ", {0}, 10);
         slowPrint(characters[i].name, {characters[i].nameColor}, 10);
         slowPrint(" ] ", {0}, 10);
-        if(i!=4)slowPrint("->",{93},10);
+        if(i+1!=repeatedTimes)slowPrint("->",{93},10);
     }
 }
 
@@ -97,18 +99,12 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 //            if(i!=state.maxSkillPoint-1) cout << " ";
         }
         cout << endl << "Energy: ";
-        for (auto ally: state.allies) {
-            string color = "\033[0m";
-            if (ally.maxEnergy==ally.energy)
-                color = "\033["+to_string(ally.nameColor[0])+"m";
-            cout << color << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "\033[0m   ";
+        for (auto &ally: state.allies) {
+            cout << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "   ";
         }
         cout << endl << "Health: ";
         for (auto &ally: state.allies) {
-            string color = "\033[0m";
-            if (ally.hp <= ally.maxHp*0.3)
-                color = "\033[31m";
-            cout<< ally.name << " " << color << ally.hp << " / " << ally.maxHp << "\033[0m   ";
+            cout << ally.name << " " << ally.hp << " / " << ally.maxHp << "   ";
         }
 
         string line, move;
