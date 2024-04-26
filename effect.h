@@ -11,14 +11,13 @@ class Effect {
 private:
     function<void(Effect&, Character&, State&)> empty = [](Effect &self, Character &master, State &state) {};
 public:
-    string name;
-    bool type;
+    string name, type;  // type = {buff|debuff|other}
     int duration, stack;
     vector<double> values{};
 
     function<void(Effect&, Character&, State&)> startRound = empty, endRound = empty;
 
-    explicit Effect(string name, int duration = 1, int stack = 1, bool type= false);
+    explicit Effect(string name, string type, int duration = 1, int stack = 1);
 };
 
 #endif //PROJECT_EFFECT_H
