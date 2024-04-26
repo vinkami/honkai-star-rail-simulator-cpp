@@ -298,7 +298,7 @@ void insertCharacterAbility(Character &character) {
             self.dmgReduction += 0.25;
             enhancedCounter.stack += 2;
         };
-        character.onHit = [](Character &self, State &state, Character &attacker) {
+        character.onHit = [](Character &self, State &state, Character &attacker) {  // Because We're Family
             Effect enhancedCounter = self.getEffectOrCrash("Enhanced Counter");
             if (hit(30)) {  // should have determined by damage taken but I'm lazy
                 slowPrint("クラーラ：…痛い。\n", {37});
@@ -428,7 +428,7 @@ void insertCharacterAbility(Character &character) {
         //        character.name= "\033[91mClara\033[0m";
         //Effect enhancedCounter = Effect("Enhanced Counter", -1, 0);
         character.nameColor ={95};
-        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+        character.basicAtk = [](Character &self, State &state) {  // Dislodged
             Effect &transmigration = self.getEffectOrCrash("Spectral Transmigration");
             if (transmigration.stack == 1) {
                 slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",self.nameColor);
@@ -441,14 +441,14 @@ void insertCharacterAbility(Character &character) {
             state.incSkillPoint();
             state.timelineProceed = true;
         };
-        character.skill = [](Character &self, State &state) {
-            Effect blessing("Blessing", "buff", 3, 0);  // blessing for allies
+        character.skill = [](Character &self, State &state) {  // Soothing Melody
+            Effect benediction("Benediction", "buff", 3, 0);  // benediction for allies
             Effect speed_up ("Speed up", "buff", 1, 0);  // self speed up
             if (!state.decSkillPoint()) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
             }
-            // blessing part
+            // benediction part
             slowPrint("停云:万事順調～\n停云：諸悪退散～\n",  self.nameColor);
             int target = selectTarget(state.allies);// selecting target
             Character &allies = state.allies[target];
@@ -456,17 +456,17 @@ void insertCharacterAbility(Character &character) {
             if(increased_atk > self.atk*0.25) {
                 increased_atk = self.atk*0.25;
             }
-            blessing.values.push_back(increased_atk);
-            allies.getEffectOrCrash("Blessing");
-            allies.atk+=increased_atk;
-            blessing.endRound = [](Effect &self, Character &master, State &state) {
+            benediction.values.push_back(increased_atk);
+            allies.getEffectOrCrash("Benediction");
+            allies.atk += increased_atk;
+            benediction.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 if (self.duration == 0) {
                     master.atk-=self.values[0];
                     master.removeEffect(self);
                 }
             };
-            // blessing part end
+            // benediction part end
             // speed up
             self.getEffectOrCrash("Speed up");
             double increased_speed = self.baseSpeed*0.2;
@@ -480,7 +480,7 @@ void insertCharacterAbility(Character &character) {
                 }
             };
         };
-        character.ult = [](Character &self, State &state) {
+        character.ult = [](Character &self, State &state) {  // Amidst the Rejoicing Clouds
             int target = selectTarget(state.allies);
             Character &allies = state.allies[target];
             slowPrint("停云:万事吉とならん、一心同帰。      \n",  self.nameColor);
@@ -507,8 +507,7 @@ void insertCharacterAbility(Character &character) {
             //singleAttack(state, )
         };
         character.nameColor ={35};
-        character.basicAtk = [](Character &self, State &state) {  // midnight tumult
-
+        character.basicAtk = [](Character &self, State &state) {  // Midnight Tumul
             int target = selectTarget(state.enemies);
             slowPrint("一瞬よ。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
@@ -517,7 +516,7 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed = true;
         };
         //Todo: follow up attack
-        character.skill = [](Character &self, State &state) {
+        character.skill = [](Character &self, State &state) {  // Caressing Moonlight
             if (!state.decSkillPoint()) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
@@ -529,13 +528,13 @@ void insertCharacterAbility(Character &character) {
             addEnergy(self,30);
             state.timelineProceed = true;
         };
-        character.ult = [](Character &self, State &state) {
+        character.ult = [](Character &self, State &state) {  // Twilight Trill
             aoeAttack(state, self, 0.8);
-
+            // Todo: where is the remaining ult?
         };
     } else if (character.name=="Huohuo") {
         character.nameColor = {32};
-        character.basicAtk = [](Character &self, State &state) {  // Banner: Storm caller
+        character.basicAtk = [](Character &self, State &state) {  // Banner: Stormcaller
             int target = selectTarget(state.enemies);
             if (hit(50)) slowPrint("シッポ：ほーらよっと。\nフォフォ：やあああ――\n", self.nameColor);
             else slowPrint("フォフォ：いやあ助けてええっ――\n", self.nameColor);
@@ -544,20 +543,48 @@ void insertCharacterAbility(Character &character) {
             state.incSkillPoint();
             state.timelineProceed = true;
         };
-        character.skill = [](Character &self, State &state) {
+        character.skill = [](Character &self, State &state) {  // Talisman: Protection
             if (!state.decSkillPoint()) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
             }
-            int target = selectTarget(state.allies);
+            int targetPos = selectTarget(state.allies);
+            Character &target = state.allies[targetPos];
             if (hit(50)) slowPrint("フォフォ：邪を払い...魅を縛らん...\n", self.nameColor);
             else slowPrint("フォフォ：霊符よ...守りたまえ...\n", self.nameColor);
             addEnergy(self,30);
-            cleanseDebuff(state, self, target);
-            blastHealing(state, self, target, 0.21, 0.168, 560, 448);
+            target.cleanseDebuff();
+            blastHealing(state, self, targetPos, 0.21, 0.168, 560, 448);
+            // divine provision - added to allies instead for simplicity
+            for (auto &ally: state.allies) {
+                Effect skillEfx("Divine Provision", "buff", 2, 1);
+                skillEfx.startRound = [](Effect &self, Character &master, State &state) {
+                    if (master.name == "Huohuo") {
+                        self.duration--;
+                        if (self.duration == 0) {
+                            for (auto &ally: state.allies) {
+                                ally.removeEffect(ally.getEffectOrCrash("Divine Provision"));
+                            }
+                        }
+                    }
+                    // heal
+                    int huohuoPos = searchCharacter(state.allies, "Huohuo");
+                    if (huohuoPos != -1) {
+                        for (auto &ally: state.allies) {
+                            ally.removeEffect(ally.getEffectOrCrash("Divine Provision"));
+                        }
+                    }
+                    Character &huohuo = state.allies[huohuoPos];
+                    master.cleanseDebuff();
+                    int masterPos = searchCharacter(state.allies, master.name);
+                    singleHeal(state, huohuo, masterPos, 0.045, 120);
+                };
+                ally.effects.push_back(skillEfx);
+            }
+
             state.timelineProceed = true;
         };
-        character.ult = [](Character &self, State &state) {
+        character.ult = [](Character &self, State &state) {  // Tail: Spiritual Domination
             slowPrint("フォフォ：こ、来ないで...\n",self.nameColor);
             slowPrint("",{},500);
             slowPrint("シッポ：うろちょろと目障りなんだよ...悪鬼は、俺様だけで充分だ！\n",self.nameColor);
