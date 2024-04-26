@@ -97,8 +97,11 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 //            if(i!=state.maxSkillPoint-1) cout << " ";
         }
         cout << endl << "Energy: ";
-        for (auto &ally: state.allies) {
-            cout << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "   ";
+        for (auto ally: state.allies) {
+            string color = "\033[0m";
+            if (ally.maxEnergy==ally.energy)
+                color = "\033["+to_string(ally.nameColor[0])+"m";
+            cout << color << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "\033[0m   ";
         }
         cout << endl << "Health: ";
         for (auto &ally: state.allies) {
