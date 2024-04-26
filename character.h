@@ -29,8 +29,7 @@ public:
         startBattle = emptyAbility,
         startRound = [](Character &self, State &state) {for (auto &efx: self.effects) efx.startRound(efx, self, state);},
         endRound = [](Character &self, State &state) {for (auto &efx: self.effects) efx.endRound(efx, self, state);};
-    function<void(Character&, State&, Character&)> onHit = [](Character &self, State &state, Character &attacker) {self.energy += 5;};
-
+    function<void(Character&, State&, Character&)> onHit = [](Character &self, State &state, Character &attacker) {self.energy = (self.energy + 5 < self.maxEnergy) ? self.energy + 5 : self.maxEnergy;};
 
     Character(string name, int level, double speed, double hp, double atk, double def, double critRate, double critDamage, double maxEnergy, int taunt, int maxHp);
 
