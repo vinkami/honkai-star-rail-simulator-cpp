@@ -63,3 +63,12 @@ void Character::removeEffect(Effect& efx) {
 void Character::printColorName(int delayMS) {
     slowPrint(name, nameColor, delayMS);
 }
+
+void Character::cleanseDebuff() {
+    for (auto &efx: effects) {
+        if (efx.type == "debuff") {
+            removeEffect(efx);
+            return;
+        }
+    }
+}

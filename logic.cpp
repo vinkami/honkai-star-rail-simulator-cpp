@@ -28,18 +28,7 @@ double getNonCritDamage(double atk, double skillMultiplier, double def, double d
     return atk * skillMultiplier * defMultiplier * (1 - dmgReduction) * (1 + dmgBonus);
 }
 
-void cleanseDebuff(State &state, Character &attacker, int target) {
-    vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
-    Character &defender = team[target];
-    for (int i=0; i<defender.effects.size();i++) {
-        if (defender.effects[i].type == "debuff") {
-            defender.effects.erase(next(defender.effects.begin(),i));
-            return;
-        }
-    }
-}
-
-void heal(Character &healer, Character &target, double skillMultiplier, double plus, State &state){
+void heal(Character &healer, Character &target, double skillMultiplier, double plus){
     double healing = healer.baseHp*skillMultiplier+plus;
     double maxHP= target.baseHp;
     if (healing+target.hp>maxHP) target.hp=maxHP;
@@ -72,20 +61,20 @@ void attack(Character &attacker, Character &defender, double skillMultiplier, St
 void singleHeal(State &state, Character &healer, int target, double skillMultiplier, double plus){
     std::vector<Character>& team = (healer.faction == "ally") ? state.allies : state.enemies;
     Character &receiver =team[target] ;
-    heal(healer,receiver,skillMultiplier,plus,state);
+    heal(healer,receiver,skillMultiplier,plus);
 }
 
 void blastHealing(State &state, Character &healer, int target, double mainSkillMultiplier, double adjacentSkillMultiplier,double mainPlus, double adjacentPlus){
     std::vector<Character>& team = (healer.faction == "ally") ? state.allies : state.enemies;
     if (target > 0) {
         Character &adjacent = team[target - 1];
-        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus,state);
+        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus);
     }
     Character &receiver = team[target];
-    heal(healer, receiver, mainSkillMultiplier, mainPlus, state);
+    heal(healer, receiver, mainSkillMultiplier, mainPlus);
     if (target + 1 < team.size()) {
         Character &adjacent = team[target + 1];
-        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus,state);
+        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus);
     }
 }
 
