@@ -572,7 +572,6 @@ void insertCharacterAbility(Character &character) {
                 double increased_atk = allie.baseAtk*0.2;
                 allie.atk += increased_atk;
                 tail.values.push_back((increased_atk));
-                cout << allie.name << " increased atk by " << increased_atk <<endl;
                 tail.endRound = [](Effect &self, Character &master, State &state) {
                     self.duration--;
                     if (self.duration == 0) {
