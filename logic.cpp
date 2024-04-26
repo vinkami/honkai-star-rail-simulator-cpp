@@ -52,7 +52,13 @@ void attack(Character &attacker, Character &defender, double skillMultiplier, St
     bool crit = hit(attacker.critRate);
     if (crit) damage *= 1 + attacker.critDamage / 100;
     defender.hp -= damage;
-    cout << attacker.name << " attacks " << defender.name << " for " << damage << " damage";
+    slowPrint(attacker.name, {attacker.nameColor}, 10);
+    slowPrint((" attacks "), {0}, 10);
+    slowPrint(defender.name, {defender.nameColor}, 10);
+    slowPrint(" for ", {0}, 10);
+    cout << damage;
+    slowPrint(" damage",{0},10);
+//    cout << attacker.name << " attacks " << defender.name << " for " << damage << " damage";
     if (crit) cout << " (critical)";
     cout << "." << endl;
     if (defender.hp <= 0) {

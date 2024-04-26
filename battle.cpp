@@ -81,12 +81,16 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         state.timelineProceed = true;
 
     } else if (current.faction == "enemy") {  // enemy's turn
-        cout << current.name << "'s turn" << endl;
+        slowPrint(current.name, {current.nameColor}, 10);
+        slowPrint("'s turn.", {31}, 10);
         current.basicAtk(current, state);
 
     } else { // player's turn
-        cout << current.name << "'s turn" << endl;
-        cout << "Skill Points: "; //<< state.skillPoint << " / " << state.maxSkillPoint << endl;
+        slowPrint(current.name, {current.nameColor}, 10);
+        slowPrint("'s turn.", {93}, 10);
+//        cout << current.name << "'s turn" << endl;
+        printCharacterQueue(state);
+        cout << "\nSkill Points: "; //<< state.skillPoint << " / " << state.maxSkillPoint << endl;
         for (int i=0;i<state.maxSkillPoint;i++){
             if (i<state.skillPoint){cout << "■";}
             else cout << "□";
@@ -100,7 +104,6 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         for (auto &ally: state.allies) {
             cout << ally.name << " " << ally.hp << " / " << ally.maxHp << "   ";
         }
-        printCharacterQueue(state);
 
         string line, move;
         cout << endl << "Action: ";
