@@ -28,11 +28,11 @@ double getNonCritDamage(double atk, double skillMultiplier, double def, double d
     return atk * skillMultiplier * defMultiplier * (1 - dmgReduction) * (1 + dmgBonus);
 }
 
-void clearDebuff(State &state, Character &attacker, int target){
-    std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
+void cleanseDebuff(State &state, Character &attacker, int target) {
+    vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
     Character &defender = team[target];
-    for (int i=0; i<defender.effects.size();i++){
-        if (defender.effects[i].type){ //true if debuff, default: false
+    for (int i=0; i<defender.effects.size();i++) {
+        if (defender.effects[i].type == "debuff") {
             defender.effects.erase(next(defender.effects.begin(),i));
             return;
         }

@@ -169,7 +169,7 @@ void insertEnemyAbility(Character &enemy){
         };
     } else if (enemy.name== "Trampler"){
         enemy.basicAtk = [](Character &self, State &state){
-            Effect lockOn("lockOn", -1,1);  //idk what happen
+            Effect lockOn("lockOn", "debuff", -1, 1);  // idk what happen
             int target= aiTarget(state.allies);
             bool locked= false;
             for (int i=0;i<state.allies.size();i++){
@@ -225,7 +225,7 @@ void insertEnemyAbility(Character &enemy){
             } else {
                 slowPrint("時限モジュール!!!\nThe next action uses \"自爆モジュール\"\n");
                 //idk is there any lyris so i put in megumin lyris from konosuba
-                Effect explosion = Effect("Self-destruct",1,0);
+                Effect explosion = Effect("Self-destruct", "other", 1, 0);
                 self.effects.push_back(explosion);
                 explosion.endRound = [](Effect &self, Character &master, State &state) {
                     self.duration--;
@@ -251,7 +251,7 @@ void insertCharacterAbility(Character &character) {
     if (character.name == "Clara") {
         //        character.name= "\033[91mClara\033[0m";
         character.nameColor = {36};
-        Effect enhancedCounter = Effect("Enhanced Counter", -1, 0);
+        Effect enhancedCounter = Effect("Enhanced Counter", "other", -1, 0);
         character.effects.push_back(enhancedCounter);
         character.dmgReduction = 0.1;
         character.basicAtk = [](Character &self, State &state) {  // I Want to Help
@@ -286,7 +286,7 @@ void insertCharacterAbility(Character &character) {
             self.taunt*=5;
             slowPrint("クラーラ：クラーラも…みんなを守りたい！       \nクラーラ：助けて、スヴァローグ！\n", {37});
             addEnergy(self,5);
-            Effect ultEfx("Promise, Not Command", 2, 0);
+            Effect ultEfx("Promise, Not Command", "buff", 2, 0);
             ultEfx.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 if (self.duration == 0) {
@@ -307,7 +307,7 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("クラーラ：大丈夫。\n", {37});
             }
             addEnergy(self,10);
-            Effect counter("Mark of Counter", -1, 1);
+            Effect counter("Mark of Counter", "other", -1, 1);
             attacker.effects.push_back(counter);
             if (hit(50)) {
                 slowPrint("スヴァローグ：クラーラから離れろ。\n", {36});
@@ -327,8 +327,8 @@ void insertCharacterAbility(Character &character) {
     else if (character.name== "Jingliu") {
         //        character.name="\033[34mJingliu\033[0m";
         character.nameColor = {34};
-        Effect syzygy("Syzygy", -1, 0);
-        Effect transmigration("Spectral Transmigration", -1, 0);
+        Effect syzygy("Syzygy", "other" -1, 0);
+        Effect transmigration("Spectral Transmigration", "other", -1, 0);
         character.effects.push_back(syzygy);
         character.effects.push_back(transmigration);
 
@@ -442,8 +442,8 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed = true;
         };
         character.skill = [](Character &self, State &state) {
-            Effect blessing ("Blessing", 3,0);//blessing for allies
-            Effect speed_up ("Speed up",1,0);//self speed up
+            Effect blessing("Blessing", "buff", 3, 0);  // blessing for allies
+            Effect speed_up ("Speed up", "buff", 1, 0);  // self speed up
             if (!state.decSkillPoint()) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
@@ -485,7 +485,7 @@ void insertCharacterAbility(Character &character) {
             Character &allies = state.allies[target];
             slowPrint("停云:万事吉とならん、一心同帰。      \n",  self.nameColor);
             addEnergy(allies,50);
-            Effect ultEfx ("Amidst the Rejoicing Clouds",2,0);
+            Effect ultEfx("Amidst the Rejoicing Clouds", "buff", 2, 0);
             allies.effects.push_back(ultEfx);
             double dmg_b = 0.5;
             allies.dmgBonus += dmg_b;
@@ -501,7 +501,7 @@ void insertCharacterAbility(Character &character) {
         };
     }
     else if (character.name == "Kafka") {
-        Effect elecshock = Effect("電觸", 2 ,0);
+        Effect elecshock = Effect("電觸", "debuff", 2 ,0);
         elecshock.endRound = [](Effect &self, Character &master, State &state) {
             self.duration--;
             //singleAttack(state, )
@@ -553,25 +553,24 @@ void insertCharacterAbility(Character &character) {
             if (hit(50)) slowPrint("フォフォ：邪を払い...魅を縛らん...\n", self.nameColor);
             else slowPrint("フォフォ：霊符よ...守りたまえ...\n", self.nameColor);
             addEnergy(self,30);
-            clearDebuff(state, self, target);
+            cleanseDebuff(state, self, target);
             blastHealing(state, self, target, 0.21, 0.168, 560, 448);
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {
-            Effect tail("Spiritual Domination", 2,0);
             slowPrint("フォフォ：こ、来ないで...\n",self.nameColor);
             slowPrint("",{},500);
             slowPrint("シッポ：うろちょろと目障りなんだよ...悪鬼は、俺様だけで充分だ！\n",self.nameColor);
             for (auto & allie : state.allies) {
+                Effect tail("Spiritual Domination", "buff", 2,0);
                 allie.effects.push_back(tail);
                 if (allie.name!=self.name) {
-                    double charge = 0.2 * allie.maxEnergy;
+                    double charge = allie.maxEnergy * 0.2;
                     addEnergy(allie,charge);
                 } else addEnergy(self,5);
-                allie.getEffectOrCrash("Spiritual Domination");
-                double increased_atk = allie.baseAtk*0.2;
+                double increased_atk = allie.baseAtk * 0.2;
                 allie.atk += increased_atk;
-                tail.values.push_back((increased_atk));
+                tail.values.push_back(increased_atk);
                 tail.endRound = [](Effect &self, Character &master, State &state) {
                     self.duration--;
                     if (self.duration == 0) {
@@ -583,6 +582,7 @@ void insertCharacterAbility(Character &character) {
         };
     }
 }
+
 vector<Situation> getSituations() {
     vector<Situation> situations;
     ifstream situationFile("situations.txt"), enemyFile("enemies.csv");
