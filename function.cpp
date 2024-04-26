@@ -163,7 +163,7 @@ void insertEnemyAbility(Character &enemy){
     if (enemy.name== "Antibaryon") {
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
-            slowPrint("消滅\n",{31});
+            slowPrint("Antibaryon: 消滅\n",{31});
             singleAttack(state, self, target, 2.5);
             state.timelineProceed = true;
         };
@@ -181,21 +181,21 @@ void insertEnemyAbility(Character &enemy){
                 }
             }
             if (locked) {
-                slowPrint("Trampler:強弓の終末\n");
+                slowPrint("Trampler: 強弓の終末\n");
                 singleAttack(state, self, target, 6.0);
                 state.allies[target].removeEffect(lockOn);
             } else {
                 if (hit(20)) {
-                    slowPrint("Trampler:螺旋の弓矢\nTrampler locks on to "+state.allies[target].name+"!\n"+"Cast End of Bow to this target in the next action.\n",{37});
+                    slowPrint("Trampler: 螺旋の弓矢\nTrampler locks on to "+state.allies[target].name+"!\n"+"Cast End of Bow to this target in the next action.\n",{37});
                     state.allies[target].effects.push_back(lockOn);
                 } else if (hit(37.5)){
-                    slowPrint("侵略の鉄蹄\n",{37});
+                    slowPrint("Trampler: 侵略の鉄蹄\n",{37});
                     singleAttack(state,self,target,4.0);
                 } else if (hit(60)){
-                    slowPrint("戦争の蹂躙\n",{37});
+                    slowPrint("Trampler: 戦争の蹂躙\n",{37});
                     blastAttack(state,self,target,2.5,2.5);
                 }else {
-                    slowPrint("虚実の投影\n",{37});
+                    slowPrint("Trampler: 虚実の投影\n",{37});
                     singleAttack(state,self,target,3.0);
                 }
             }
@@ -205,10 +205,10 @@ void insertEnemyAbility(Character &enemy){
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             if (hit(50)) {
-                slowPrint("略奪の斬撃\n", {31});
+                slowPrint("Reaver: 略奪の斬撃\n", {31});
                 singleAttack(state, self, target, 2.5);
             } else {
-                slowPrint("狩猟の刃\n",{31});
+                slowPrint("Reaver: 狩猟の刃\n",{31});
                 blastAttack(state,self,target,1.5,1.5);
             }
             state.timelineProceed = true;
@@ -220,10 +220,10 @@ void insertEnemyAbility(Character &enemy){
             //enemy.nameColor = {34}; todo: IDK why there is bug in this line
             int target= aiTarget(state.allies);
             if (hit(50)) {
-                slowPrint("突進！\n",self.nameColor);
+                slowPrint("AutomatonSpider: 突進！\n",self.nameColor);
                 singleAttack(state, self, target, 2.0);
             } else {
-                slowPrint("時限モジュール!!!\nThe next action uses \"自爆モジュール\"\n");
+                slowPrint("AutomatonSpider: 時限モジュール!!!\nThe next action uses \"自爆モジュール\"\n");
                 //idk is there any lyris so i put in megumin lyris from konosuba
                 Effect explosion = Effect("Self-destruct", "other", 1, 0);
                 self.effects.push_back(explosion);

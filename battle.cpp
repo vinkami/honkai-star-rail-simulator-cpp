@@ -82,7 +82,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 
     } else if (current.faction == "enemy") {  // enemy's turn
         slowPrint(current.name, {current.nameColor}, 10);
-        slowPrint("'s turn.", {31}, 10);
+        slowPrint("'s turn.\n", {31}, 10);
         current.basicAtk(current, state);
 
     } else { // player's turn
@@ -105,7 +105,10 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         }
         cout << endl << "Health: ";
         for (auto &ally: state.allies) {
-            cout << ally.name << " " << ally.hp << " / " << ally.maxHp << "   ";
+            string color = "\033[0m";
+            if (ally.hp <= ally.maxHp*0.3)
+                color = "\033[31m";
+            cout<< ally.name << " " << color << ally.hp << " / " << ally.maxHp << "\033[0m   ";
         }
 
         string line, move;
