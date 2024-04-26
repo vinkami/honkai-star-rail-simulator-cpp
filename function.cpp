@@ -256,7 +256,6 @@ void insertCharacterAbility(Character &character) {
         character.dmgReduction = 0.1;
         character.basicAtk = [](Character &self, State &state) {  // I Want to Help
             int target = selectTarget(state.enemies);
-            Character &enemy = state.enemies[target];
             if (hit(50)) slowPrint("クラーラ：気を付けて、スヴァローグ！\n", self.nameColor);
             else slowPrint("スヴァローグ：排除する。\n", self.nameColor);
             singleAttack(state, self, target, 1.0);
@@ -556,18 +555,32 @@ void insertCharacterAbility(Character &character) {
             addEnergy(self,30);
             clearDebuff(state, self, target);
             blastHealing(state, self, target, 0.21, 0.168, 560, 448);
-            state.timelineProceed = true; //TODO: add huohuo two stack of Divine Provision that can heal when allies on hit
+            state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {
-            slowPrint("フォフォ：こ、来ないで...",self.nameColor);
-            slowPrint("",{},200);
-            slowPrint("シッポ：うろちょろと目障りなんだよ…\n悪鬼は、俺様だけで充分だ！\n",self.nameColor);
-            for (auto &ally: state.allies) {
-                if (ally.name!=self.name) {
-                    double charge = 0.2 * ally.maxEnergy;
-                    addEnergy(ally,charge);
+            Effect tail("Spiritual Domination", 2,0);
+            slowPrint("フォフォ：こ、来ないで...\n",self.nameColor);
+            slowPrint("",{},500);
+            slowPrint("シッポ：うろちょろと目障りなんだよ...悪鬼は、俺様だけで充分だ！\n",self.nameColor);
+            for (auto & allie : state.allies) {
+                allie.effects.push_back(tail);
+                if (allie.name!=self.name) {
+                    double charge = 0.2 * allie.maxEnergy;
+                    addEnergy(allie,charge);
                 } else addEnergy(self,5);
-            } //TODO: add effect that huohuo add 20% atk to allies
+                allie.getEffectOrCrash("Spiritual Domination");
+                double increased_atk = allie.baseAtk*0.2;
+                allie.atk += increased_atk;
+                tail.values.push_back((increased_atk));
+                cout << allie.name << " increased atk by " << increased_atk <<endl;
+                tail.endRound = [](Effect &self, Character &master, State &state) {
+                    self.duration--;
+                    if (self.duration == 0) {
+                        master.atk -= self.values[0];
+                        master.removeEffect((self));
+                    }
+                };
+            }
         };
     }
 }
