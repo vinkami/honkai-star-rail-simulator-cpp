@@ -327,7 +327,7 @@ void insertCharacterAbility(Character &character) {
     else if (character.name== "Jingliu") {
         //        character.name="\033[34mJingliu\033[0m";
         character.nameColor = {34};
-        Effect syzygy("Syzygy", "other" -1, 0);
+        Effect syzygy("Syzygy", "other", -1, 0);
         Effect transmigration("Spectral Transmigration", "other", -1, 0);
         character.effects.push_back(syzygy);
         character.effects.push_back(transmigration);
