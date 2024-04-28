@@ -48,6 +48,7 @@ void battleStart(State &state) {
     }
     for (auto &enemy : state.enemies) {
         enemy.remTime = 15000.0 / enemy.speed;
+        enemy.maxHp=static_cast<int>(enemy.hp);
         enemy.resetRemTime = 10000.0 / enemy.speed;
         enemy.startBattle(enemy, state);
     }
