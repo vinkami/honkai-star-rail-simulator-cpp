@@ -321,17 +321,35 @@ void insertEnemyAbility(Character &enemy){
             state.timelineProceed = true;
         };
     } else if (enemy.name== "Wooden Lupus"){
+        enemy.speed=120;
+        Effect howl = Effect("howling","other",-1,1);
+        enemy.effects.push_back(howl);
         enemy.nameColor={36};
         enemy.basicAtk = [](Character &self, State &state) {
+            Effect &summon=self.getEffectOrCrash("howling");
             int target= aiTarget(state.allies);
-            if (hit(50)) {
-                slowPrint("skill1\n", {31});
+            if (hit(60) || summon.stack==0) {
+                slowPrint("Wooden Lupus: 狼餐\n", self.nameColor);
                 singleAttack(state, self, target, 2);
                 //TODO:dot atk
             } else {
-                slowPrint("skill2\n",{31});
-                //TODO: summon another dog share same HP value
+                slowPrint("Wooden Lupus: 嘯合\n",self.nameColor);
+                slowPrint("Wooden Lupus summoned Shadow Jackhyena!\n",self.nameColor);
+                summon.stack-=1;
+                Character wolf= Character("Shadow Jackhyena",1,120,self.hp,155,700,0,0,0,0,self.maxHp);
+                wolf.maxHp=self.maxHp; wolf.faction="enemy";
+                insertEnemyAbility(wolf);
+                state.enemies.push_back(wolf);
             }
+            state.timelineProceed = true;
+        };
+    }  else if (enemy.name== "Shadow Jackhyena"){
+        enemy.nameColor={36};
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            slowPrint("Shadow Jackhyena: 狼餐\n", self.nameColor);
+            singleAttack(state, self, target, 2);
+            //TODO:dot atk
             state.timelineProceed = true;
         };
     }
@@ -573,6 +591,7 @@ void insertCharacterAbility(Character &character) {
                     master.removeEffect((self));
                 }
             };
+            state.timelineProceed=true;
         };
         character.ult = [](Character &self, State &state) {  // Amidst the Rejoicing Clouds
             int target = selectTarget(state.allies);
@@ -982,9 +1001,55 @@ void insertCharacterAbility(Character &character) {
                 ally.speed+= 50;
             }
         };
+        //Asta
     }
-    //Asta
+        //Danhen
+    else if (character.name == "Danheng") {
+        character.nameColor ={92};
+        character.basicAtk = [](Character &self, State &state) {
+            int target = selectTarget(state.enemies);
+            slowPrint("今だ。\n",  self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+        character.skill = [](Character &self, State &state) {
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", {91});
+                return;
+            }
+            int target = selectTarget(state.enemies);
+            Character &enemy = state.enemies[target];
+            singleAttack(state, self, target, 2.6);
+            addEnergy(self, 30);
+            Effect speed_lo = Effect("疾雨", "debuff", 2, 0);
+            speed_lo.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration == 0) {
+                    master.speed += master.baseSpeed * 0.12;
+                    master.removeEffect(self);
+                }
+            };
+            enemy.effects.push_back(speed_lo);
+            enemy.speed -= enemy.baseSpeed * 0.12;
+            state.timelineProceed = true;
+        };
+
+        character.ult = [](Character &self, State &state) {
+            slowPrint("	生死虚実、一念の間なり。\n",  self.nameColor);
+            int target = selectTarget(state.enemies);
+            Character &enemy = state.enemies[target];
+            slowPrint("	洞天幻化、長夢一覚…破！\n",  self.nameColor);
+            if(enemy.effects[enemy.getEffectLoc("疾雨")].duration>0) {
+                singleAttack(state, self, target, 4*0.12);
+            } else {
+                singleAttack(state, self, target, 4);
+            }
+        };
+    }
+    //Danhen   
 }
+    
 
 vector<Situation> getSituations() {
     vector<Situation> situations;
