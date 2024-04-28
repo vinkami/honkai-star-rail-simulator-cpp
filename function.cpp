@@ -321,17 +321,35 @@ void insertEnemyAbility(Character &enemy){
             state.timelineProceed = true;
         };
     } else if (enemy.name== "Wooden Lupus"){
+        enemy.speed=120;
+        Effect howl = Effect("howling","other",-1,1);
+        enemy.effects.push_back(howl);
         enemy.nameColor={36};
         enemy.basicAtk = [](Character &self, State &state) {
+            Effect &summon=self.getEffectOrCrash("howling");
             int target= aiTarget(state.allies);
-            if (hit(50)) {
-                slowPrint("skill1\n", {31});
+            if (hit(60) || summon.stack==0) {
+                slowPrint("Wooden Lupus: 狼餐\n", self.nameColor);
                 singleAttack(state, self, target, 2);
                 //TODO:dot atk
             } else {
-                slowPrint("skill2\n",{31});
-                //TODO: summon another dog share same HP value
+                slowPrint("Wooden Lupus: 嘯合\n",self.nameColor);
+                slowPrint("Wooden Lupus summoned Shadow Jackhyena!\n",self.nameColor);
+                summon.stack-=1;
+                Character wolf= Character("Shadow Jackhyena",1,120,self.hp,155,700,0,0,0,0,self.maxHp);
+                wolf.maxHp=self.maxHp; wolf.faction="enemy";
+                insertEnemyAbility(wolf);
+                state.enemies.push_back(wolf);
             }
+            state.timelineProceed = true;
+        };
+    }  else if (enemy.name== "Shadow Jackhyena"){
+        enemy.nameColor={36};
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            slowPrint("Shadow Jackhyena: 狼餐\n", self.nameColor);
+            singleAttack(state, self, target, 2);
+            //TODO:dot atk
             state.timelineProceed = true;
         };
     }
@@ -573,6 +591,7 @@ void insertCharacterAbility(Character &character) {
                     master.removeEffect((self));
                 }
             };
+            state.timelineProceed=true;
         };
         character.ult = [](Character &self, State &state) {  // Amidst the Rejoicing Clouds
             int target = selectTarget(state.allies);
