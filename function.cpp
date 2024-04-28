@@ -259,7 +259,7 @@ void insertEnemyAbility(Character &enemy){
         };
 
     }else if (enemy.name== "Golden Hound"){
-        enemy.nameColor={93};
+        enemy.nameColor={37};
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             slowPrint("Golden Hound: 角抵\n", {31});
@@ -279,11 +279,12 @@ void insertEnemyAbility(Character &enemy){
         enemy.effects.push_back(monkeRage);
         enemy.nameColor={35};
         enemy.basicAtk = [](Character &self, State &state) {
-            int target;
+            int target = aiTarget(state.allies);
             for (int i=0;i<state.allies.size();i++){
                 int index = state.allies[i].getEffectLoc("Monkey Eye On You");
-                if (index!=-1)
+                if (index!=-1){
                     target=i;
+                }
             }
             Effect &genki = self.getEffectOrCrash("元気");
             Effect &wakuwaku = self.getEffectOrCrash("奮威");
@@ -291,7 +292,6 @@ void insertEnemyAbility(Character &enemy){
             if (genki.stack==0){
                 slowPrint("Malefic Ape: 怒哮\n",self.nameColor);
                 slowPrint("Malefic Ape gains 3 stacks of Gusto.\n",self.nameColor);
-                target = aiTarget(state.allies);
                 monkeyLock(state,state.allies[target],false);
                 slowPrint("Any target that uses their Skill will become the new Monitored target.\n",self.nameColor);
                 genki.stack+=3;
@@ -311,9 +311,26 @@ void insertEnemyAbility(Character &enemy){
                     slowPrint("Malefic Ape boosted its damage\n",self.nameColor);
                     wakuwaku.stack+=1;
                 }
+
                 genki.stack-=1;
                 slowPrint("Malefic Ape: 獣撃\n",self.nameColor);
                 singleAttack(state,self, target,4.75);
+                if (genki.stack==0)
+                    slowPrint("Malefic Ape is exhausted\n",self.nameColor);
+            }
+            state.timelineProceed = true;
+        };
+    } else if (enemy.name== "Wooden Lupus"){
+        enemy.nameColor={36};
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            if (hit(50)) {
+                slowPrint("skill1\n", {31});
+                singleAttack(state, self, target, 2);
+                //TODO:dot atk
+            } else {
+                slowPrint("skill2\n",{31});
+                //TODO: summon another dog share same HP value
             }
             state.timelineProceed = true;
         };
