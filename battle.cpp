@@ -47,6 +47,7 @@ void battleStart(State &state) {
         ally.startBattle(ally, state);
     }
     for (auto &enemy : state.enemies) {
+        enemy.maxHp=enemy.hp;
         enemy.remTime = 15000.0 / enemy.speed;
         enemy.resetRemTime = 10000.0 / enemy.speed;
         enemy.startBattle(enemy, state);
@@ -103,12 +104,21 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
                 color = "\033["+to_string(ally.nameColor[0])+"m";
             cout << color << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "\033[0m   ";
         }
-        cout << endl << "Health: ";
+        cout << endl << "Allie's Health: ";
         for (auto &ally: state.allies) {
             string color = "\033[0m";
             if (ally.hp <= ally.maxHp*0.3)
                 color = "\033[31m";
             cout<< ally.name << " " << color << ally.hp << " / " << ally.maxHp << "\033[0m   ";
+        }
+        cout << endl << "Enemy's Health: ";
+        for (auto &enemy: state.enemies) {
+            string color = "\033[0m";
+            double health = enemy.hp/enemy.maxHp * 100;
+            int healthPercent = static_cast<int>(health);
+            if (health <= 30)
+                color = "\033[31m";
+            cout<< enemy.name << " " << color << healthPercent << "%\033[0m   ";
         }
 
         string line, move;
