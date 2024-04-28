@@ -1,0 +1,10 @@
+Basic attack: Behind the Kindness (Q)
+Deals Physical DMG equal to 100% of Natasha's ATK to a single enemy.
+
+Skill: Love, Heal, and Choose (E)
+Restores a single ally for 10.5% of Natasha's Max HP plus 280.
+Restores the ally for another 7.2% of Natasha's Max HP plus 192
+at the beginning of each turn for 2 turn(s).
+
+Ultimate: Gift of Rebirth (90 energy cost)
+Heals all allies for 13.8% of Natasha's Max HP plus 368.

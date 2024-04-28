@@ -72,6 +72,23 @@ int searchCharacter(const vector<Character>& characters, const string& target) {
     return -1;
 }
 
+void monkeyLock(State &state, Character &self, bool F){
+    if (self.faction!="ally") return;
+    Effect monkey = Effect("Monkey Eye On You","other",-1,0);
+    bool flag= true;
+    for (const auto &enemy : state.enemies){
+        if (enemy.name=="Malefic Ape")
+            flag=false;
+    } if (flag && F) return;
+    if (state.movement=='e' || not F){
+        for (auto &ally : state.allies){
+            ally.removeEffect(monkey);
+        }
+        self.effects.push_back(monkey);
+        slowPrint("Malefic Ape marks on "+self.name+"!\n",{31});
+    }
+}
+
 /* Print text slowly, with a delay between each character
  * text: the text to print
  * delayMS: the delay between each character in milliseconds
@@ -161,6 +178,7 @@ int aiTarget(vector<Character>& character){
 
 void insertEnemyAbility(Character &enemy){
     if (enemy.name== "Antibaryon") {
+        enemy.nameColor={37};
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             slowPrint("Antibaryon: 消滅\n",{31});
@@ -168,8 +186,9 @@ void insertEnemyAbility(Character &enemy){
             state.timelineProceed = true;
         };
     } else if (enemy.name== "Trampler"){
+        enemy.nameColor={37};
         enemy.basicAtk = [](Character &self, State &state){
-            Effect lockOn("lockOn", "debuff", -1, 1);  // idk what happen
+            Effect lockOn("lockOn", "other", -1, 1);  // idk what happen
             int target= aiTarget(state.allies);
             bool locked= false;
             for (int i=0;i<state.allies.size();i++){
@@ -186,22 +205,23 @@ void insertEnemyAbility(Character &enemy){
                 state.allies[target].removeEffect(lockOn);
             } else {
                 if (hit(20)) {
-                    slowPrint("Trampler: 螺旋の弓矢\nTrampler locks on to "+state.allies[target].name+"!\n"+"Cast End of Bow to this target in the next action.\n",{37});
+                    slowPrint("Trampler: 螺旋の弓矢\nTrampler locks on to "+state.allies[target].name+"!\n"+"Cast End of Bow to this target in the next action.\n",{31});
                     state.allies[target].effects.push_back(lockOn);
                 } else if (hit(37.5)){
-                    slowPrint("Trampler: 侵略の鉄蹄\n",{37});
+                    slowPrint("Trampler: 侵略の鉄蹄\n",{31});
                     singleAttack(state,self,target,4.0);
                 } else if (hit(60)){
-                    slowPrint("Trampler: 戦争の蹂躙\n",{37});
+                    slowPrint("Trampler: 戦争の蹂躙\n",{31});
                     blastAttack(state,self,target,2.5,2.5);
                 }else {
-                    slowPrint("Trampler: 虚実の投影\n",{37});
+                    slowPrint("Trampler: 虚実の投影\n",{31});
                     singleAttack(state,self,target,3.0);
                 }
             }
             state.timelineProceed = true;
         };
     } else if (enemy.name== "Reaver"){
+        enemy.nameColor={37};
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             if (hit(50)) {
@@ -238,8 +258,82 @@ void insertEnemyAbility(Character &enemy){
             }
         };
 
-    } else if (enemy.name == " ") {
+    }else if (enemy.name== "Golden Hound"){
+        enemy.nameColor={37};
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            slowPrint("Golden Hound: 角抵\n", {31});
+            singleAttack(state, self, target, 2.5);
+            state.timelineProceed = true;
+        };
+        enemy.onHit = [](Character&self, State &state, Character &attacker){
+            if (self.hp<=0){
+                slowPrint("遠吠え",{31});
+                //TODO: change next-move character to the character next to golden hound
+            }
+        };
+    } else if (enemy.name== "Malefic Ape"){
+        Effect monkeTarget = Effect("元気", "other", -1, 0);
+        Effect monkeRage = Effect("奮威","buff",-1,0);
+        enemy.effects.push_back(monkeTarget);
+        enemy.effects.push_back(monkeRage);
+        enemy.nameColor={35};
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target = aiTarget(state.allies);
+            for (int i=0;i<state.allies.size();i++){
+                int index = state.allies[i].getEffectLoc("Monkey Eye On You");
+                if (index!=-1){
+                    target=i;
+                }
+            }
+            Effect &genki = self.getEffectOrCrash("元気");
+            Effect &wakuwaku = self.getEffectOrCrash("奮威");
 
+            if (genki.stack==0){
+                slowPrint("Malefic Ape: 怒哮\n",self.nameColor);
+                slowPrint("Malefic Ape gains 3 stacks of Gusto.\n",self.nameColor);
+                monkeyLock(state,state.allies[target],false);
+                slowPrint("Any target that uses their Skill will become the new Monitored target.\n",self.nameColor);
+                genki.stack+=3;
+            } else {
+                double increased_atk = self.baseAtk*0.2;
+                self.atk += increased_atk*wakuwaku.stack;
+                wakuwaku.values.push_back(increased_atk);
+                wakuwaku.endRound = [](Effect &self, Character &master, State &state) {
+                    self.duration--;
+                    if (self.duration == 0) {
+                        master.atk -= self.values[0];
+                        master.removeEffect((self));
+                    }
+                };
+                if (wakuwaku.stack<3){
+                    slowPrint("Malefic Ape: 奮威\n",self.nameColor);
+                    slowPrint("Malefic Ape boosted its damage\n",self.nameColor);
+                    wakuwaku.stack+=1;
+                }
+
+                genki.stack-=1;
+                slowPrint("Malefic Ape: 獣撃\n",self.nameColor);
+                singleAttack(state,self, target,4.75);
+                if (genki.stack==0)
+                    slowPrint("Malefic Ape is exhausted\n",self.nameColor);
+            }
+            state.timelineProceed = true;
+        };
+    } else if (enemy.name== "Wooden Lupus"){
+        enemy.nameColor={36};
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            if (hit(50)) {
+                slowPrint("skill1\n", {31});
+                singleAttack(state, self, target, 2);
+                //TODO:dot atk
+            } else {
+                slowPrint("skill2\n",{31});
+                //TODO: summon another dog share same HP value
+            }
+            state.timelineProceed = true;
+        };
     }
 }
 
@@ -327,7 +421,7 @@ void insertCharacterAbility(Character &character) {
     else if (character.name== "Jingliu") {
         //        character.name="\033[34mJingliu\033[0m";
         character.nameColor = {34};
-        Effect syzygy("Syzygy", "other" -1, 0);
+        Effect syzygy("Syzygy", "other", -1, 0);
         Effect transmigration("Spectral Transmigration", "other", -1, 0);
         character.effects.push_back(syzygy);
         character.effects.push_back(transmigration);
@@ -483,7 +577,7 @@ void insertCharacterAbility(Character &character) {
         character.ult = [](Character &self, State &state) {  // Amidst the Rejoicing Clouds
             int target = selectTarget(state.allies);
             Character &allies = state.allies[target];
-            slowPrint("停云:万事吉とならん、一心同帰。      \n",  self.nameColor);
+            slowPrint("停云:万事吉とならん、一心同帰\n",  self.nameColor);
             addEnergy(allies,50);
             Effect ultEfx("Amidst the Rejoicing Clouds", "buff", 2, 0);
             allies.effects.push_back(ultEfx);
@@ -499,39 +593,7 @@ void insertCharacterAbility(Character &character) {
             };
             // Todo: Add more characters
         };
-    }
-    else if (character.name == "Kafka") {
-        Effect elecshock = Effect("電觸", "debuff", 2 ,0);
-        elecshock.endRound = [](Effect &self, Character &master, State &state) {
-            self.duration--;
-            //singleAttack(state, )
-        };
-        character.nameColor ={35};
-        character.basicAtk = [](Character &self, State &state) {  // Midnight Tumul
-            int target = selectTarget(state.enemies);
-            slowPrint("一瞬よ。\n",  self.nameColor);
-            singleAttack(state, self, target, 1.0);
-            addEnergy(self,20);
-            state.incSkillPoint();
-            state.timelineProceed = true;
-        };
-        //Todo: follow up attack
-        character.skill = [](Character &self, State &state) {  // Caressing Moonlight
-            if (!state.decSkillPoint()) {
-                slowPrint("No skill points left.\n", self.nameColor);
-                return;
-            }
-            int target = selectTarget(state.enemies);
-            singleAttack(state, self, target, 2.0);
-            blastAttack(state, self, target, 2.0, 0.75);
-            //slowPrint((" ")); seem there are no lyris when kafka use skill
-            addEnergy(self,30);
-            state.timelineProceed = true;
-        };
-        character.ult = [](Character &self, State &state) {  // Twilight Trill
-            aoeAttack(state, self, 0.8);
-            // Todo: where is the remaining ult?
-        };
+
     } else if (character.name=="Huohuo") {
         character.nameColor = {32};
         character.basicAtk = [](Character &self, State &state) {  // Banner: Stormcaller
@@ -608,6 +670,320 @@ void insertCharacterAbility(Character &character) {
             }
         };
     }
+    //Huohuo
+
+    //Kafka
+    else if (character.name == "Kafka") {
+        character.nameColor ={35};
+        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+            int target = selectTarget(state.enemies);
+            slowPrint("一瞬よ。\n",  self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            addEnergy(self, 20);
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+        //Todo: follow up attack
+        character.skill = [](Character &self, State &state) {
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", {91});
+                return;
+            }
+            //skill point check
+            int target = selectTarget(state.enemies);
+            singleAttack(state, self, target, 2.0);
+            blastAttack(state, self, target, 0.75, 0.75);
+            //slowPrint((" ")); seem there are no lyris when kafka use skill
+            self.energy += 30;
+            //if target contain elecshock
+            // std::vector<Character> &team = (attacker.faction == "ally") ? state.enemies : state.allies;
+            if (target > 0) {
+                Character &left_target = state.enemies[target - 1];
+                if(left_target.getEffectLoc("電觸") != -1) {
+                    singleAttack(state, self, target-1,0.825);
+                }
+            }
+            if (target + 1 < state.enemies.size()) {
+                Character &right_target = state.enemies[target + 1];
+                if(right_target.getEffectLoc("電觸") != -1) {
+                    singleAttack(state, self, target+1,0.825);
+                }
+            }
+            state.timelineProceed = true;
+            //check contain effect
+        };
+        character.ult = [](Character &self, State &state) {
+            //int character_pos = searchCharacter(state.allies, self.name);
+            aoeAttack(state, self, 0.8);
+            slowPrint("お別れの時間よ…ポン！\n",self.nameColor);
+            aoeAttack(state, self, 3.47);
+            //ult attack end
+            //effect
+            Effect elecshock = Effect("電觸", "debuff" ,2);
+            double rounddmg = self.atk * 3.47;
+            double oringaldmg = self.atk * 1.08;
+            elecshock.values.push_back(rounddmg);//elecshock round damage
+            elecshock.values.push_back(oringaldmg);//oringnal damage
+            // elecshock value[0] = rounddmg
+            // elecshock value[1] = oringnaldmg
+            elecshock.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                master.hp -= self.values[0];
+                slowPrint("素晴らしい時は…やがて過ぎ去る。\n",{35});
+                if(self.duration==0) {
+                    master.removeEffect(self);
+                }
+            };
+            for(auto &enemy: state.enemies) {
+                if(hit(75)) {
+                    enemy.effects.push_back(elecshock);
+                    //singleAttack(state, self, );
+                    //enemy.hp-= elecshock.values[1];
+                }
+            }
+        };
+    }
+    //kafka
+
+    //FuXuan
+    else if (character.name == "Fuxuan") {
+        //todo: add telent team damage resist 18%
+        character.nameColor ={35};
+        //talent Fuxuan self healing
+        Effect bulf = Effect("陰陽転換、生々流転。", "other", 0, 1);
+        bulf.endRound = [](Effect &self, Character &master, State &state) {
+            if(master.hp<master.baseHp*0.5 && master.hp>0) {
+                master.hp+= (master.baseHp-master.hp)*0.9;
+                slowPrint("陰陽転換、生々流転。",{35});
+                self.stack--;
+            }
+        };
+        character.effects.push_back(bulf);
+        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+            int target = selectTarget(state.enemies);
+            slowPrint("極数，知来！\n成象，効法！\n",  self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            addEnergy(self, 20);
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+
+        character.skill =[](Character &self, State &state) {
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", self.nameColor);
+                return;
+            }
+            // Doing Effect for shar damage
+            slowPrint("うよいったい\nしょうかしょうい\n",self.nameColor);
+            addEnergy(self, 30);
+            Effect share_dmg = Effect("穷观阵", "buff", 3);
+            int Fuxuan_pos = searchCharacter(state.allies, "Fuxuan");
+            double addiction_hp = self.baseHp * 0.6;
+            double addiction_critrate = 12;
+            share_dmg.values.push_back(Fuxuan_pos);
+            share_dmg.values.push_back(addiction_hp);
+            share_dmg.values.push_back(addiction_critrate);
+            //giving all ally Fuxuan's skill buff
+            for (auto &ally : state.allies) {
+                if(ally.name!= "Fuxuan") {
+                    int ally_pos= searchCharacter(state.allies,ally.name);
+                    if(ally.getEffectLoc("穷观阵")>=0) {
+                        ally.critRate+=addiction_critrate;
+                        ally.baseHp+=addiction_hp;
+                        ally.effects.push_back(share_dmg);
+                    }
+                    if(ally.effects[ally.getEffectLoc("穷观阵")].duration<3) {
+                        ally.effects[ally.getEffectLoc("穷观阵")].duration=3;
+                    }
+                }
+            }
+            // Fuxuan_pos at share_dmg.valus[0] , addi hp [1], addi critrate [2]
+            //todo: Finish Fuxuan share damage skill for each charater
+            share_dmg.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                int master_pos = searchCharacter(state.allies, master.name);
+                double hp_difference = self.values[0] - master.hp;
+                singleHeal(state,state.allies[self.values[0]],master_pos,0, hp_difference * 0.65);
+                self.values[0] = master.hp;
+                if(self.duration==0) {
+                    master.baseHp -= self.values[1];
+                    master.critRate -= self.values[2];
+                    //removing baseHp
+                    if(master.hp>master.baseHp) {
+                        master.hp = master.baseHp;
+                    }
+                    master.removeEffect((self));
+                }
+            };
+            state.timelineProceed = true;
+        };
+        character.ult = [](Character &self, State &state) {
+            //todo: the aoeAttack of fuxuan should base on baseHp value 100%
+            aoeAttack(state, self,1);
+            slowPrint("換斗移星、人事を、成す！",self.nameColor);
+            if(self.effects[self.getEffectLoc("陰陽転換、生々流転。")].stack<2) {
+                slowPrint("世の万物に法理あり…",self.nameColor);
+                self.effects[self.getEffectLoc("陰陽転換、生々流転。")].stack+=1;
+            }
+            int self_pos = searchCharacter(state.allies , "Fuxuan");
+            for (auto &ally : state.allies) {
+                int ally_pos = searchCharacter(state.allies,ally.name);
+                if(state.allies[ally_pos].name != "Fuxuan"){
+                    singleHeal(state, state.allies[self_pos],ally_pos,0.05,133);
+                }
+            }
+        };
+    }
+    //FuXuan
+
+    //Natasha
+    else if (character.name == "Natasha") {
+        character.nameColor ={97};
+        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+
+            int target = selectTarget(state.enemies);
+            slowPrint("重症ね。\n",  self.nameColor);
+            slowPrint("生命の重みを味わいなさい。\n",  self.nameColor);
+            slowPrint("眠るといいわ。\n",  self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            addEnergy(self, 20);
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+
+        character.skill =[](Character &self, State &state) {
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", {91});
+                return;
+            }
+            slowPrint("薬を飲みましょう。\n",  self.nameColor);
+            slowPrint("痛くないでしょ。\n",self.nameColor);
+            addEnergy(self, 30);
+            int target = selectTarget(state.allies);
+            Character &ally = state.allies[target];
+            int self_pos = searchCharacter(state.allies, self.name);
+            double healing_hp = self.baseHp*0.105 + 280;
+            double healing_hp_round = self.baseHp*0.072 + 192;
+            //add decision below 30%hp
+            if (ally.hp <= ally.baseHp*0.3) {
+                singleHeal(state,self,target,0.105*1.5,280*1.5);
+                //ally.hp+= healing_hp * 1.5;
+            }else {
+                singleHeal(state,self,target,0.105,280);
+                //ally.hp += healing_hp;
+            }
+            //Healing of skill
+            //Healing Effect last 2 round
+            Effect healing = Effect("Love, Healing and Decison", "buff", 2);
+            healing.values.push_back(healing_hp);
+            healing.values.push_back(healing_hp_round);
+            healing.values.push_back(self_pos);
+            //values[0] == healing_hp
+            //values[1] == healing_hp_round
+            //value[2] == natasha pos
+            healing.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                int master_pos = searchCharacter(state.allies,master.name);
+                //determination
+                if (master.hp <= master.baseHp*0.3) {
+                    singleHeal(state,state.allies[self.values[2]],master_pos,0.072*1.5,192*1.5);
+                    //master.hp += self.values[1] * 1.5;
+                }else {
+                    singleHeal(state,state.allies[self.values[2]],master_pos,0.072,192);
+                    //master.hp += self.values[1];
+                }
+                if(self.duration == 0) {
+                    master.removeEffect(self);
+                }
+            };
+            //Effect declaring end
+            //negative effect removing
+            ally.effects.push_back(healing);
+            for(Effect &effect_in_charater : ally.effects) {
+                if(effect_in_charater.type=="debuff") {
+                    ally.removeEffect(effect_in_charater);
+                }
+            }
+            //end turn
+            state.timelineProceed = true;
+        };
+        character.ult = [](Character &self, State &state) {
+            for(auto &ally : state.allies) {
+                int ally_pos = searchCharacter(state.allies,ally.name);
+                //double healing_hp_ult = self.hp * 0.138  + 368;
+                //ally.hp += healing_hp_ult;
+                if (ally.hp <= ally.baseHp*0.3) {
+                    singleHeal(state,self,ally_pos,0.138*1.5,368*1.5);
+                    //ally.hp+= healing_hp_ult * 1.5;
+                }else {
+                    singleHeal(state,self,ally_pos,0.138,368);
+                    //ally.hp += healing_hp_ult;
+            }
+            }
+        };
+    }
+    //Natasha
+
+    //Asta
+    else if (character.name == "Asta") {
+        //todo: add asta buff team attack buff
+        character.nameColor ={31};
+
+        character.basicAtk = [](Character &self, State &state) {
+            int target = selectTarget(state.enemies);
+            Character &enemy = state.enemies[target];
+            slowPrint("避けてね。\n",  self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            addEnergy(self, 20);
+            //basic attack effect
+            Effect buring = Effect("燃焼","debuff",3,0);
+            int Asta_pos =searchCharacter(state.allies,"Asta");
+            buring.values.push_back(Asta_pos);
+            buring.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                int master_pos = searchCharacter(state.allies, master.name);
+                singleAttack(state , state.allies[self.values[0]],master_pos,0.8);
+                if (self.duration == 0) {
+                    master.removeEffect(self);
+                }
+            };
+            //adding effect on target by chance
+            if (hit(80)) {
+                enemy.effects.push_back(buring);
+            }
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+        character.skill = [](Character &self , State &state) {
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", self.nameColor);
+                return;
+            }
+            slowPrint("ラッキースターは誰かな～    \n星の祝福を貴方に～\n",  self.nameColor);
+            int target = selectTarget((state.enemies));
+            Character &enemy = state.enemies[target];
+            bounceAttack(state, self, target, 0.5, 4);
+            addEnergy(self, 6);
+            state.timelineProceed = true;
+
+        };
+        character.ult = [](Character &self , State &state) {
+            slowPrint("星の秘密を求めるカギよ、開拓者たちに真なる祝福を！\n",  self.nameColor);
+            Effect ult_speed_up = Effect("星空の願い", "buff", 2, 0);
+            ult_speed_up.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration==0) {
+                    master.speed-=50;
+                    master.removeEffect(self);
+                }
+            };
+            for (Character &ally: state.allies) {
+                ally.effects.push_back(ult_speed_up);
+                ally.speed+= 50;
+            }
+        };
+    }
+    //Asta
 }
 
 vector<Situation> getSituations() {

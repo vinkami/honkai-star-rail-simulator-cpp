@@ -1,0 +1,10 @@
+Basic attack: Spectrum Beam (Q)
+Deals Physical DMG equal to 100% of Asta's ATK to a single enemy.
+
+Skill: Meteor Storm (E)
+Deals Physical DMG equal to 50% of Asta's ATK to a single enemy and
+further deals DMG for 4 extra times, with each time dealing Physical
+DMG equal to 50% of Asta's ATK to a random enemy.
+
+Ultimate: Astral Blessing (120 energy cost)
+Increases SPD of all allies by 50 for 2 turn(s).

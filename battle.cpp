@@ -61,13 +61,11 @@ void printCharacterQueue(State &state) {
     characters.insert(characters.end(),state.enemies.begin(), state.enemies.end());
     sort(characters.begin(), characters.end(), [](const Character &a, const Character &b) { return a.remTime < b.remTime; });
     slowPrint("\nNext in line ",{93}, 10);
-    int repeatedTimes = 5;
-    if (characters.size()<4) repeatedTimes = characters.size()+1;
-    for (int i=1;i<(repeatedTimes);i++){
+    for (int i=1;i<5;i++){
         slowPrint(" [ ", {0}, 10);
         slowPrint(characters[i].name, {characters[i].nameColor}, 10);
         slowPrint(" ] ", {0}, 10);
-        if(i+1!=repeatedTimes)slowPrint("->",{93},10);
+        if(i!=4)slowPrint("->",{93},10);
     }
 }
 
@@ -99,12 +97,28 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 //            if(i!=state.maxSkillPoint-1) cout << " ";
         }
         cout << endl << "Energy: ";
-        for (auto &ally: state.allies) {
-            cout << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "   ";
+        for (auto ally: state.allies) {
+            string color = "\033[0m";
+            if (ally.maxEnergy==ally.energy)
+                color = "\033["+to_string(ally.nameColor[0])+"m";
+            cout << color << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "\033[0m   ";
         }
-        cout << endl << "Health: ";
+        cout << endl << "Allie's Health: ";
         for (auto &ally: state.allies) {
-            cout << ally.name << " " << ally.hp << " / " << ally.maxHp << "   ";
+            int health = static_cast<int>(ally.hp);
+            string color = "\033[0m";
+            if (ally.hp <= ally.maxHp*0.3)
+                color = "\033[31m";
+            cout<< ally.name << " " << color << health << " / " << ally.maxHp << "\033[0m   ";
+        }
+        cout << endl << "Enemy's Health: ";
+        for (auto &enemy: state.enemies) {
+            string color = "\033[0m";
+            double health = enemy.hp/enemy.maxHp * 100;
+            int healthPercent = static_cast<int>(health);
+            if (health <= 30)
+                color = "\033[31m";
+            cout<< enemy.name << " " << color << healthPercent << "%\033[0m   ";
         }
 
         string line, move;
