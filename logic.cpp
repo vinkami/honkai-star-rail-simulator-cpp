@@ -24,16 +24,16 @@ double getDot(bool team, double atk, double skillMultiplier, double def, double 
     if (team)  def = 200+10*defLevel; //enemy
     double temp = def/(def+200+10*atkLevel);
     double defMul = 1-temp;
-    return atk*skillMultiplier*defMul*dmgBonus*(1-dmgReduction);
+    return (atk*5)*skillMultiplier*defMul*(1+dmgBonus)*(1-dmgReduction);
 }
 
 
-void dot(Character &attacker, Character &defender, double skillMultiplier, State &state){
+void dot(Character &attacker, Character &defender, double skillMultiplier, const string& effect){
     bool isEnemy = (defender.faction == "enemy");
     double damage=getDot(isEnemy,attacker.atk, skillMultiplier, defender.def, defender.dmgReduction ,attacker.dmgBonus,attacker.level,defender.level);
     defender.hp-=damage;
     string dam=to_string(static_cast<int>(damage));
-    slowPrint(defender.name+" received " + dam + " Dot damage.",{0});
+    slowPrint(defender.name+" received " + dam + " DOT damage from " +effect + ".\n",{0});
     if (defender.hp <= 0) {
         attacker.energy += 10;
         slowPrint(defender.name + " is defeated!\n", {91});
