@@ -787,13 +787,13 @@ void insertCharacterAbility(Character &character) {
             for (auto &ally : state.allies) {
                 if(ally.name!= "Fuxuan") {
                     int ally_pos= searchCharacter(state.allies,ally.name);
-                    if(ally.getEffectLoc(""穷观阵"")>=0) {
+                    if(ally.getEffectLoc("穷观阵")>=0) {
                         ally.critRate+=addiction_critrate;
                         ally.baseHp+=addiction_hp;
                         ally.effects.push_back(share_dmg);
                     }
-                    if(ally.effects[ally.getEffectLoc(""穷观阵"")].duration<3) {
-                        ally.effects[ally.getEffectLoc(""穷观阵"")].duration=3;
+                    if(ally.effects[ally.getEffectLoc("穷观阵")].duration<3) {
+                        ally.effects[ally.getEffectLoc("穷观阵")].duration=3;
                     }
                 }
             }
