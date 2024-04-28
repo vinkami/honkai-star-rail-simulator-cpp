@@ -328,7 +328,6 @@ void insertEnemyAbility(Character &enemy){
         enemy.basicAtk = [](Character &self, State &state) {
             Effect &summon=self.getEffectOrCrash("howling");
             int target= aiTarget(state.allies);
-            cout << "stack: " << summon.stack << endl;
             if (hit(60) || summon.stack==0) {
                 slowPrint("Wooden Lupus: 狼餐\n", self.nameColor);
                 singleAttack(state, self, target, 2);
