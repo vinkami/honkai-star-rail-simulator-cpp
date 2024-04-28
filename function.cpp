@@ -161,6 +161,7 @@ int aiTarget(vector<Character>& character){
 
 void insertEnemyAbility(Character &enemy){
     if (enemy.name== "Antibaryon") {
+        enemy.nameColor={37};
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             slowPrint("Antibaryon: 消滅\n",{31});
@@ -168,8 +169,9 @@ void insertEnemyAbility(Character &enemy){
             state.timelineProceed = true;
         };
     } else if (enemy.name== "Trampler"){
+        enemy.nameColor={37};
         enemy.basicAtk = [](Character &self, State &state){
-            Effect lockOn("lockOn", "debuff", -1, 1);  // idk what happen
+            Effect lockOn("lockOn", "other", -1, 1);  // idk what happen
             int target= aiTarget(state.allies);
             bool locked= false;
             for (int i=0;i<state.allies.size();i++){
@@ -186,22 +188,23 @@ void insertEnemyAbility(Character &enemy){
                 state.allies[target].removeEffect(lockOn);
             } else {
                 if (hit(20)) {
-                    slowPrint("Trampler: 螺旋の弓矢\nTrampler locks on to "+state.allies[target].name+"!\n"+"Cast End of Bow to this target in the next action.\n",{37});
+                    slowPrint("Trampler: 螺旋の弓矢\nTrampler locks on to "+state.allies[target].name+"!\n"+"Cast End of Bow to this target in the next action.\n",{31});
                     state.allies[target].effects.push_back(lockOn);
                 } else if (hit(37.5)){
-                    slowPrint("Trampler: 侵略の鉄蹄\n",{37});
+                    slowPrint("Trampler: 侵略の鉄蹄\n",{31});
                     singleAttack(state,self,target,4.0);
                 } else if (hit(60)){
-                    slowPrint("Trampler: 戦争の蹂躙\n",{37});
+                    slowPrint("Trampler: 戦争の蹂躙\n",{31});
                     blastAttack(state,self,target,2.5,2.5);
                 }else {
-                    slowPrint("Trampler: 虚実の投影\n",{37});
+                    slowPrint("Trampler: 虚実の投影\n",{31});
                     singleAttack(state,self,target,3.0);
                 }
             }
             state.timelineProceed = true;
         };
     } else if (enemy.name== "Reaver"){
+        enemy.nameColor={37};
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             if (hit(50)) {

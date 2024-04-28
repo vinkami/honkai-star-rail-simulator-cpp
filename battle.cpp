@@ -82,7 +82,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 
     } else if (current.faction == "enemy") {  // enemy's turn
         slowPrint(current.name, {current.nameColor}, 10);
-        slowPrint("'s turn.\n", {31}, 10);
+        slowPrint("'s turn.\n", {93}, 10);
         current.basicAtk(current, state);
 
     } else { // player's turn
