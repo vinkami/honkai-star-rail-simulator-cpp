@@ -33,7 +33,13 @@ void heal(Character &healer, Character &target, double skillMultiplier, double p
     double maxHP= target.baseHp;
     if (healing+target.hp>maxHP) target.hp=maxHP;
     else target.hp+=healing;
-    cout << healer.name << " heals " << target.name << " for " << healing << " hp\n";
+    int heals = static_cast<int>(healing);
+    slowPrint(healer.name, {healer.nameColor}, 10);
+    slowPrint((" heals "), {0}, 10);
+    slowPrint(target.name, {target.nameColor}, 10);
+    slowPrint(" for " , {0}, 10);
+    slowPrint(to_string(heals),{0},10);
+    slowPrint(" hp.\n",{0},10);
 }
 
 void attack(Character &attacker, Character &defender, double skillMultiplier, State &state) {
@@ -45,10 +51,11 @@ void attack(Character &attacker, Character &defender, double skillMultiplier, St
     slowPrint((" attacks "), {0}, 10);
     slowPrint(defender.name, {defender.nameColor}, 10);
     slowPrint(" for ", {0}, 10);
-    cout << damage;
+    int integerDamage = static_cast<int>(damage);
+    cout << integerDamage;
     slowPrint(" damage",{0},10);
 //    cout << attacker.name << " attacks " << defender.name << " for " << damage << " damage";
-    if (crit) cout << " (critical)";
+    if (crit) cout << "\033[93m (critical) \033[0m";
     cout << "." << endl;
     if (defender.hp <= 0) {
         attacker.energy += 10;
