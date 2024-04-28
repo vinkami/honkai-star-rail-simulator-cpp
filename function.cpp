@@ -72,6 +72,23 @@ int searchCharacter(const vector<Character>& characters, const string& target) {
     return -1;
 }
 
+void monkeyLock(State &state, Character &self, bool F){
+    if (self.faction!="ally") return;
+    Effect monkey = Effect("Monkey Eye On You","other",-1,0);
+    bool flag= true;
+    for (const auto &enemy : state.enemies){
+        if (enemy.name=="Malefic Ape")
+            flag=false;
+    } if (flag && F) return;
+    if (state.movement=='e' || not F){
+        for (auto &ally : state.allies){
+            ally.removeEffect(monkey);
+        }
+        self.effects.push_back(monkey);
+        slowPrint("Malefic Ape marks on "+self.name+"!\n",{31});
+    }
+}
+
 /* Print text slowly, with a delay between each character
  * text: the text to print
  * delayMS: the delay between each character in milliseconds
@@ -241,8 +258,65 @@ void insertEnemyAbility(Character &enemy){
             }
         };
 
-    } else if (enemy.name == " ") {
+    }else if (enemy.name== "Golden Hound"){
+        enemy.nameColor={93};
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            slowPrint("Golden Hound: 角抵\n", {31});
+            singleAttack(state, self, target, 2.5);
+            state.timelineProceed = true;
+        };
+        enemy.onHit = [](Character&self, State &state, Character &attacker){
+            if (self.hp<=0){
+                slowPrint("遠吠え",{31});
+                //TODO: change next-move character to the character next to golden hound
+            }
+        };
+    } else if (enemy.name== "Malefic Ape"){
+        Effect monkeTarget = Effect("元気", "other", -1, 0);
+        Effect monkeRage = Effect("奮威","buff",-1,0);
+        enemy.effects.push_back(monkeTarget);
+        enemy.effects.push_back(monkeRage);
+        enemy.nameColor={35};
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target;
+            for (int i=0;i<state.allies.size();i++){
+                int index = state.allies[i].getEffectLoc("Monkey Eye On You");
+                if (index!=-1)
+                    target=i;
+            }
+            Effect &genki = self.getEffectOrCrash("元気");
+            Effect &wakuwaku = self.getEffectOrCrash("奮威");
 
+            if (genki.stack==0){
+                slowPrint("Malefic Ape: 怒哮\n",self.nameColor);
+                slowPrint("Malefic Ape gains 3 stacks of Gusto.\n",self.nameColor);
+                target = aiTarget(state.allies);
+                monkeyLock(state,state.allies[target],false);
+                slowPrint("Any target that uses their Skill will become the new Monitored target.\n",self.nameColor);
+                genki.stack+=3;
+            } else {
+                double increased_atk = self.baseAtk*0.2;
+                self.atk += increased_atk*wakuwaku.stack;
+                wakuwaku.values.push_back(increased_atk);
+                wakuwaku.endRound = [](Effect &self, Character &master, State &state) {
+                    self.duration--;
+                    if (self.duration == 0) {
+                        master.atk -= self.values[0];
+                        master.removeEffect((self));
+                    }
+                };
+                if (wakuwaku.stack<3){
+                    slowPrint("Malefic Ape: 奮威\n",self.nameColor);
+                    slowPrint("Malefic Ape boosted its damage\n",self.nameColor);
+                    wakuwaku.stack+=1;
+                }
+                genki.stack-=1;
+                slowPrint("Malefic Ape: 獣撃\n",self.nameColor);
+                singleAttack(state,self, target,4.75);
+            }
+            state.timelineProceed = true;
+        };
     }
 }
 
@@ -486,7 +560,7 @@ void insertCharacterAbility(Character &character) {
         character.ult = [](Character &self, State &state) {  // Amidst the Rejoicing Clouds
             int target = selectTarget(state.allies);
             Character &allies = state.allies[target];
-            slowPrint("停云:万事吉とならん、一心同帰。      \n",  self.nameColor);
+            slowPrint("停云:万事吉とならん、一心同帰\n",  self.nameColor);
             addEnergy(allies,50);
             Effect ultEfx("Amidst the Rejoicing Clouds", "buff", 2, 0);
             allies.effects.push_back(ultEfx);
@@ -509,7 +583,7 @@ void insertCharacterAbility(Character &character) {
             self.duration--;
             //singleAttack(state, )
         };
-        character.nameColor ={35};
+        character.nameColor ={95};
         character.basicAtk = [](Character &self, State &state) {  // Midnight Tumul
             int target = selectTarget(state.enemies);
             slowPrint("一瞬よ。\n",  self.nameColor);
