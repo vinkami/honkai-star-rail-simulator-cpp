@@ -12,6 +12,8 @@ private:
     function<void(Effect&, Character&, State&)> empty = [](Effect &self, Character &master, State &state) {};
 public:
     string name, type;  // type = {buff|debuff|other}
+    bool isDot= false;
+    double skillMultiplier=0;
     int duration, stack;
     vector<double> values{};
 
