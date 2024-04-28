@@ -53,10 +53,10 @@ void attack(Character &attacker, Character &defender, double skillMultiplier, St
     slowPrint(" for ", {0}, 10);
     int integerDamage = static_cast<int>(damage);
     cout << integerDamage;
-    slowPrint(" damage",{0},10);
+    slowPrint(" damage.",{0},10);
 //    cout << attacker.name << " attacks " << defender.name << " for " << damage << " damage";
-    if (crit) cout << "\033[93m (critical) \033[0m";
-    cout << "." << endl;
+    if (crit) cout << "\033[94m (Critical)\033[0m";
+    cout << endl;
     if (defender.hp <= 0) {
         attacker.energy += 10;
         slowPrint(defender.name + " is defeated!\n", {91});
