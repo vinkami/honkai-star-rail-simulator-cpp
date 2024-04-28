@@ -15,7 +15,7 @@ public:
     vector<Character> &allies, &enemies;
     vector<Character> &alliesOriginal, &enemiesOriginal;
     Character &round;
-
+    char movement=' ';
     int maxSkillPoint;
     int skillPoint;
     int roundNumber;
