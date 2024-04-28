@@ -130,20 +130,25 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 
         // actions
         if (move == "q") {
+            state.movement='q';
             current.basicAtk(current, state);
         } else if (move == "e") {
+            state.movement='e';
             current.skill(current, state);
         } else if (move == "1") {
             tryUlt(0, state);
+            state.movement='1';
         } else if (move == "2") {
             tryUlt(1, state);
-        } else if (move == "3") {
+            state.movement='u';
+        } else if (move == "2") {
             tryUlt(2, state);
+            state.movement='3';
         } else if (move == "4") {
             tryUlt(3, state);
+            state.movement='4';
         } else
-
-        // other commands
+            // other commands
         if (move == "escape") {
             cout << "You escaped. Battle terminated." << endl;
             return false;
@@ -151,8 +156,10 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             cout << "Goodbye!" << endl;
             exit(0);
         } else if (move == "help") {
+            state.movement=' ';
             printHelp("battle");
         } else if (move == "reset") {
+            state.movement=' ';
             state.reset = true;
             return false;
         } else {
@@ -170,7 +177,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             if (state.enemies[i].hp<=0)
                 state.enemies.erase(next(state.enemies.begin(), i));
         }
-
+        monkeyLock(state,current);
         // go to next character
         current.endRound(current, state);
         state.forward(current.remTime);
