@@ -336,7 +336,7 @@ void insertEnemyAbility(Character &enemy){
                 slowPrint("Wooden Lupus: 嘯合\n",self.nameColor);
                 slowPrint("Wooden Lupus summoned Shadow Jackhyena!\n",self.nameColor);
                 summon.stack-=1;
-                Character wolf= Character("Shadow Jackhyena",1,120,self.hp,155,700,0,0,0,0,self.maxHp);
+                Character wolf= Character("Shadow Jackhyena",self.level,120,self.hp,155,700,0,0,0,0,self.maxHp);
                 wolf.maxHp=self.maxHp; wolf.faction="enemy";
                 insertEnemyAbility(wolf);
                 state.enemies.push_back(wolf);
@@ -1081,7 +1081,6 @@ vector<Situation> getSituations() {
         int situationNo, level = 1;
         double speed, hp, atk, def;
         char comma;
-
         getline(ss, name, ',');
         ss >> situationNo >> comma;
         ss >> speed >> comma;
@@ -1089,7 +1088,7 @@ vector<Situation> getSituations() {
         ss >> atk >> comma;
         ss >> def;
 
-        Character temp(name, level, speed, hp, atk, def, 0, 0, 0, 0, 0);
+        Character temp(name, level, speed, hp, atk, def, 0, 0, 0, 0,0);
         temp.faction = "enemy";
         insertEnemyAbility(temp);
         situations[situationNo].enemies.push_back(temp);
@@ -1120,7 +1119,7 @@ vector<Character> getPlayableCharacters() {
         ss >> critDamage >> comma;
         ss >> maxEnergy >> comma;
         ss >> taunt;
-        maxHp = hp;
+        maxHp = static_cast<int>(hp);
 
         Character temp(name, level, speed, hp, atk, def, critRate, critDamage, maxEnergy, taunt, maxHp);
         insertCharacterAbility(temp);
