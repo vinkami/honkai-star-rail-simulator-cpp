@@ -1001,9 +1001,55 @@ void insertCharacterAbility(Character &character) {
                 ally.speed+= 50;
             }
         };
+        //Asta
     }
-    //Asta
+        //Danhen
+    else if (character.name == "Danheng") {
+        character.nameColor ={92};
+        character.basicAtk = [](Character &self, State &state) {
+            int target = selectTarget(state.enemies);
+            slowPrint("今だ。\n",  self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+        character.skill = [](Character &self, State &state) {
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", {91});
+                return;
+            }
+            int target = selectTarget(state.enemies);
+            Character &enemy = state.enemies[target];
+            singleAttack(state, self, target, 2.6);
+            addEnergy(self, 30);
+            Effect speed_lo = Effect("疾雨", "debuff", 2, 0);
+            speed_lo.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration == 0) {
+                    master.speed += master.baseSpeed * 0.12;
+                    master.removeEffect(self);
+                }
+            };
+            enemy.effects.push_back(speed_lo);
+            enemy.speed -= enemy.baseSpeed * 0.12;
+            state.timelineProceed = true;
+        };
+
+        character.ult = [](Character &self, State &state) {
+            slowPrint("	生死虚実、一念の間なり。\n",  self.nameColor);
+            int target = selectTarget(state.enemies);
+            Character &enemy = state.enemies[target];
+            slowPrint("	洞天幻化、長夢一覚…破！\n",  self.nameColor);
+            if(enemy.effects[enemy.getEffectLoc("疾雨")].duration>0) {
+                singleAttack(state, self, target, 4*0.12);
+            } else {
+                singleAttack(state, self, target, 4);
+            }
+        };
+    }
+    //Danhen   
 }
+    
 
 vector<Situation> getSituations() {
     vector<Situation> situations;
