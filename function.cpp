@@ -1066,7 +1066,7 @@ void insertCharacterAbility(Character &character) {
             slowPrint("丹恒: 生死虚実、一念の間なり。\n",  self.nameColor);
             int target = selectTarget(state.enemies);
             Character &enemy = state.enemies[target];
-            slowPrint("丹恒: 洞天幻化、長夢一...破！\n",  self.nameColor);
+            slowPrint("丹恒: 洞天幻化、長夢一覚...破！\n",  self.nameColor);
             if(enemy.effects[enemy.getEffectLoc("疾雨")].duration>0) {
                 singleAttack(state, self, target, 4*1.2);
             } else {
