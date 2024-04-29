@@ -32,6 +32,7 @@ void teamMenu(State &state) {
             return;
         } else if (selection == "help") {
             printHelp("team");
+        // TODO: Add a command to direct the player to the list of characters
         } else {
             int number = stoi(selection);
             if (number > playableCharacters.size() || number <= 0){
