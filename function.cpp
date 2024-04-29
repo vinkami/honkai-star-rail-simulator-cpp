@@ -156,16 +156,16 @@ int selectTarget(vector<Character>& characters) {
         try {
             int target = stoi(move) - 1;
             if (target < 0 || target >= characters.size()) {
-                cout << "Invalid target. Defaulting to 1" << endl;
+                slowPrint("Invalid target. Defaulting to 1\n");
                 return 0;
             } else {
                 return target;
             }
         } catch (invalid_argument& e) {
-            cout << "Invalid target. Defaulting to 1" << endl;
+            slowPrint("Invalid target. Defaulting to 1\n");
             return 0;
         } catch (out_of_range& e) {
-            cout << "Invalid target. Defaulting to 1" << endl;
+            slowPrint("Invalid target. Defaulting to 1\n");
             return 0;
         }
     } while (true);
@@ -533,11 +533,12 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",self.nameColor);
                 singleAttack(state, self, target, 2.0);
                 addEnergy(self,20);
-
+                state.timelineProceed = true;
                 if (syzygy.stack >= 2) {
                     transmigration.stack = 1;
                     self.critRate += 50;
                     self.remTime = 0;
+                    state.timelineProceed = false;  // 100% speed up
                     slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", self.nameColor);
                 }
             } else {  // Moon On Glacial River
@@ -566,8 +567,8 @@ void insertCharacterAbility(Character &character) {
                 } else {
                     slowPrint("Syzygy stack: " + to_string(syzygy.stack) + " (Spectral Transmigration mode active)\n", self.nameColor);
                 }
+                state.timelineProceed = true;
             }
-            state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Florephemeral Dreamflux
             Effect &syzygy = self.getEffectOrCrash("Syzygy");
