@@ -15,8 +15,11 @@ void teamMenu(State &state) {
     cout << "Team Menu" << endl;
     vector<Character> team;
     cout << "Available Characters:" << endl;
-    for (int i = 1; i <= playableCharacters.size(); i++)
-        cout << i << ". " << playableCharacters[i-1].name << endl;
+    for (int i = 1; i <= playableCharacters.size(); i++) {
+        cout << i << ". ";
+        playableCharacters[i-1].printColorName(0);
+        cout << endl;
+    }
 //    for (const auto &character : playableCharacters) character.printCurrentStatus();
     cout << "More details of character can be found in list." << endl;
     cout << "A team must have 4 characters." << endl;
