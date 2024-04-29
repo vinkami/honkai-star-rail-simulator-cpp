@@ -17,7 +17,7 @@ void teamMenu(State &state) {
     cout << "Available Characters:" << endl;
     for (int i = 1; i <= playableCharacters.size(); i++)
         cout << i << ". " << playableCharacters[i-1].name << endl;
-//    for (const auto &character : playableCharacters) character.print();
+//    for (const auto &character : playableCharacters) character.printCurrentStatus();
     cout << "More details of character can be found in list." << endl;
     cout << "A team must have 4 characters." << endl;
     //Ask the user what characters they want to use

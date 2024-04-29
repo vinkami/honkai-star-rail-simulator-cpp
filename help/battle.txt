@@ -1,5 +1,6 @@
 Commands:
 - help: Display this help message
+- check: Check the effects and stats of the allies or enemies
 - escape: Escape from the fight
 - reset: Restart with all same setting
 - exit: Exit the battle menu and return to the main menu

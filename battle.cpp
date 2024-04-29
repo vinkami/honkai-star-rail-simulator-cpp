@@ -35,6 +35,50 @@ void tryUlt(int allyTarget, State &state) {
     }
 }
 
+void checkCharacters(State &state) {
+    // list out the names of all allies and enemies in the battle with order
+    slowPrint("Allies:\n", {0}, 10);
+    int i = 1;
+    for (auto &ally : state.allies) {
+        slowPrint(to_string(i) + ": " + ally.name + "\n", {ally.nameColor}, 10);
+        i++;
+    }
+    slowPrint("Enemies:\n", {0}, 10);
+    for (auto &enemy : state.enemies) {
+        slowPrint(to_string(i) + ": " + enemy.name + "\n", {enemy.nameColor}, 10);
+        i++;
+    }
+
+    slowPrint("Select the character to check (1-" + to_string(i-1) + " or exit, anything else return back to action): ", {0}, 10);
+    string line, cmd;
+    getline(cin, line);
+    stringstream ss(line);
+    ss >> cmd;
+    if (cmd == "exit") {
+        cout << "Goodbye!" << endl;
+        exit(0);
+    }
+    try {
+        int target = stoi(cmd);
+        if (target >= 1 && target < i) {
+            if (target <= state.allies.size()) {
+                state.allies[target - 1].printCurrentStatus();
+            } else {
+                state.enemies[target - state.allies.size() - 1].printCurrentStatus();
+            }
+        } else {
+            slowPrint("Returning to action.\n", {0}, 10);
+            return;
+        }
+    } catch (invalid_argument &e) {
+        slowPrint("Returning to action.\n", {0}, 10);
+        return;
+    } catch (out_of_range &e) {
+        slowPrint("Returning to action.\n", {0}, 10);
+        return;
+    }
+}
+
 void battleStart(State &state) {
     state.maxSkillPoint = 5;
     state.skillPoint = 3;
@@ -62,7 +106,7 @@ void printCharacterQueue(State &state) {
     characters.insert(characters.end(),state.enemies.begin(), state.enemies.end());
     sort(characters.begin(), characters.end(), [](const Character &a, const Character &b) { return a.remTime < b.remTime; });
     int listSize = 5;
-    if(characters.size()<listSize) listSize = characters.size();
+    if(characters.size()<listSize) listSize = (int) characters.size();
     slowPrint("Next in line ",{93}, 10);
     for (int i=1;i<listSize;i++){
         slowPrint(" [ ", {0}, 10);
@@ -179,6 +223,8 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             exit(0);
         } else if (move == "help") {
             printHelp("battle");
+        } else if (move == "check") {
+            checkCharacters(state);
         } else if (move == "reset") {
             state.reset = true;
             return false;
