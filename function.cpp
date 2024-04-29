@@ -31,7 +31,12 @@ void printDescription(const string &name){
     }
     description.close();
 }
-
+//void printAllCharactersPortrait(vector<Character> allies, vector<Character> enemies){
+//    vector<char> currentCharacter;
+//    currentCharacter.insert(currentCharacter.end(),allies.begin().name,allies.end().name);
+//
+//
+//}
 void printCharacterPortrait(const string &name) {
     ifstream portraitFile("ANSI/" + name + ".txt");
     if (portraitFile.is_open()) {
@@ -51,6 +56,21 @@ void printCharacterPortrait(const string &name) {
     portraitFile.close();
 }
 
+void printCharacterByLine(const string &name, int line) {
+    ifstream portraitFile("ANSI/" + name + ".txt");
+    if (portraitFile.is_open()) {
+        string l;
+        int i=0;
+        while (getline(portraitFile, l)) {
+            if (i==line) cout << l;
+            i++;
+        }
+        cout << "  ";
+    } else {
+//        cout << "Portrait file not found." << endl;
+    }
+    portraitFile.close();
+}
 
 void printCommandSelected(vector<string> list, int num) {
     for (int i=0;i<9;i++){

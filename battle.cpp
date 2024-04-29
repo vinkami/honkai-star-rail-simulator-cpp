@@ -117,6 +117,17 @@ void printCharacterQueue(State &state) {
     }
 }
 
+void printAllCharacters(State &state){
+    auto characters = state.allies;
+    characters.insert(characters.end(),state.enemies.begin(),state.enemies.end());
+    for(int i=0;i<6;i++){
+        for(int j=0;j<characters.size();j++){
+            printCharacterByLine(characters[j].name,i);
+        }
+        cout << endl;
+    }
+}
+
 bool gameLoop(State &state) {  // return value: whether the battle is still ongoing
     Character &current = state.nextCharacter();
     current.startRound(current, state);
@@ -137,7 +148,12 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 //        cout << current.name << "'s turn" << endl;
         printCharacterQueue(state);
 
+        printAllCharacters(state);
 //        printCharacterPortrait(current.name);
+//        printCharacterByLine(current.name,2);
+//        printCharacterByLine(current.name,3);
+//        printCharacterByLine(current.name,4);
+//        printCharacterByLine(current.name, 5);
         cout << "Energy: ";
 //        for (auto ally: state.allies) {
 //            string color = "\033[0m";
