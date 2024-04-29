@@ -6,7 +6,8 @@ This game consists of various characters and enemies, which all have different s
 This is a turn-based RPG game where the speed stat determines how fast each character moves.
 
 ## How to start the game
-To start the game, run the following commands in the terminal in the project directory:
+To start the game, of course you first need to clone the game files into a directory in your computer
+Then, run the following commands in the terminal in the project directory:
 ```bash
 bash ./run.sh
 ```
@@ -31,16 +32,13 @@ Each character and enemy has the following stats:
 ## Enemies
 **TO BE ADDED**
 
-# Stuff that are required in the group project brief
+# Other stuff that are required by the group project brief
 ## Team members
 - [Vincent](https://github.com/vinkami)
 - [David](https://github.com/IamnotOscar)
 - [Sunny](https://github.com/Sanichi52)
 - [John](https://github.com/wanndieearly)
 - [Jacky](https://github.com/Icescream46)
-
-## Description of the game and game rules
-All above.
 
 ## Features aka Code Requirements
 - Random game events: Enemies choose a random skill and a random target based on aggro system
@@ -50,11 +48,10 @@ All above.
 - Program codes in multiple files: `main.cpp`, `setup.cpp`, `battle.cpp`, `character.cpp`, etc.
 
 ## Non-standard libraries
-**There might be `nlohmann/json` if we decide to use JSON files for the character stats.**  
-**TO BE ADDED**
+### VariadicTable
+- File: `VariadicTable.h`
+- Source: https://github.com/friedmud/variadic_table
+- Usage: To print the table of characters and enemies in a nice format
 
-## Compilation and execution instructions
-All above.
-
-## Link to demonstration brief video
+## Link to demonstration video
 **TO BE ADDED**
