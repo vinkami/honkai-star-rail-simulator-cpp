@@ -210,16 +210,22 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 
         // actions
         if (move == "q") {
+            state.movement='q';
             current.basicAtk(current, state);
         } else if (move == "e") {
+            state.movement='e';
             current.skill(current, state);
         } else if (move == "1") {
+            state.movement='1';
             tryUlt(0, state);
         } else if (move == "2") {
+            state.movement='2';
             tryUlt(1, state);
         } else if (move == "3") {
+            state.movement='3';
             tryUlt(2, state);
         } else if (move == "4") {
+            state.movement='4';
             tryUlt(3, state);
         } else
 
@@ -232,17 +238,23 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             exit(0);
         } else if (move == "help") {
             printHelp("battle");
+            state.movement=' ';
         } else if (move == "check") {
             checkCharacters(state);
+            state.movement=' ';
         } else if (move == "reset") {
             state.reset = true;
             return false;
         } else {
+            state.movement=' ';
             cout << "Unknown command" << endl;
         }
     }
 
     if (state.timelineProceed) {
+        //malefic Ape skill, do not remove it >:0
+        monkeyLock(state,current);
+
         // remove dead characters
         for (int i=0;i<state.allies.size();i++){
             if (state.allies[i].hp<=0)
