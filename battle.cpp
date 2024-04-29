@@ -61,12 +61,15 @@ void printCharacterQueue(State &state) {
     auto characters = state.allies;
     characters.insert(characters.end(),state.enemies.begin(), state.enemies.end());
     sort(characters.begin(), characters.end(), [](const Character &a, const Character &b) { return a.remTime < b.remTime; });
+    int listSize = 5;
+    if(characters.size()<listSize) listSize = characters.size();
     slowPrint("\nNext in line ",{93}, 10);
-    for (int i=1;i<5;i++){
+    for (int i=1;i<listSize;i++){
         slowPrint(" [ ", {0}, 10);
         slowPrint(characters[i].name, {characters[i].nameColor}, 10);
         slowPrint(" ] ", {0}, 10);
-        if(i!=4)slowPrint("->",{93},10);
+        if(i+1!=listSize)slowPrint("->",{93},10);
+        else cout << endl;
     }
 }
 
@@ -91,6 +94,9 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         slowPrint("'s turn.", {93}, 10);
 //        cout << current.name << "'s turn" << endl;
         printCharacterQueue(state);
+
+//        printCharacterPortrait(current.name);
+
         cout << "\nSkill Points: "; //<< state.skillPoint << " / " << state.maxSkillPoint << endl;
         for (int i=0;i<state.maxSkillPoint;i++){
             if (i<state.skillPoint){cout << "■";}
