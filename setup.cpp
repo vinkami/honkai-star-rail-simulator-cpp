@@ -151,7 +151,6 @@ void settingsMenu(State &state) {
     cout << "Select a difficulty for your game.(1-6): ";
     string difficulty;
     bool flag = true;
-    string resetColor="\033[0m";
     vector<int> color;
     if (state.enemies.empty()){
         slowPrint( "Please select situation first!\n" );
@@ -161,10 +160,10 @@ void settingsMenu(State &state) {
     while (flag){
         cin >> difficulty;
         cout << endl;
-        if (difficulty=="help"){
+        if (difficulty == "help"){
             printHelp("difficulty");
             cout << endl << "Select a difficulty for your game.(1-6): ";
-        } else if (difficulty=="exit"){
+        } else if (difficulty=="exit") {
             cout << "Difficulty selection terminated." << endl;
             return;
         } else if (difficulty == "1" || difficulty == "I") {
