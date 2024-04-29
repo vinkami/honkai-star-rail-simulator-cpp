@@ -361,7 +361,7 @@ void insertEnemyAbility(Character &enemy){
                 }
             };
             int target= aiTarget(state.allies);
-            if (hit(100) || summon.stack==0) {
+            if (summon.stack==0) {
                 slowPrint("Wooden Lupus: 狼餐\n", self.nameColor);
                 singleAttack(state, self, target, 2);
                 if (hit(80) && state.allies[target].hp>0) {
