@@ -10,7 +10,7 @@
 bool hit(double chance);
 //double getNonCritDamage(double atk, double skillMultiplier, double def, double defIgnore=0);
 //void attack(Character &attacker, Character &defender, double skillMultiplier);
-void dot(Character &attacker, Character &defender, double skillMultiplier, const string& effect);
+void dot(Effect &efx, Character &defender, double multiplier = 1.0);
 void singleHeal(State &state, Character &healer, int target, double skillMultiplier, double plus);
 void blastHealing(State &state, Character &healer, int target, double mainSkillMultiplier, double adjacentSkillMultiplier,double mainPlus, double adjacentPlus );
 void singleAttack(State &state, Character &attacker, int target, double skillMultiplier);

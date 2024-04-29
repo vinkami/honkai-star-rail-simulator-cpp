@@ -20,32 +20,22 @@ bool hit(double chance){    //simply it is crit rate www
     return (randomNumber <= chance);
 }
 
-double getDot(bool team, double atk, double skillMultiplier, double def, double dmgReduction, double dmgBonus,int atkLevel, int defLevel){
-    if (team)  def = 200+10*defLevel; //enemy
-    double temp = def/(def+200+10*atkLevel);
-    double defMul = 1-temp;
-    return (atk*5)*skillMultiplier*defMul*(1+dmgBonus)*(1-dmgReduction);
-}
-
-
-void dot(Character &attacker, Character &defender, double skillMultiplier, const string& effect){
-    bool isEnemy = (defender.faction == "enemy");
-    double damage=getDot(isEnemy,attacker.atk, skillMultiplier, defender.def, defender.dmgReduction ,attacker.dmgBonus,attacker.level,defender.level);
-    defender.hp-=damage;
-    string dam=to_string(static_cast<int>(damage));
-    slowPrint(defender.name+" received " + dam + " DOT damage from " +effect + ".\n",{0});
-    if (defender.hp <= 0) {
-        attacker.energy += 10;
-        slowPrint(defender.name + " is defeated!\n", {91});
-    }
-}
-
 // refer to https://www.prydwen.gg/star-rail/guides/damage-formula/ for all formulas
 double getNonCritDamage(double atk, double skillMultiplier, double def, double defIgnore, double dmgReduction, double dmgBonus) {
     double trueDef = def * (1 - defIgnore);
     if (trueDef < 0) trueDef = 0;
     double defMultiplier = 1 - trueDef / (trueDef + 1000);
     return atk * skillMultiplier * defMultiplier * (1 - dmgReduction) * (1 + dmgBonus);
+}
+
+void dot(Effect &efx, Character &defender, double multiplier){
+    double damage = getNonCritDamage(efx.values[0], multiplier, defender.def, 0.0, defender.dmgReduction, 0.0);
+    defender.hp -= damage;
+    slowPrint(defender.name + " received " + to_string((int) damage) + " DOT damage from " + efx.name + ".\n", {0});
+    if (defender.hp <= 0) {
+        addEnergy(*efx.applier, 10);
+        slowPrint(defender.name + " is defeated!\n", {91});
+    }
 }
 
 void heal(Character &healer, Character &target, double skillMultiplier, double plus){
