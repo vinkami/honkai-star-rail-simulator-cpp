@@ -3,6 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <algorithm>
+#include <fstream>
 
 using namespace std;
 
@@ -23,8 +24,15 @@ void Character::reset() {
 }
 
 void Character::printCurrentStatus() const {
+    ifstream portraitFile("art/" + name + ".txt");
+    if (portraitFile.is_open()) {
+        cout << portraitFile.rdbuf();
+        portraitFile.close();
+    }
+    cout << endl;
     if (faction == "ally") {
         slowPrint(name + ":\n", nameColor, 3);
+
         vector<int> color = {0};
         if (hp <= maxHp*0.3) color = {31};
         slowPrint("HP: " + to_string((int) hp) + "/" + to_string((int) maxHp) + "\n", color, 3);
