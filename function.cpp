@@ -119,6 +119,14 @@ void addEnergy(Character &target, double increase){
     else target.energy=target.maxEnergy;
 }
 
+void checkDot(State &state,Character &self){
+    std::vector<Character>& team = (self.faction == "ally") ? state.enemies : state.allies;
+    for (auto &effect:self.effects){
+        if (effect.isDot)
+            dot(team[effect.values[0]],self,effect.skillMultiplier,effect.name);
+    }
+}
+
 int selectTarget(vector<Character>& characters) {
     do {
         cout << "Available targets are: ";
@@ -327,11 +335,28 @@ void insertEnemyAbility(Character &enemy){
         enemy.nameColor={36};
         enemy.basicAtk = [](Character &self, State &state) {
             Effect &summon=self.getEffectOrCrash("howling");
+            Effect bilibili = Effect("Shocked","debuff",3,1);
+            bilibili.isDot=true;
+            bilibili.skillMultiplier=1.5;
+            bilibili.values.push_back(searchCharacter(state.enemies,self.name));
+            bilibili.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration == 0) {
+                    master.removeEffect(self);
+                }
+            };
             int target= aiTarget(state.allies);
-            if (hit(60) || summon.stack==0) {
+            if (hit(100) || summon.stack==0) {
                 slowPrint("Wooden Lupus: 狼餐\n", self.nameColor);
                 singleAttack(state, self, target, 2);
-                //TODO:dot atk
+                if (hit(80 && state.allies[target].hp>0)) {
+                    int con=state.allies[target].getEffectLoc("Shocked");
+                    slowPrint(state.allies[target].name+" is Shocked for 3 turns.\n",{31});
+                    if (con==-1)
+                        state.allies[target].effects.push_back(bilibili);
+                    else
+                        state.allies[target].effects[con].duration=3;
+                }
             } else {
                 slowPrint("Wooden Lupus: 嘯合\n",self.nameColor);
                 slowPrint("Wooden Lupus summoned Shadow Jackhyena!\n",self.nameColor);
