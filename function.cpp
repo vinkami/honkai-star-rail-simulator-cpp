@@ -540,7 +540,7 @@ void insertCharacterAbility(Character &character) {
                     self.remTime = 0;
                     slowPrint("鏡流：乗月返真。 (Spectral Transmigration mode activated)\n", self.nameColor);
                 }
-            } if (transmigration.stack !=0 ) {  // Moon On Glacial River
+            } else {  // Moon On Glacial River
                 // does not consume skill point
                 int target = selectTarget(state.enemies);
                 slowPrint("鏡流：月光を剣とせん。\n",self.nameColor);
