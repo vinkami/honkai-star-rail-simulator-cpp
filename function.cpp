@@ -635,7 +635,6 @@ void insertCharacterAbility(Character &character) {
                     master.removeEffect((self));
                 }
             };
-            // Todo: Add more characters
         };
 
     } else if (character.name=="Huohuo") {
@@ -1033,7 +1032,7 @@ void insertCharacterAbility(Character &character) {
         character.nameColor ={92};
         character.basicAtk = [](Character &self, State &state) {
             int target = selectTarget(state.enemies);
-            slowPrint("今だ。\n",  self.nameColor);
+            slowPrint("丹恒: 今だ。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             state.incSkillPoint();
             state.timelineProceed = true;
@@ -1043,6 +1042,9 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("No skill points left.\n", {91});
                 return;
             }
+            if (hit(50))
+                slowPrint("丹恒: 争いに...意味はない。\n",self.nameColor);
+            else slowPrint("丹恒: どけ、騒ぎを起こしたくはない\n",self.nameColor);
             int target = selectTarget(state.enemies);
             Character &enemy = state.enemies[target];
             singleAttack(state, self, target, 2.6);
@@ -1061,12 +1063,12 @@ void insertCharacterAbility(Character &character) {
         };
 
         character.ult = [](Character &self, State &state) {
-            slowPrint("	生死虚実、一念の間なり。\n",  self.nameColor);
+            slowPrint("丹恒: 生死虚実、一念の間なり。\n",  self.nameColor);
             int target = selectTarget(state.enemies);
             Character &enemy = state.enemies[target];
-            slowPrint("	洞天幻化、長夢一覚…破！\n",  self.nameColor);
+            slowPrint("丹恒: 洞天幻化、長夢一...破！\n",  self.nameColor);
             if(enemy.effects[enemy.getEffectLoc("疾雨")].duration>0) {
-                singleAttack(state, self, target, 4*0.12);
+                singleAttack(state, self, target, 4*1.2);
             } else {
                 singleAttack(state, self, target, 4);
             }
