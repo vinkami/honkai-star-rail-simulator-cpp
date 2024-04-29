@@ -54,7 +54,7 @@ void battleStart(State &state) {
     }
     state.round.remTime = 150.0;  // speed for round is fixed at 100
     state.round.resetRemTime = 100.0;
-    slowPrint("Round 1 starts\n", {1, 33}, 20);
+    slowPrint("----------Round 1 starts----------\n", {1, 33}, 20);
 }
 
 void printCharacterQueue(State &state) {
@@ -63,7 +63,7 @@ void printCharacterQueue(State &state) {
     sort(characters.begin(), characters.end(), [](const Character &a, const Character &b) { return a.remTime < b.remTime; });
     int listSize = 5;
     if(characters.size()<listSize) listSize = characters.size();
-    slowPrint("\nNext in line ",{93}, 10);
+    slowPrint("Next in line ",{93}, 10);
     for (int i=1;i<listSize;i++){
         slowPrint(" [ ", {0}, 10);
         slowPrint(characters[i].name, {characters[i].nameColor}, 10);
@@ -81,7 +81,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
     checkDot(state,current);
     if (current.faction == "round") {  // new round starts
         state.roundNumber++;
-        slowPrint("Round " + to_string(state.roundNumber) + " starts\n", {1, 33}, 20);
+        slowPrint("----------Round " + to_string(state.roundNumber) + " starts----------\n", {1, 33}, 20);
         state.timelineProceed = true;
 
     } else if (current.faction == "enemy") {  // enemy's turn
@@ -90,42 +90,63 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         current.basicAtk(current, state);
 
     } else { // player's turn
-        slowPrint(current.name, {current.nameColor}, 10);
-        slowPrint("'s turn.", {93}, 10);
 //        cout << current.name << "'s turn" << endl;
         printCharacterQueue(state);
 
 //        printCharacterPortrait(current.name);
+        cout << "Energy: ";
+//        for (auto ally: state.allies) {
+//            string color = "\033[0m";
+//            if (ally.maxEnergy==ally.energy)
+//                color = "\033["+to_string(ally.nameColor[0])+"m";
+//            cout << color << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "\033[0m   ";
+//        }
 
-        cout << "\nSkill Points: "; //<< state.skillPoint << " / " << state.maxSkillPoint << endl;
-        for (int i=0;i<state.maxSkillPoint;i++){
-            if (i<state.skillPoint){cout << "■";}
+        // Print energy of all allies
+        for (const auto& ally: state.allies) {
+            auto color = ally.nameColor;
+            if (ally.energy < ally.maxEnergy) color = {0};
+            slowPrint(ally.name + " " + to_string((int) ally.energy) + " / " + to_string((int) ally.maxEnergy) + "   ", color, 0);
+        }
+        cout << endl;
+
+        // Print health of all allies
+        cout << "Allie's Health: ";
+        for (const auto &ally: state.allies) {
+//            int health = static_cast<int>(ally.hp);
+//            string color = "\033[0m";
+//            if (ally.hp <= ally.maxHp*0.3)
+//                color = "\033[31m";
+//            cout << ally.name << " " << color << health << " / " << ally.maxHp << "\033[0m   ";
+            vector<int> color = {0};
+            if (ally.hp <= ally.maxHp*0.3) color = {31};
+            slowPrint(ally.name + " " + to_string((int) ally.hp) + " / " + to_string((int) ally.maxHp) + "   ", color, 0);
+        }
+        cout << endl;
+
+        // Print health of all enemies
+        cout << "Enemy's Health: ";
+        for (auto &enemy: state.enemies) {
+//            string color = "\033[0m";
+//            double health = enemy.hp/enemy.maxHp * 100;
+//            int healthPercent = static_cast<int>(health);
+//            if (health <= 30)
+//                color = "\033[31m";
+//            cout<< enemy.name << " " << color << healthPercent << "%\033[0m   ";
+            vector<int> color = {0};
+            if (enemy.hp <= enemy.maxHp*0.3) color = {31};
+            int healthPercent = (int) (enemy.hp/enemy.maxHp * 100);
+            slowPrint(enemy.name + " " + to_string(healthPercent) + "%   ", color, 0);
+        }
+        cout << endl << endl;
+
+        slowPrint(current.name, {current.nameColor}, 10);
+        slowPrint("'s turn.          ", {93}, 10);
+        slowPrint("Skill Points: ", {0}, 10); //<< state.skillPoint << " / " << state.maxSkillPoint << endl;
+        for (int i=0; i<state.maxSkillPoint; i++){
+            if (i<state.skillPoint) cout << "■";
             else cout << "□";
 //            if(i!=state.maxSkillPoint-1) cout << " ";
-        }
-        cout << endl << "Energy: ";
-        for (auto ally: state.allies) {
-            string color = "\033[0m";
-            if (ally.maxEnergy==ally.energy)
-                color = "\033["+to_string(ally.nameColor[0])+"m";
-            cout << color << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "\033[0m   ";
-        }
-        cout << endl << "Allie's Health: ";
-        for (auto &ally: state.allies) {
-            int health = static_cast<int>(ally.hp);
-            string color = "\033[0m";
-            if (ally.hp <= ally.maxHp*0.3)
-                color = "\033[31m";
-            cout<< ally.name << " " << color << health << " / " << ally.maxHp << "\033[0m   ";
-        }
-        cout << endl << "Enemy's Health: ";
-        for (auto &enemy: state.enemies) {
-            string color = "\033[0m";
-            double health = enemy.hp/enemy.maxHp * 100;
-            int healthPercent = static_cast<int>(health);
-            if (health <= 30)
-                color = "\033[31m";
-            cout<< enemy.name << " " << color << healthPercent << "%\033[0m   ";
         }
 
         string line, move;
