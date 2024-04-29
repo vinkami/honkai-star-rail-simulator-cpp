@@ -427,7 +427,7 @@ void insertEnemyAbility(Character &enemy){
     } else if(enemy.name == "Sweet Gorilla"){
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
-            if (hit(0)) {
+            if (hit(80)) {
                 slowPrint("Sweet Gorilla: Attack\n");
                 singleAttack(state, self, target, 3.8);
                 state.allies[target].hp -= state.allies[target].baseHp * 0.08;
@@ -438,7 +438,11 @@ void insertEnemyAbility(Character &enemy){
                     if (enemy.name == "Bubble Hound"){
                         summon = enemy;
                         enemy.maxHp = enemy.hp;
-                        if (state.enemies.size() != 3){
+                        if (state.enemies.size() == 2){
+                            state.enemies.push_back(enemy);
+                            slowPrint("Sweet Gorilla: Summon\n");
+                        } else if (state.enemies.size() == 1){
+                            state.enemies.push_back(enemy);
                             state.enemies.push_back(enemy);
                             slowPrint("Sweet Gorilla: Summon\n");
                         } else {
