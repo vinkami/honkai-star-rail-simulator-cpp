@@ -100,7 +100,7 @@ void Character::cleanseDebuff() {
     for (auto &efx: effects) {
         if (efx.type == "debuff") {
             removeEffect(efx);
-            slowPrint("cleansed debuff: "+efx.name,{92},0);
+            slowPrint("cleansed debuff: "+efx.name+"\n",{92},0);
             return;
         }
     }
