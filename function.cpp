@@ -1057,9 +1057,13 @@ void insertCharacterAbility(Character &character) {
                     master.removeEffect(self);
                 }
             };
-            enemy.effects.push_back(speed_lo);
-            enemy.speed -= enemy.baseSpeed * 0.12;
-            state.timelineProceed = true;
+            if (hit(70)) {
+                if (enemy.getEffectLoc("疾雨") == -1) {
+                    enemy.effects.push_back(speed_lo);
+                    enemy.speed -= enemy.baseSpeed * 0.12;
+                } else enemy.getEffectOrCrash("疾雨").duration = 2;
+                state.timelineProceed = true;
+            }
         };
 
         character.ult = [](Character &self, State &state) {
