@@ -428,7 +428,7 @@ void insertEnemyAbility(Character &enemy){
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
             if (hit(0)) {
-                slowPrint("Sweet Gorilla: !!!\n");
+                slowPrint("Sweet Gorilla: Attack\n");
                 singleAttack(state, self, target, 3.8);
                 state.allies[target].hp -= state.allies[target].baseHp * 0.08;
                 state.allies[target].def -= state.allies[target].baseDef * 0.2;
@@ -440,8 +440,9 @@ void insertEnemyAbility(Character &enemy){
                         enemy.maxHp = enemy.hp;
                         if (state.enemies.size() != 3){
                             state.enemies.push_back(enemy);
+                            slowPrint("Sweet Gorilla: Summon\n");
                         } else {
-                            slowPrint("Sweet Gorilla: !!!\n");
+                            slowPrint("Sweet Gorilla: Attack\n");
                             singleAttack(state, self, target, 3.8);
                             state.allies[target].hp -= state.allies[target].baseHp * 0.08;
                             state.allies[target].def -= state.allies[target].baseDef * 0.2;
@@ -464,13 +465,14 @@ void insertEnemyAbility(Character &enemy){
                         enemy.remTime = 0;
                     }
                 }
+                slowPrint("Winder Goon: Again\n");
             }
             state.timelineProceed = true;
         };
     } else if (enemy.name == "Bubble Hound"){
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
-            slowPrint("Bubble Hound: !!!\n");
+            slowPrint("Bubble Hound: Attack\n");
             singleAttack(state, self, target, 2.5);
             state.timelineProceed = true;
         };
