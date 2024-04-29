@@ -815,11 +815,28 @@ void insertCharacterAbility(Character &character) {
 
     //FuXuan
     else if (character.name == "Fuxuan") {
-        //todo: add telent team damage resist 18%
         character.nameColor ={35};
         //talent Fuxuan self healing
         Effect hpRestoration = Effect("HP Restoration", "other", character, 0, 1);
         character.effects.push_back(hpRestoration);
+        character.startRound = [](Character &self, State &state) {
+            for (auto &efx: self.effects) efx.startRound(efx, self, state);
+            Effect dmgReduction = Effect("Misfortune Avoidance", "buff", self, -1, 0);
+            dmgReduction.startRound = [](Effect &self, Character &master, State &state) {
+                if (self.applier->hp <= 0) {
+                    master.removeEffect(self);
+                    master.dmgReduction -= .18;
+                }
+            };
+            for (auto &ally: state.allies) {
+                if (ally.name == "Fuxuan") continue;
+                if (ally.getEffectLoc("Misfortune Avoidance") == -1) {
+                    ally.effects.push_back(dmgReduction);
+                    ally.dmgReduction += .18;
+                }
+            }
+        };
+
         character.basicAtk = [](Character &self, State &state) {  // Novaburst
             int target = selectTargetPrompt(state.enemies);
             slowPrint("極数，知来！\n成象，効法！\n",  self.nameColor);
@@ -1172,7 +1189,6 @@ vector<Character> getPlayableCharacters() {
         ss >> critDamage >> comma;
         ss >> maxEnergy >> comma;
         ss >> taunt;
-        maxHp = static_cast<int>(hp);
 
         Character temp(name, level, speed, hp, atk, def, critRate, critDamage, maxEnergy, taunt, maxHp);
         insertCharacterAbility(temp);
