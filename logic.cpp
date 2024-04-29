@@ -133,20 +133,30 @@ void aoeAttack(State &state, Character &attacker, double skillMultiplier) {
     attack(attacker, defender, skillMultiplier, state);
 }
 
+void search(int newTarget, vector<int> &unique){
+    bool flag= true;
+    for (const auto& element : unique){
+        if (newTarget==element) flag= false;
+    }
+    if (flag) unique.push_back(newTarget);
+}
 
-void bounceAttack(State &state, Character &attacker, int target, double skillMultiplier, int bounceCount) {
+void bounceAttack(State &state, Character &attacker, int target, double skillMultiplier, int bounceCount,int &hitCount) {
     std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
     Character &defender = team[target];
     attack(attacker, defender, skillMultiplier, state);
     random_device rd;
     mt19937 gen(rd());
+    vector<int> uniqueArray = {};
     uniform_int_distribution<int> dist(0, (int) team.size() - 1);
     while (bounceCount > 0) {
         int newTarget = dist(gen);
+        search(newTarget,uniqueArray);
         Character &newDefender = team[newTarget];
         if (newDefender.hp > 0) {
             attack(attacker, newDefender, skillMultiplier, state);
             bounceCount--;
         }
     }
+    hitCount=uniqueArray.size();
 }

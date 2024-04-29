@@ -16,5 +16,5 @@ void blastHealing(State &state, Character &healer, int target, double mainSkillM
 void singleAttack(State &state, Character &attacker, int target, double skillMultiplier);
 void blastAttack(State &state, Character &attacker, int target, double mainSkillMultiplier, double adjacentSkillMultiplier);
 void aoeAttack(State &state, Character &attacker, double skillMultiplier);
-void bounceAttack(State &state, Character &attacker, int target, double skillMultiplier, int bounceCount);
+void bounceAttack(State &state, Character &attacker, int target, double skillMultiplier, int bounceCount, int &hitCount);
 #endif //PROJECT_LOGIC_H
