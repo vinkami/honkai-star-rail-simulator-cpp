@@ -127,7 +127,7 @@ void checkDot(State &state,Character &self){
     std::vector<Character>& team = (self.faction == "ally") ? state.enemies : state.allies;
     for (auto &effect:self.effects){
         if (effect.isDot)
-            dot(team[effect.values[0]],self,effect.skillMultiplier,effect.name);
+            dot(team[(int) effect.values[0]],self, effect.skillMultiplier,effect.name);
     }
 }
 
@@ -248,8 +248,8 @@ void insertEnemyAbility(Character &enemy){
         // https://honkai-star-rail.fandom.com/wiki/Automaton_Spider
         // AutomationSpider, 1, 100, 10000, 552, 900, 500
     } else if (enemy.name == "AutomatonSpider") {
+        enemy.nameColor = {34};
         enemy.basicAtk = [](Character &self, State &state) {
-            //enemy.nameColor = {34}; todo: IDK why there is bug in this line
             int target= aiTarget(state.allies);
             if (hit(50)) {
                 slowPrint("AutomatonSpider: 突進！\n",self.nameColor);
@@ -365,7 +365,7 @@ void insertEnemyAbility(Character &enemy){
                 slowPrint("Wooden Lupus: 嘯合\n",self.nameColor);
                 slowPrint("Wooden Lupus summoned Shadow Jackhyena!\n",self.nameColor);
                 summon.stack-=1;
-                Character wolf= Character("Shadow Jackhyena",self.level,120,self.hp,155,700,0,0,0,0,self.maxHp);
+                Character wolf= Character("Shadow Jackhyena",self.level,120,self.hp,155,700,0,0,0,0, self.maxHp);
                 wolf.maxHp=self.maxHp; wolf.faction="enemy";
                 insertEnemyAbility(wolf);
                 state.enemies.push_back(wolf);
@@ -403,7 +403,7 @@ void insertEnemyAbility(Character &enemy){
             DoT.endRound = [](Effect &self, Character &master, State &state) {
                 int master_pos = searchCharacter(state.allies,master.name);
                 self.duration--;
-                singleAttack(state,state.enemies[self.values[0]],master_pos,0.5);
+                singleAttack(state,state.enemies[(int) self.values[0]],master_pos,0.5);
                 if (self.duration==0) {
                     master.removeEffect(self);
                 }
@@ -867,7 +867,6 @@ void insertCharacterAbility(Character &character) {
             //giving all ally Fuxuan's skill buff
             for (auto &ally : state.allies) {
                 if(ally.name!= "Fuxuan") {
-                    int ally_pos= searchCharacter(state.allies,ally.name);
                     if(ally.getEffectLoc("穷观阵")>=0) {
                         ally.critRate+=addiction_critrate;
                         ally.baseHp+=addiction_hp;
@@ -884,7 +883,7 @@ void insertCharacterAbility(Character &character) {
                 self.duration--;
                 int master_pos = searchCharacter(state.allies, master.name);
                 double hp_difference = self.values[0] - master.hp;
-                singleHeal(state,state.allies[self.values[0]],master_pos,0, hp_difference * 0.65);
+                singleHeal(state,state.allies[(int) self.values[0]],master_pos,0, hp_difference * 0.65);
                 self.values[0] = master.hp;
                 if(self.duration==0) {
                     master.baseHp -= self.values[1];
@@ -967,10 +966,10 @@ void insertCharacterAbility(Character &character) {
                 int master_pos = searchCharacter(state.allies,master.name);
                 //determination
                 if (master.hp <= master.baseHp*0.3) {
-                    singleHeal(state,state.allies[self.values[2]],master_pos,0.072*1.5,192*1.5);
+                    singleHeal(state,state.allies[(int) self.values[2]],master_pos,0.072*1.5,192*1.5);
                     //master.hp += self.values[1] * 1.5;
                 }else {
-                    singleHeal(state,state.allies[self.values[2]],master_pos,0.072,192);
+                    singleHeal(state,state.allies[(int) self.values[2]],master_pos,0.072,192);
                     //master.hp += self.values[1];
                 }
                 if(self.duration == 0) {
@@ -1029,7 +1028,6 @@ void insertCharacterAbility(Character &character) {
             buring.values.push_back(Asta_pos);
             buring.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
-                int master_pos = searchCharacter(state.allies, master.name);
                 self.skillMultiplier=0.5;self.isDot= true;
                 if (self.duration == 0) {
                     master.removeEffect(self);
@@ -1052,7 +1050,6 @@ void insertCharacterAbility(Character &character) {
             if (hit(50)) slowPrint("アスター: ラッキースターは誰かな～\n",self.nameColor);
             else slowPrint("アスター: 星の祝福を貴方に～\n",  self.nameColor);
             int target = selectTarget((state.enemies)), add;
-            Character &enemy = state.enemies[target];
             bounceAttack(state, self, target, 0.5, 4,add);
             if (add+astro.stack>5) astro.stack=5;
             else astro.stack+=add;
