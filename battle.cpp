@@ -157,25 +157,23 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 //        }
 
         // Print energy of all allies
-        for (const auto& ally: state.allies) {
-            auto color = ally.nameColor;
-            if (ally.energy < ally.maxEnergy) color = {0};
-            slowPrint(ally.name + " " + to_string((int) ally.energy) + " / " + to_string((int) ally.maxEnergy) + "   ",
-                      {ally.nameColor}, 0);
+        for (auto& ally: state.allies) {
+            vector<int> color = ally.nameColor,color2 = {1,93};
+            color.push_back(1);
+            if (ally.energy < ally.maxEnergy) {color = ally.nameColor;color2 = {0};}
+            slowPrint(ally.name + " ", color, 0);
+            slowPrint(to_string((int) ally.energy) + " / " + to_string((int) ally.maxEnergy) + "   ",color2,0);
         }
         cout << endl;
 
         // Print health of all allies
         cout << "Ally's Health: ";
         for (const auto &ally: state.allies) {
-//            int health = static_cast<int>(ally.hp);
-//            string color = "\033[0m";
-//            if (ally.hp <= ally.maxHp*0.3)
-//                color = "\033[31m";
-//            cout << ally.name << " " << color << health << " / " << ally.maxHp << "\033[0m   ";
             vector<int> color = {0};
             if (ally.hp <= ally.maxHp*0.3) color = {31};
-            slowPrint(ally.name + " " + to_string((int) ally.hp) + " / " + to_string((int) ally.maxHp) + "   ", {ally.nameColor}, 0);
+            slowPrint(ally.name+" ",ally.nameColor);
+            slowPrint(to_string(static_cast<int>(ally.hp)) + " / " + to_string(static_cast<int>(ally.maxHp)));
+            slowPrint("    ");
         }
         cout << endl;
 
