@@ -75,7 +75,7 @@ void attack(Character &attacker, Character &defender, double skillMultiplier, St
     cout << integerDamage;
     slowPrint(" damage.",{0},10);
 //    cout << attacker.name << " attacks " << defender.name << " for " << damage << " damage";
-    if (crit) cout << "\033[94m (Critical)\033[0m";
+    if (crit) slowPrint(" (Critical)", {94});
     cout << endl;
     if (defender.hp <= 0) {
         attacker.energy += 10;
