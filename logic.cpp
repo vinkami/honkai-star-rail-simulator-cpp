@@ -58,17 +58,35 @@ void attack(Character &attacker, Character &defender, double skillMultiplier, St
     double damage = getNonCritDamage(attacker.atk, skillMultiplier, defender.def, attacker.defIgnore, attacker.dmgReduction, attacker.dmgBonus);
     bool crit = hit(attacker.critRate);
     if (crit) damage *= 1 + attacker.critDamage / 100;
+
+
     defender.hp -= damage;
-    slowPrint(attacker.name, {attacker.nameColor}, 10);
-    slowPrint((" attacks "), {0}, 10);
-    slowPrint(defender.name, {defender.nameColor}, 10);
+    attacker.printColorName();
+    slowPrint(" attacks ", {0}, 10);
+    defender.printColorName();
     slowPrint(" for ", {0}, 10);
-    int integerDamage = static_cast<int>(damage);
+    int integerDamage = (int) damage;
     cout << integerDamage;
     slowPrint(" damage.",{0},10);
 //    cout << attacker.name << " attacks " << defender.name << " for " << damage << " damage";
     if (crit) slowPrint(" (Critical)", {94});
     cout << endl;
+
+    if (defender.faction == "ally") {
+        // check for Matrix of Prescience
+        int fuxuanPos = searchCharacter(state.allies, "Fuxuan");  // check if Fuxuan is alive in the team
+        if (defender.getEffectLoc("Knowledge") != -1 && fuxuanPos != -1) {
+            Character &fuxuan = state.allies[fuxuanPos];
+            defender.printColorName();
+            slowPrint(" apportioned some of the damage to ", {0}, 10);
+            fuxuan.printColorName();
+            slowPrint("!\n", {0}, 10);
+            defender.hp += damage * .65;
+            fuxuan.hp -= damage * .65;
+            return;
+        }
+    }
+
     if (defender.hp <= 0) {
         attacker.energy += 10;
         slowPrint(defender.name + " is defeated!\n", {91});

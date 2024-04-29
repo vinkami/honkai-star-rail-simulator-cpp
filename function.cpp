@@ -238,7 +238,7 @@ void insertEnemyAbility(Character &enemy){
                 } else if (hit(60)){
                     slowPrint("Trampler: 戦争の蹂躙\n",{31});
                     blastAttack(state,self,target,2.5,2.5);
-                }else {
+                } else {
                     slowPrint("Trampler: 虚実の投影\n",{31});
                     singleAttack(state,self,target,3.0);
                 }
@@ -283,7 +283,7 @@ void insertEnemyAbility(Character &enemy){
             }
         };
 
-    }else if (enemy.name== "Golden Hound"){
+    } else if (enemy.name== "Golden Hound"){
         enemy.nameColor={37};
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
@@ -873,7 +873,7 @@ void insertCharacterAbility(Character &character) {
         character.effects.push_back(hpRestoration);
         character.startRound = [](Character &self, State &state) {
             for (auto &efx: self.effects) efx.startRound(efx, self, state);
-            Effect dmgReduction = Effect("Misfortune Avoidance", "buff", self, -1, 0);
+            Effect dmgReduction = Effect("Misfortune Avoidance", "buff", self, -1, 1);
             dmgReduction.startRound = [](Effect &self, Character &master, State &state) {
                 if (self.applier->hp <= 0) {
                     master.removeEffect(self);
@@ -891,7 +891,7 @@ void insertCharacterAbility(Character &character) {
 
         character.basicAtk = [](Character &self, State &state) {  // Novaburst
             int target = selectTargetPrompt(state.enemies);
-            slowPrint("極数，知来！\n成象，効法！\n",  self.nameColor);
+            slowPrint("符玄：極数，知来！\n符玄：成象，効法！\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self, 20);
             state.incSkillPoint();
@@ -903,57 +903,44 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
             }
-            // Doing Effect for shar damage
-            slowPrint("相与一体\n上下象易\n",self.nameColor);
-            addEnergy(self, 30);
-//            int Fuxuan_pos = searchCharacter(state.allies, self.name);
-//            double addition_hp = self.baseHp * 0.6;
-//            double addition_critrate = 12;
-//            matrix.values.push_back(Fuxuan_pos);
-//            matrix.values.push_back(addition_hp);
-//            matrix.values.push_back(addition_critrate);
-//            //giving all ally Fuxuan's skill buff
-//            for (auto &ally : state.allies) {
-//                if (ally.name != "Fuxuan") continue;
-//                if (ally.getEffectLoc("Matrix of Prescience") == -1) {
-//                    ally.critRate+=addition_critrate;
-//                    ally.baseHp+=addition_hp;
-//                    ally.effects.push_back(matrix);
-//                }
-//                if (ally.effects[ally.getEffectLoc("Matrix of Prescience")].duration<3) {
-//                    ally.effects[ally.getEffectLoc("Matrix of Prescience")].duration=3;
-//                }
-//            }
-//            // Fuxuan_pos at matrix.valus[0] , addi hp [1], addi critrate [2]
-//            //todo: Finish Fuxuan share damage skill for each charater
-//            matrix.endRound = [](Effect &self, Character &master, State &state) {
-//                self.duration--;
-//                int master_pos = searchCharacter(state.allies, master.name);
-//                double hp_difference = self.values[0] - master.hp;
-//                singleHeal(state,state.allies[(int) self.values[0]],master_pos,0, hp_difference * 0.65);
-//                self.values[0] = master.hp;
-//                if(self.duration==0) {
-//                    master.baseHp -= self.values[1];
-//                    master.critRate -= self.values[2];
-//                    //removing baseHp
-//                    if(master.hp>master.baseHp) {
-//                        master.hp = master.baseHp;
-//                    }
-//                    master.removeEffect((self));
-//                }
-//            };
-            if (self.getEffectLoc("Matrix of Prescience") != -1) {
-                self.getEffectOrCrash("Matrix of Prescience").duration = 3;
-            } else {
+            slowPrint("符玄：相与一体\n符玄：上下象易\n",self.nameColor);
 
+            // Fu Xuan gets the Matrix of Prescience, other allies get Knowledge
+            Effect matrix("Matrix of Prescience", "buff", self, 3, 1);
+            matrix.endRound = [](Effect &self, Character &master, State &state) {
+                self.duration--;
+                if (self.duration == 0) {
+                    for (auto &ally: state.allies) {
+                        if (&ally == &master) continue;
+                        if (ally.getEffectLoc("Knowledge") == -1) continue;  // should not happen; just to be safe
+                        Effect &efx = ally.getEffectOrCrash("Knowledge");
+                        ally.baseHp -= efx.values[0];
+                        ally.critRate -= 12;
+                        ally.removeEffect(efx);
+                    }
+                    master.removeEffect(self);
+                }
+            };
+            self.effects.push_back(matrix);
+
+            for (auto &ally: state.allies) {
+                if (&ally == &self) continue;
+                if (ally.getEffectLoc("Knowledge") == -1) {
+                    Effect knowledge = Effect("Knowledge", "buff", self, 1, 1);
+                    knowledge.values.push_back(self.baseHp * 0.06);  // [0] base HP increase
+                    ally.baseHp += self.baseHp * 0.06;
+                    ally.critRate += 12;
+                    ally.effects.push_back(knowledge);
+                }
             }
+            addEnergy(self, 30);
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Woes of Many Morphed to One
             aoeAttack(state, self,1);
-            slowPrint("換斗移星、人事を、成す！",self.nameColor);
+            slowPrint("符玄：換斗移星、人事を、成す！\n",self.nameColor);
             if (self.effects[self.getEffectLoc("HP Restoration")].stack < 2) {
-                slowPrint("世の万物に法理あり…",self.nameColor);
+                slowPrint("符玄：世の万物に法理あり…\n",self.nameColor);
                 self.effects[self.getEffectLoc("HP Restoration")].stack += 1;
             }
             int self_pos = searchCharacter(state.allies , "Fuxuan");
@@ -968,7 +955,7 @@ void insertCharacterAbility(Character &character) {
             Effect &hpRestore = self.getEffectOrCrash("HP Restoration");
             if (self.hp < self.baseHp * 0.5 && self.hp > 0 && hpRestore.stack > 0) {
                 self.hp+= (self.baseHp-self.hp)*0.9;
-                slowPrint("陰陽転換、生々流転。",{35});
+                slowPrint("符玄：陰陽転換、生々流転。\n",{35});
                 hpRestore.stack--;
             }
         };
@@ -1102,7 +1089,7 @@ void insertCharacterAbility(Character &character) {
         character.ult = [](Character &self , State &state) {  // Astral Blessing
             addEnergy(self,5);
             slowPrint("アスター: 星の秘密を求めるカギよ、開拓者たちに真なる祝福を！\n",  self.nameColor);
-            Effect ult_speed_up = Effect("Astral Blessing", "buff", self, 2, 0);
+            Effect ult_speed_up("Astral Blessing", "buff", self, 2, 0);
             ult_speed_up.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 if (self.duration==0) {
@@ -1171,8 +1158,69 @@ void insertCharacterAbility(Character &character) {
                 }
             }
         };
+    } else if (character.name == "Sparkle") {
+        character.nameColor = {38, 5, 196};
+        character.startBattle = [](Character &self, State &state) {
+            state.maxSkillPoint = 7;
+            for (auto &ally : state.allies) {
+                ally.dmgBonus += .18;  // Talent dmg bonus but simplified
+            }
+        };
+        character.basicAtk = [](Character &self, State &state) {  // Monodrama
+            int target = selectTargetPrompt(state.enemies);
+            slowPrint("花火：悪役は花火に任せてぇ～\n", self.nameColor);
+            singleAttack(state, self, target, 1.0);
+            addEnergy(self, 30);  // Major trace
+            state.incSkillPoint();
+            state.timelineProceed = true;
+        };
+        character.skill = [](Character &self, State &state) {  // Dreamdiver
+            if (!state.decSkillPoint()) {
+                slowPrint("No skill points left.\n", self.nameColor);
+                return;
+            }
+            int targetPos = selectTargetPrompt(state.allies);
+            if (hit(50)) slowPrint("花火：動揺しちゃだーめ。\n", self.nameColor);
+            else slowPrint("花火：頑張ってね？\n", self.nameColor);
+            Character &target = state.allies[targetPos];
+            if (target.getEffectLoc("Dreamdiver") == -1) {
+                Effect dreamdiver("Dreamdiver", "buff", self, 2, 0);
+                dreamdiver.values.push_back(self.baseCritDamage * .24 + .45);  // [0] crit damage increase
+                target.critDamage += dreamdiver.values[0];
+                dreamdiver.startRound = [](Effect &self, Character &master, State &state) {
+                    self.duration--;
+                    if (self.duration == 0) {
+                        master.critDamage -= self.values[0];
+                        master.removeEffect(self);
+                    }
+                };
+                target.effects.push_back(dreamdiver);
+            } else target.getEffectOrCrash("Dreamdiver").duration = 2;
+
+            if (&target != &self) {
+                target.remTime /= 2;
+            }
+            addEnergy(self, 30);
+            state.timelineProceed = true;
+        };
+        character.ult = [](Character &self, State &state) {  // The Hero with a Thousand Faces
+            slowPrint("花火：かくれんぼしよっか。\n", self.nameColor);
+            slowPrint("花火：愚者千面、浮世を遊び尽くさん…答え、見つけてごらん？\n", self.nameColor);
+            state.incSkillPoint(4);
+            for (auto &ally: state.allies) {
+                Effect cipher("Cipher", "buff", self, 2, 1);
+                ally.dmgBonus += .10;
+                cipher.endRound = [](Effect &self, Character &master, State &state) {
+                    self.duration--;
+                    if (self.duration == 0) {
+                        master.dmgBonus -= .10;
+                        master.removeEffect(self);
+                    }
+                };
+                ally.effects.push_back(cipher);
+            }
+        };
     }
-    //Danheng
 }
     
 
