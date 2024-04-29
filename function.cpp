@@ -975,11 +975,12 @@ void insertCharacterAbility(Character &character) {
         character.basicAtk = [](Character &self, State &state) {
             int target = selectTarget(state.enemies);
             Character &enemy = state.enemies[target];
-            slowPrint("避けてね。\n",  self.nameColor);
+            slowPrint("アスター: 避けてね。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self, 20);
             //basic attack effect
             Effect buring = Effect("燃焼","debuff",3,0);
+
             int Asta_pos =searchCharacter(state.allies,"Asta");
             buring.values.push_back(Asta_pos);
             buring.endRound = [](Effect &self, Character &master, State &state) {
@@ -1002,7 +1003,8 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
             }
-            slowPrint("ラッキースターは誰かな～    \n星の祝福を貴方に～\n",  self.nameColor);
+            if (hit(50)) slowPrint("アスター: ラッキースターは誰かな～\n",self.nameColor);
+            else slowPrint("アスター: 星の祝福を貴方に～\n",  self.nameColor);
             int target = selectTarget((state.enemies));
             Character &enemy = state.enemies[target];
             bounceAttack(state, self, target, 0.5, 4);
@@ -1011,7 +1013,7 @@ void insertCharacterAbility(Character &character) {
 
         };
         character.ult = [](Character &self , State &state) {
-            slowPrint("星の秘密を求めるカギよ、開拓者たちに真なる祝福を！\n",  self.nameColor);
+            slowPrint("アスター: 星の秘密を求めるカギよ、開拓者たちに真なる祝福を！\n",  self.nameColor);
             Effect ult_speed_up = Effect("星空の願い", "buff", 2, 0);
             ult_speed_up.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
