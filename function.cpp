@@ -38,7 +38,7 @@ void printDescription(const string &name){
 //
 //}
 void printCharacterPortrait(const string &name) {
-    ifstream portraitFile("ANSI/" + name + ".txt");
+    ifstream portraitFile("art/" + name + ".txt");
     if (portraitFile.is_open()) {
         string l;
         while (getline(portraitFile, l)) {
@@ -57,7 +57,7 @@ void printCharacterPortrait(const string &name) {
 }
 
 void printCharacterByLine(const string &name,int charaColor, int line) {
-    ifstream portraitFile("ANSI/" + name + ".txt");
+    ifstream portraitFile("art/" + name + ".txt");
     if (portraitFile.is_open()) {
         string l;
         int i=0;
