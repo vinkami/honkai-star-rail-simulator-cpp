@@ -648,11 +648,11 @@ void insertCharacterAbility(Character &character) {
             int target = selectTargetPrompt(state.allies);// selecting target
             Character &allies = state.allies[target];
             double increased_atk = allies.baseAtk * 0.5;
-            if(increased_atk > self.atk*0.25) {
+            if (increased_atk > self.atk*0.25) {
                 increased_atk = self.atk*0.25;
             }
             benediction.values.push_back(increased_atk);
-            allies.getEffectOrCrash("Benediction");
+            allies.effects.push_back(benediction);
             allies.atk += increased_atk;
             benediction.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
@@ -663,7 +663,7 @@ void insertCharacterAbility(Character &character) {
             };
             // benediction part end
             // speed up
-            self.getEffectOrCrash("Speed up");
+            self.effects.push_back(speed_up);
             double increased_speed = self.baseSpeed*0.2;
             self.speed += increased_speed;
             speed_up.values.push_back((increased_speed));
@@ -776,7 +776,7 @@ void insertCharacterAbility(Character &character) {
     //Kafka
     else if (character.name == "Kafka") {
         character.nameColor ={35};
-        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+        character.basicAtk = [](Character &self, State &state) {  // Midnight Tumult
             int target = selectTargetPrompt(state.enemies);
             slowPrint("一瞬よ。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
@@ -785,7 +785,7 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed = true;
         };
         //Todo: follow up attack
-        character.skill = [](Character &self, State &state) {
+        character.skill = [](Character &self, State &state) {  // Caressing Moonlight
             if (!state.decSkillPoint()) {
                 slowPrint("No skill points left.\n", {91});
                 return;
@@ -813,7 +813,7 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed = true;
             //check contain effect
         };
-        character.ult = [](Character &self, State &state) {
+        character.ult = [](Character &self, State &state) {  // Twilight Trill
             //int character_pos = searchCharacter(state.allies, self.name);
             aoeAttack(state, self, 0.8);
             slowPrint("お別れの時間よ…ポン！\n",self.nameColor);
@@ -851,16 +851,9 @@ void insertCharacterAbility(Character &character) {
         //todo: add telent team damage resist 18%
         character.nameColor ={35};
         //talent Fuxuan self healing
-        Effect bulf = Effect("陰陽転換、生々流転。", "other", 0, 1);
-        bulf.endRound = [](Effect &self, Character &master, State &state) {
-            if(master.hp<master.baseHp*0.5 && master.hp>0) {
-                master.hp+= (master.baseHp-master.hp)*0.9;
-                slowPrint("陰陽転換、生々流転。",{35});
-                self.stack--;
-            }
-        };
-        character.effects.push_back(bulf);
-        character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
+        Effect hpRestoration = Effect("HP Restoration", "other", 0, 1);
+        character.effects.push_back(hpRestoration);
+        character.basicAtk = [](Character &self, State &state) {  // Novaburst
             int target = selectTargetPrompt(state.enemies);
             slowPrint("極数，知来！\n成象，効法！\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
@@ -869,37 +862,36 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed = true;
         };
 
-        character.skill =[](Character &self, State &state) {
+        character.skill =[](Character &self, State &state) {  // Known by Stars, Shown by Hearts
             if (!state.decSkillPoint()) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
             }
             // Doing Effect for shar damage
-            slowPrint("うよいったい\nしょうかしょうい\n",self.nameColor);
+            slowPrint("相与一体\n上下象易\n",self.nameColor);
             addEnergy(self, 30);
-            Effect share_dmg = Effect("穷观阵", "buff", 3);
-            int Fuxuan_pos = searchCharacter(state.allies, "Fuxuan");
-            double addiction_hp = self.baseHp * 0.6;
-            double addiction_critrate = 12;
-            share_dmg.values.push_back(Fuxuan_pos);
-            share_dmg.values.push_back(addiction_hp);
-            share_dmg.values.push_back(addiction_critrate);
+            Effect matrix = Effect("Matrix of Prescience", "buff", 3);
+            int Fuxuan_pos = searchCharacter(state.allies, self.name);
+            double addition_hp = self.baseHp * 0.6;
+            double addition_critrate = 12;
+            matrix.values.push_back(Fuxuan_pos);
+            matrix.values.push_back(addition_hp);
+            matrix.values.push_back(addition_critrate);
             //giving all ally Fuxuan's skill buff
             for (auto &ally : state.allies) {
-                if(ally.name!= "Fuxuan") {
-                    if(ally.getEffectLoc("穷观阵")>=0) {
-                        ally.critRate+=addiction_critrate;
-                        ally.baseHp+=addiction_hp;
-                        ally.effects.push_back(share_dmg);
-                    }
-                    if(ally.effects[ally.getEffectLoc("穷观阵")].duration<3) {
-                        ally.effects[ally.getEffectLoc("穷观阵")].duration=3;
-                    }
+                if (ally.name != "Fuxuan") continue;
+                if (ally.getEffectLoc("Matrix of Prescience") == -1) {
+                    ally.critRate+=addition_critrate;
+                    ally.baseHp+=addition_hp;
+                    ally.effects.push_back(matrix);
+                }
+                if (ally.effects[ally.getEffectLoc("Matrix of Prescience")].duration<3) {
+                    ally.effects[ally.getEffectLoc("Matrix of Prescience")].duration=3;
                 }
             }
-            // Fuxuan_pos at share_dmg.valus[0] , addi hp [1], addi critrate [2]
+            // Fuxuan_pos at matrix.valus[0] , addi hp [1], addi critrate [2]
             //todo: Finish Fuxuan share damage skill for each charater
-            share_dmg.endRound = [](Effect &self, Character &master, State &state) {
+            matrix.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 int master_pos = searchCharacter(state.allies, master.name);
                 double hp_difference = self.values[0] - master.hp;
@@ -917,13 +909,13 @@ void insertCharacterAbility(Character &character) {
             };
             state.timelineProceed = true;
         };
-        character.ult = [](Character &self, State &state) {
+        character.ult = [](Character &self, State &state) {  // Woes of Many Morphed to One
             //todo: the aoeAttack of fuxuan should base on baseHp value 100%
             aoeAttack(state, self,1);
             slowPrint("換斗移星、人事を、成す！",self.nameColor);
-            if(self.effects[self.getEffectLoc("陰陽転換、生々流転。")].stack<2) {
+            if (self.effects[self.getEffectLoc("HP Restoration")].stack < 2) {
                 slowPrint("世の万物に法理あり…",self.nameColor);
-                self.effects[self.getEffectLoc("陰陽転換、生々流転。")].stack+=1;
+                self.effects[self.getEffectLoc("HP Restoration")].stack += 1;
             }
             int self_pos = searchCharacter(state.allies , "Fuxuan");
             for (auto &ally : state.allies) {
@@ -931,6 +923,14 @@ void insertCharacterAbility(Character &character) {
                 if(state.allies[ally_pos].name != "Fuxuan"){
                     singleHeal(state, state.allies[self_pos],ally_pos,0.05,133);
                 }
+            }
+        };
+        character.onHit = [](Character &self, State &state, Character &attacker) {
+            Effect &hpRestore = self.getEffectOrCrash("HP Restoration");
+            if (self.hp < self.baseHp * 0.5 && self.hp > 0 && hpRestore.stack > 0) {
+                self.hp+= (self.baseHp-self.hp)*0.9;
+                slowPrint("陰陽転換、生々流転。",{35});
+                hpRestore.stack--;
             }
         };
     }
