@@ -12,7 +12,7 @@ using namespace std;
 void printHelp(const string& name);
 void printDescription(const string &name);
 void printCharacterPortrait(const string& name);
-void printCharacterByLine(const string& name, int line);
+void printCharacterByLine(const string& name,int charaColor, int line);
 void monkeyLock(State &state, Character &self, bool F= true);
 void checkDot(State &state,Character &self);
 void slowPrint(const string& text, const vector<int>& sgr={0}, int delayMS=10);
