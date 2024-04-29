@@ -22,15 +22,39 @@ void Character::reset() {
     remTime = resetRemTime;
 }
 
-void Character::print() const {
-    //cout << "Name: " << name << endl;
-    //cout << "Level: " << level << endl;
-    //cout << "HP: " << hp << endl;
-    //cout << "ATK: " << atk << endl;
-    //cout << "DEF: " << def << endl;
-    //cout << "Speed: " << speed << endl;
-    //cout << "Crit: " << critRate << "% / " << critDamage << "%" << endl;
-    //cout << endl;
+void Character::printCurrentStatus() const {
+    if (faction == "ally") {
+        slowPrint(name + ":\n", nameColor, 3);
+        vector<int> color = {0};
+        if (hp <= maxHp*0.3) color = {31};
+        slowPrint("HP: " + to_string((int) hp) + "/" + to_string((int) maxHp) + "\n", color, 3);
+        slowPrint("ATK: " + to_string((int) atk) + "\n", {0}, 3);
+        slowPrint("DEF: " + to_string((int) def) + "\n", {0}, 3);
+        slowPrint("Crit Rate: " + to_string((int) critRate) + "%\n", {0}, 3);
+        slowPrint("Crit Damage: " + to_string((int) critDamage) + "%\n", {0}, 3);
+        slowPrint("Speed: " + to_string((int) speed) + "\n", {0}, 3);
+    } else {
+        slowPrint("You are unable to see through the enemy completely\n", {31}, 3);
+        slowPrint(name + ":\n", nameColor, 3);
+        vector<int> color = {0};
+        if (hp <= maxHp*0.3) color = {31};
+        int healthPercent = (int) (hp/maxHp * 100);
+        slowPrint("HP: " + to_string(healthPercent) + "%\n", color, 3);
+    }
+    if (!effects.empty()) {
+        slowPrint("Effects: \n", {0}, 3);
+        for (auto &efx: effects) {
+            slowPrint("- " + efx.name + " with stack " + to_string(efx.stack), {0}, 3);
+            if (efx.duration > 0) {
+                slowPrint(" (" + to_string(efx.duration) + " turns left)\n", {0}, 0);
+            } else {
+                slowPrint(" (permanent)\n", {0}, 0);
+            }
+        }
+    } else {
+        slowPrint("No effects.\n", {0}, 3);
+    }
+    cout << endl;
 }
 
 int Character::getEffectLoc(const string &efxName) {
