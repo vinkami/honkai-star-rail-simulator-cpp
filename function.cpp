@@ -1008,11 +1008,12 @@ void insertCharacterAbility(Character &character) {
             int target = selectTarget((state.enemies));
             Character &enemy = state.enemies[target];
             bounceAttack(state, self, target, 0.5, 4);
-            addEnergy(self, 6);
+            addEnergy(self, 30);
             state.timelineProceed = true;
 
         };
         character.ult = [](Character &self , State &state) {
+            addEnergy(self,5);
             slowPrint("アスター: 星の秘密を求めるカギよ、開拓者たちに真なる祝福を！\n",  self.nameColor);
             Effect ult_speed_up = Effect("星空の願い", "buff", 2, 0);
             ult_speed_up.endRound = [](Effect &self, Character &master, State &state) {
@@ -1023,8 +1024,10 @@ void insertCharacterAbility(Character &character) {
                 }
             };
             for (Character &ally: state.allies) {
-                ally.effects.push_back(ult_speed_up);
-                ally.speed+= 50;
+                if (ally.getEffectLoc("星空の願い")==-1){
+                    ally.effects.push_back(ult_speed_up);
+                    ally.speed+= 50;
+                } else ally.getEffectOrCrash("星空の願い").duration=2;
             }
         };
         //Asta
