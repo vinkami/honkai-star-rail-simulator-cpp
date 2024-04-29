@@ -67,7 +67,7 @@ void printCharacterByLine(const string &name,int charaColor, int line) {
         }
         cout << "   ";
     } else {
-//        cout << "Portrait file not found." << endl;
+        cout << "Portrait file not found." << endl;
     }
     portraitFile.close();
 }

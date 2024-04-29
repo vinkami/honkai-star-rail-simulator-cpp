@@ -118,11 +118,15 @@ void printCharacterQueue(State &state) {
 }
 
 void printAllCharacters(State &state){
-    auto characters = state.allies;
-    characters.insert(characters.end(),state.enemies.begin(),state.enemies.end());
-    for(int i=0;i<6;i++){
-        for(int j=0;j<characters.size();j++){
-            printCharacterByLine(characters[j].name,characters[j].nameColor[0],i);
+//    auto characters = state.allies;
+//    characters.insert(characters.end(),state.enemies.begin(),state.enemies.end());
+    for(int i = 0 ; i < 6 ; i++){
+        for(auto & allie : state.allies){
+            printCharacterByLine(allie.name,allie.nameColor[0],i);
+        }
+        cout << "           ";
+        for(auto & enemie : state.enemies){
+            printCharacterByLine(enemie.name,enemie.nameColor[0],i);
         }
         cout << endl;
     }
