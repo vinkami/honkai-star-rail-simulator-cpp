@@ -27,6 +27,7 @@ double getNonCritDamage(double atk, double skillMultiplier, double def, double d
     double defMultiplier = 1 - trueDef / (trueDef + 1000);
     return atk * skillMultiplier * defMultiplier * (1 - dmgReduction) * (1 + dmgBonus);
 }
+// getNonCritDamage fuction is for calculating non-crit damage which target should take, also use for determind Dot damage in dot function
 
 void dot(Effect &efx, Character &defender, double multiplier){
     double damage = getNonCritDamage(efx.values[0], multiplier, defender.def, 0.0, defender.dmgReduction, 0.0);
@@ -37,7 +38,7 @@ void dot(Effect &efx, Character &defender, double multiplier){
         slowPrint(defender.name + " is defeated!\n", {91});
     }
 }
-
+// dot function give dot damage on target and determind target deafeated or not
 void heal(Character &healer, Character &target, double skillMultiplier, double plus){
     double healing = healer.baseHp*skillMultiplier+plus;
     double maxHP= target.baseHp;
@@ -51,7 +52,8 @@ void heal(Character &healer, Character &target, double skillMultiplier, double p
     slowPrint(to_string(heals),{0},10);
     slowPrint(" hp.\n",{0},10);
 }
-
+// heal fuction is use for healing the cahracter with calculating how many hp should be healed
+// used in different healing function e.g. single healing blasthealing
 void attack(Character &attacker, Character &defender, double skillMultiplier, State &state) {
     double damage = getNonCritDamage(attacker.atk, skillMultiplier, defender.def, attacker.defIgnore, attacker.dmgReduction, attacker.dmgBonus);
     bool crit = hit(attacker.critRate);
@@ -74,24 +76,29 @@ void attack(Character &attacker, Character &defender, double skillMultiplier, St
         defender.onHit(defender, state, attacker);
     }
 }
-
+// Attack function is one of the basic function for deducting hp to target
+// the function calculate how much damage should be deducted from target and determind target death
+// also being used in all attack function
 void singleHeal(State &state, Character &healer, int target, double skillMultiplier, double plus){
     std::vector<Character>& team = (healer.faction == "ally") ? state.allies : state.enemies;
     Character &receiver =team[target] ;
-    heal(healer,receiver,skillMultiplier,plus);
+    heal(healer,receiver,skillMultiplier,plus); //using heal function for healing
 }
-
+// singleheal fuction is healling a single characther by inputing the target position
 void blastHealing(State &state, Character &healer, int target, double mainSkillMultiplier, double adjacentSkillMultiplier,double mainPlus, double adjacentPlus){
     std::vector<Character>& team = (healer.faction == "ally") ? state.allies : state.enemies;
+    // checking is there an adjacent target on left side (position before target in state.enemies)
     if (target > 0) {
         Character &adjacent = team[target - 1];
-        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus);
+        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus);//if return true, heal adjacent target
     }
+    // healing selected target (inputed)
     Character &receiver = team[target];
     heal(healer, receiver, mainSkillMultiplier, mainPlus);
+    // checking is there an adjacent target on right side (position after target in state.enemies)
     if (target + 1 < team.size()) {
         Character &adjacent = team[target + 1];
-        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus);
+        heal(healer, adjacent, adjacentSkillMultiplier, adjacentPlus); //if return true, heal adjacent target
     }
 }
 
@@ -99,38 +106,38 @@ void blastHealing(State &state, Character &healer, int target, double mainSkillM
 void singleAttack(State &state, Character &attacker, int target, double skillMultiplier) {
     std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
     Character &defender = team[target];
-    attack(attacker,defender,skillMultiplier, state);
+    attack(attacker,defender,skillMultiplier, state);// using attack function
     // add kafka follow up attack
 }
-
+// singleAttack function is use for attacking a single target
 void blastAttack(State &state, Character &attacker, int target, double mainSkillMultiplier, double adjacentSkillMultiplier) {
     std::vector<Character> &team = (attacker.faction == "ally") ? state.enemies : state.allies;
-    if (target > 0) {
+    if (target > 0) { // determind left side
         Character &adjacent = team[target - 1];
         attack(attacker, adjacent, adjacentSkillMultiplier, state);
     }
     Character &defender = team[target];
-    attack(attacker, defender, mainSkillMultiplier, state);
-    if (target + 1 < team.size()) {
+    attack(attacker, defender, mainSkillMultiplier, state);// attacking origin selected target by user
+    if (target + 1 < team.size()) { // determind right
         Character &adjacent = team[target + 1];
         attack(attacker, adjacent, adjacentSkillMultiplier, state);
     }
 }
-
+// blastAttack function is use for attacking up to 3 target which next to each other
 void aoeAttack(State &state, Character &attacker, double skillMultiplier) {
-    std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
+    std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies; // determind which side to attack
     for (auto &defender : team)
     attack(attacker, defender, skillMultiplier, state);
 }
-
+// AoeAttack function will attack all target in opposite team i.e if attacker belong state.allies, then state.enemies
 void search(int newTarget, vector<int> &unique){
     bool flag= true;
     for (const auto& element : unique){
-        if (newTarget==element) flag= false;
+        if (newTarget==element) flag= false; // if target position already in unique vector, flag become false and target wont input to unique
     }
     if (flag) unique.push_back(newTarget);
 }
-
+// search function is used in bounceAttack for counting hitted target
 void bounceAttack(State &state, Character &attacker, int target, double skillMultiplier, int bounceCount,int &hitCount) {
     std::vector<Character>& team = (attacker.faction == "ally") ? state.enemies : state.allies;
     Character &defender = team[target];
@@ -139,8 +146,8 @@ void bounceAttack(State &state, Character &attacker, int target, double skillMul
     mt19937 gen(rd());
     vector<int> uniqueArray = {};
     uniform_int_distribution<int> dist(0, (int) team.size() - 1);
-    while (bounceCount > 0) {
-        int newTarget = dist(gen);
+    while (bounceCount > 0) { // attackloop
+        int newTarget = dist(gen); // finding new target using dist function
         search(newTarget,uniqueArray);
         Character &newDefender = team[newTarget];
         if (newDefender.hp > 0) {
@@ -148,5 +155,6 @@ void bounceAttack(State &state, Character &attacker, int target, double skillMul
             bounceCount--;
         }
     }
-    hitCount=uniqueArray.size();
+    hitCount=uniqueArray.size(); // give hitted target e.g. use for determind Asta team atk buff stack
 }
+// bounceAttack function will attack random character in target team
