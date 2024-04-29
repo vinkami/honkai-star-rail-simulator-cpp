@@ -25,6 +25,7 @@ void printHelp(const string& name) {
 void printDescription(const string &name){
     ifstream description("Description/" + name + "des.txt");
     if (description.is_open()){
+        cout << "Please be aware that the description is from the original Honkai: Star Rail, which may not be totally accurate in this game." << endl;
         cout << description.rdbuf();
     } else{
         cout << "Character not found." << endl;
@@ -543,7 +544,7 @@ void insertCharacterAbility(Character &character) {
                 singleAttack(state, self, target, 2.0);
                 addEnergy(self,20);
                 state.timelineProceed = true;
-                if (syzygy.stack >= 2) {
+                if (syzygy.stack >= 2 && transmigration.stack == 0) {
                     transmigration.stack = 1;
                     self.critRate += 50;
                     self.remTime = 0;
@@ -600,7 +601,7 @@ void insertCharacterAbility(Character &character) {
             addEnergy(self,5);
             syzygy.stack += 1;
             slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n", self.nameColor);
-            if (syzygy.stack >= 2) {
+            if (syzygy.stack >= 2 && transmigration.stack == 0) {
                 transmigration.stack = 1;
                 self.critRate += 50;
                 self.remTime = 0;
@@ -773,7 +774,6 @@ void insertCharacterAbility(Character &character) {
             state.incSkillPoint();
             state.timelineProceed = true;
         };
-        //Todo: follow up attack
         character.skill = [](Character &self, State &state) {  // Caressing Moonlight
             if (!state.decSkillPoint()) {
                 slowPrint("No skill points left.\n", {91});
@@ -854,47 +854,50 @@ void insertCharacterAbility(Character &character) {
             // Doing Effect for shar damage
             slowPrint("相与一体\n上下象易\n",self.nameColor);
             addEnergy(self, 30);
-            Effect matrix = Effect("Matrix of Prescience", "buff", self, 3);
-            int Fuxuan_pos = searchCharacter(state.allies, self.name);
-            double addition_hp = self.baseHp * 0.6;
-            double addition_critrate = 12;
-            matrix.values.push_back(Fuxuan_pos);
-            matrix.values.push_back(addition_hp);
-            matrix.values.push_back(addition_critrate);
-            //giving all ally Fuxuan's skill buff
-            for (auto &ally : state.allies) {
-                if (ally.name != "Fuxuan") continue;
-                if (ally.getEffectLoc("Matrix of Prescience") == -1) {
-                    ally.critRate+=addition_critrate;
-                    ally.baseHp+=addition_hp;
-                    ally.effects.push_back(matrix);
-                }
-                if (ally.effects[ally.getEffectLoc("Matrix of Prescience")].duration<3) {
-                    ally.effects[ally.getEffectLoc("Matrix of Prescience")].duration=3;
-                }
+//            int Fuxuan_pos = searchCharacter(state.allies, self.name);
+//            double addition_hp = self.baseHp * 0.6;
+//            double addition_critrate = 12;
+//            matrix.values.push_back(Fuxuan_pos);
+//            matrix.values.push_back(addition_hp);
+//            matrix.values.push_back(addition_critrate);
+//            //giving all ally Fuxuan's skill buff
+//            for (auto &ally : state.allies) {
+//                if (ally.name != "Fuxuan") continue;
+//                if (ally.getEffectLoc("Matrix of Prescience") == -1) {
+//                    ally.critRate+=addition_critrate;
+//                    ally.baseHp+=addition_hp;
+//                    ally.effects.push_back(matrix);
+//                }
+//                if (ally.effects[ally.getEffectLoc("Matrix of Prescience")].duration<3) {
+//                    ally.effects[ally.getEffectLoc("Matrix of Prescience")].duration=3;
+//                }
+//            }
+//            // Fuxuan_pos at matrix.valus[0] , addi hp [1], addi critrate [2]
+//            //todo: Finish Fuxuan share damage skill for each charater
+//            matrix.endRound = [](Effect &self, Character &master, State &state) {
+//                self.duration--;
+//                int master_pos = searchCharacter(state.allies, master.name);
+//                double hp_difference = self.values[0] - master.hp;
+//                singleHeal(state,state.allies[(int) self.values[0]],master_pos,0, hp_difference * 0.65);
+//                self.values[0] = master.hp;
+//                if(self.duration==0) {
+//                    master.baseHp -= self.values[1];
+//                    master.critRate -= self.values[2];
+//                    //removing baseHp
+//                    if(master.hp>master.baseHp) {
+//                        master.hp = master.baseHp;
+//                    }
+//                    master.removeEffect((self));
+//                }
+//            };
+            if (self.getEffectLoc("Matrix of Prescience") != -1) {
+                self.getEffectOrCrash("Matrix of Prescience").duration = 3;
+            } else {
+
             }
-            // Fuxuan_pos at matrix.valus[0] , addi hp [1], addi critrate [2]
-            //todo: Finish Fuxuan share damage skill for each charater
-            matrix.endRound = [](Effect &self, Character &master, State &state) {
-                self.duration--;
-                int master_pos = searchCharacter(state.allies, master.name);
-                double hp_difference = self.values[0] - master.hp;
-                singleHeal(state,state.allies[(int) self.values[0]],master_pos,0, hp_difference * 0.65);
-                self.values[0] = master.hp;
-                if(self.duration==0) {
-                    master.baseHp -= self.values[1];
-                    master.critRate -= self.values[2];
-                    //removing baseHp
-                    if(master.hp>master.baseHp) {
-                        master.hp = master.baseHp;
-                    }
-                    master.removeEffect((self));
-                }
-            };
             state.timelineProceed = true;
         };
         character.ult = [](Character &self, State &state) {  // Woes of Many Morphed to One
-            //todo: the aoeAttack of fuxuan should base on baseHp value 100%
             aoeAttack(state, self,1);
             slowPrint("換斗移星、人事を、成す！",self.nameColor);
             if (self.effects[self.getEffectLoc("HP Restoration")].stack < 2) {
