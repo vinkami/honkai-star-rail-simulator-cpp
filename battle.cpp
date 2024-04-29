@@ -117,16 +117,14 @@ void printCharacterQueue(State &state) {
     }
 }
 
-void printAllCharacters(State &state){
-//    auto characters = state.allies;
-//    characters.insert(characters.end(),state.enemies.begin(),state.enemies.end());
+void printAllCharacters(State &state){ // print the art of all the characters still alive, with color
     for(int i = 0 ; i < 6 ; i++){
-        for(auto & allie : state.allies){
-            printCharacterByLine(allie.name,allie.nameColor[0],i);
+        for(auto & ally : state.allies){
+            printCharacterByLine(ally.name,ally.nameColor[0],i); //print a single line of the character txt
         }
-        cout << "           ";
-        for(auto & enemie : state.enemies){
-            printCharacterByLine(enemie.name,enemie.nameColor[0],i);
+        cout << "           ";//add distance between allies and enemies
+        for(auto & enemy : state.enemies){
+            printCharacterByLine(enemy.name,enemy.nameColor[0],i);
         }
         cout << endl;
     }
@@ -149,15 +147,8 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         current.basicAtk(current, state);
 
     } else { // player's turn
-//        cout << current.name << "'s turn" << endl;
         printCharacterQueue(state);
-
         printAllCharacters(state);
-//        printCharacterPortrait(current.name);
-//        printCharacterByLine(current.name,2);
-//        printCharacterByLine(current.name,3);
-//        printCharacterByLine(current.name,4);
-//        printCharacterByLine(current.name, 5);
         cout << "Energy: ";
 //        for (auto ally: state.allies) {
 //            string color = "\033[0m";
