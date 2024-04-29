@@ -34,19 +34,20 @@ void teamMenu(State &state) {
             printHelp("team");
         } else {
             int number = stoi(selection);
-            Character &ally = playableCharacters[number-1];
-            if (number > playableCharacters.size() || number < 0){
+            if (number > playableCharacters.size() || number <= 0){
                 cout << "Please input appropriate number! " << endl;
+                continue;
             }
-            else if (ally.name != "Used"){
-                team.push_back(ally);
-                cout << ally.name << " joined!" << endl;
-                ally.name = "Used";
-            } else{
+            Character &ally = playableCharacters[number-1];
+            if (searchCharacter(team, ally.name) != -1) {
                 cout << "Character already chosen. Please choose another! " << endl;
+                continue;
             }
+
+            team.push_back(ally);
+            cout << ally.name << " joined!" << endl;
         }
-        cout << "Select a character to your team by typing their number. (1-6)" << endl;
+        cout << "Select a character to your team by typing their number. (1-" + to_string(team.size()) + ")" << endl;
     }
     cout << "Team formed successfully!" << endl << "Current Team:" << endl;
     for (const auto &character : team)
@@ -70,12 +71,12 @@ void characterList(State &state){
     while (input != "exit") {
         if (all_of(input.begin(), input.end(), ::isdigit)) {
             int number = stoi(input);
-            if (number <= playableCharacters.size()) {
+            if (number >= 1 && number <= playableCharacters.size()) {
                 printDescription(playableCharacters[number - 1].name);
-                cout << "\n\n" << "Type any button return to list." << endl;
+                cout << "\n\n" << "Type anything to return." << endl;
                 cin >> exit;
-            } else{
-                cout << "Please input appropriate number." << endl;
+            } else {
+                cout << "Please input an appropriate number." << endl;
             }
         } else if (input == "help"){
             printHelp("list");
@@ -94,15 +95,17 @@ void battleMenu(State &state) {
     cout << "Battle Menu" << endl << endl;
     vector<Situation> situations = getSituations();
     for (int i = 0; i < situations.size(); i++) {
-        cout << "Situation " << i+1 << endl;
+        cout << "Situation " << i+1 << ": " << situations[i].name << endl;
         string description = situations[i].description;
+        cout << description;  // there will be \n in description so no need endl
+        cout << "Consisting of: " << endl;
         for (const auto& enemy : situations[i].enemies){
-            cout << enemy.name << endl;
+            cout << "- " << enemy.name << endl;
         }
         cout << endl;
     }
 
-    cout << "Please choose your situation (1-)  "; //TODO:ADD MORE SITUATION AND CHANGE THIS PART
+    cout << "Please choose your situation (1-" + to_string(situations.size()) + ")  "; //TODO:ADD MORE SITUATION AND CHANGE THIS PART
     bool flag = true;
     while (flag) {
         string selectionStr;
@@ -110,7 +113,7 @@ void battleMenu(State &state) {
         if (selectionStr == "help") {
             cout << endl;
             printHelp("enemy");
-            cout << endl << "Please choose your situation (1-)  "; //TODO:ADD MORE SITUATION AND CHANGE THIS PART
+            cout << endl << "Please choose your situation (1-" + to_string(situations.size()) + ")  "; //TODO:ADD MORE SITUATION AND CHANGE THIS PART
         } else if (selectionStr == "exit") {
             cout << "Situation selection terminated." << endl;
             return;
