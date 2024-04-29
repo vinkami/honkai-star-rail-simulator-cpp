@@ -377,6 +377,39 @@ void insertEnemyAbility(Character &enemy){
             //TODO:dot atk
             state.timelineProceed = true;
         };
+    }  else if (enemy.name== "Mara-Struck Soldier") {
+        enemy.nameColor={36};
+        Effect regen = Effect("Mara-Struck","other",0,1);
+        regen.endRound = [](Effect &self, Character &master, State &state) {
+            if(master.hp >= 0 ) {
+                master.hp += master.baseHp*0.5;
+                cout<<self.name<<" regen "<<endl;
+                self.stack--;
+            }
+            if(self.stack==0) {
+                master.removeEffect(self);
+            }
+        };
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target = aiTarget((state.allies));
+            singleAttack(state, self, target,2);
+            Effect DoT = Effect("Wind Shear","debuff",3,2);
+            int self_pos = searchCharacter(state.enemies,self.name);
+            DoT.values.push_back(self_pos);
+            DoT.endRound = [](Effect &self, Character &master, State &state) {
+                int master_pos = searchCharacter(state.allies,master.name);
+                self.duration--;
+                singleAttack(state,state.enemies[self.values[0]],master_pos,0.5);
+                if (self.duration==0) {
+                    master.removeEffect(self);
+                }
+            };
+            //addEnergy(self,15);
+            if(hit(85)) {
+                state.allies[target].effects.push_back(DoT);
+            }
+            state.timelineProceed = true;
+        };
     }
 }
 
@@ -1028,7 +1061,7 @@ void insertCharacterAbility(Character &character) {
         };
         //Asta
     }
-        //Danhen
+        //Danheng
     else if (character.name == "Danheng") {
         character.nameColor ={92};
         character.basicAtk = [](Character &self, State &state) {
@@ -1072,7 +1105,7 @@ void insertCharacterAbility(Character &character) {
             }
         };
     }
-    //Danhen   
+    //Danheng
 }
     
 
