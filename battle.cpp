@@ -135,7 +135,6 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
     current.startRound(current, state);
     bool battleContinues = battleEndCheck(state);  // possible that the last character dies to damage over time or something and ends the battle
     if (!battleContinues) return false;
-    checkDot(state,current);
     if (current.faction == "round") {  // new round starts
         state.roundNumber++;
         slowPrint("----------Round " + to_string(state.roundNumber) + " starts----------\n", {1, 33}, 20);
