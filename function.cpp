@@ -52,14 +52,18 @@ void printCharacterPortrait(const string &name) {
 }
 
 
-void printMainCommandSelected(int num) {
-    vector<string> list = {"help","start", "team", "list", "battle", "level", "settings", "restart", "quickstart"};
+void printCommandSelected(vector<string> list, int num) {
     for (int i=0;i<9;i++){
         if (num == i) slowPrint("["+list[i]+"]", {31}, 0);
         else cout << " " << list[i] << " ";
         if (i !=8) cout << " | ";
         else cout << endl;
     }
+}
+
+void printMainCommandSelected(int num) {
+    vector<string> list = {"help", "start", "team", "list", "battle", "level", "settings", "restart", "quickstart"};
+    printCommandSelected(list, num);
 }
 
 //To find whether character is available.
