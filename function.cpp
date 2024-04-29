@@ -349,7 +349,7 @@ void insertEnemyAbility(Character &enemy){
             if (hit(100) || summon.stack==0) {
                 slowPrint("Wooden Lupus: 狼餐\n", self.nameColor);
                 singleAttack(state, self, target, 2);
-                if (hit(80 && state.allies[target].hp>0)) {
+                if (hit(80) && state.allies[target].hp>0) {
                     int con=state.allies[target].getEffectLoc("Shocked");
                     slowPrint(state.allies[target].name+" is Shocked for 3 turns.\n",{31});
                     if (con==-1)
@@ -971,43 +971,53 @@ void insertCharacterAbility(Character &character) {
     else if (character.name == "Asta") {
         //todo: add asta buff team attack buff
         character.nameColor ={31};
+        Effect astrometry = Effect("Astrometry","buff",-1,0);
+        astrometry.endRound = [](Effect &self, Character &master, State &state){
 
+        };
+        character.effects.push_back(astrometry);
         character.basicAtk = [](Character &self, State &state) {
+            Effect &astro=self.getEffectOrCrash("Astrometry");
             int target = selectTarget(state.enemies);
+            if (astro.stack<5) astro.stack+=1;
             Character &enemy = state.enemies[target];
             slowPrint("アスター: 避けてね。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self, 20);
             //basic attack effect
-            Effect buring = Effect("燃焼","debuff",3,0);
+            Effect buring = Effect("burn","debuff",3,0);
 
             int Asta_pos =searchCharacter(state.allies,"Asta");
             buring.values.push_back(Asta_pos);
             buring.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 int master_pos = searchCharacter(state.allies, master.name);
-                singleAttack(state , state.allies[self.values[0]],master_pos,0.8);
+                self.skillMultiplier=0.5;self.isDot= true;
                 if (self.duration == 0) {
                     master.removeEffect(self);
                 }
             };
             //adding effect on target by chance
             if (hit(80)) {
-                enemy.effects.push_back(buring);
+                if (enemy.getEffectLoc("burn")==-1) enemy.effects.push_back(buring);
+                else enemy.getEffectOrCrash("burn").duration=3;
             }
             state.incSkillPoint();
             state.timelineProceed = true;
         };
         character.skill = [](Character &self , State &state) {
+            Effect &astro=self.getEffectOrCrash("Astrometry");
             if (!state.decSkillPoint()) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
             }
             if (hit(50)) slowPrint("アスター: ラッキースターは誰かな～\n",self.nameColor);
             else slowPrint("アスター: 星の祝福を貴方に～\n",  self.nameColor);
-            int target = selectTarget((state.enemies));
+            int target = selectTarget((state.enemies)), add;
             Character &enemy = state.enemies[target];
-            bounceAttack(state, self, target, 0.5, 4);
+            bounceAttack(state, self, target, 0.5, 4,add);
+            if (add+astro.stack>5) astro.stack=5;
+            else astro.stack+=add;
             addEnergy(self, 30);
             state.timelineProceed = true;
 
