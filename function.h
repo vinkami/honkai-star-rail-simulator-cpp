@@ -16,7 +16,7 @@ void monkeyLock(State &state, Character &self, bool F= true);
 void checkDot(State &state,Character &self);
 void slowPrint(const string& text, const vector<int>& sgr={0}, int delayMS=10);
 int searchCharacter(const vector<Character>& characters, const string& target);
-int selectTarget(vector<Character>& characters);
+int selectTargetPrompt(vector<Character>& characters);
 vector<Character> getPlayableCharacters();
 vector<Situation> getSituations();
 int levelscaling(double statistic, int level);

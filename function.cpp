@@ -131,7 +131,7 @@ void checkDot(State &state,Character &self){
     }
 }
 
-int selectTarget(vector<Character>& characters) {
+int selectTargetPrompt(vector<Character>& characters) {
     do {
         cout << "Available targets are: ";
         for (int i = 0; i < characters.size(); ++i) {
@@ -429,7 +429,7 @@ void insertCharacterAbility(Character &character) {
         character.effects.push_back(enhancedCounter);
         character.dmgReduction = 0.1;
         character.basicAtk = [](Character &self, State &state) {  // I Want to Help
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             if (hit(50)) slowPrint("クラーラ：気を付けて、スヴァローグ！\n", self.nameColor);
             else slowPrint("スヴァローグ：排除する。\n", self.nameColor);
             singleAttack(state, self, target, 1.0);
@@ -512,7 +512,7 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",{91});
                 return;
             }
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             slowPrint("鏡流：切先は戻らぬ！\n", self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self,20);
@@ -527,7 +527,7 @@ void insertCharacterAbility(Character &character) {
                     slowPrint("No skill points left.\n", {91});
                     return;
                 }
-                int target = selectTarget(state.enemies);
+                int target = selectTargetPrompt(state.enemies);
                 slowPrint("鏡流：飛光よ、差せ！\n", self.nameColor);
                 syzygy.stack += 1;
                 slowPrint("Syzygy stack: " + to_string(syzygy.stack) + "\n",self.nameColor);
@@ -543,7 +543,7 @@ void insertCharacterAbility(Character &character) {
                 }
             } else {  // Moon On Glacial River
                 // does not consume skill point
-                int target = selectTarget(state.enemies);
+                int target = selectTargetPrompt(state.enemies);
                 slowPrint("鏡流：月光を剣とせん。\n",self.nameColor);
                 // talent: drain allies' hp and increase atk
                 double totalRemoved = 0;
@@ -573,7 +573,7 @@ void insertCharacterAbility(Character &character) {
         character.ult = [](Character &self, State &state) {  // Florephemeral Dreamflux
             Effect &syzygy = self.getEffectOrCrash("Syzygy");
             Effect &transmigration = self.getEffectOrCrash("Spectral Transmigration");
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             slowPrint("鏡流：この月華で…       \n鏡流：すべてを照らさん！\n",  self.nameColor);
             // talent: drain allies' hp and increase atk
             double totalRemoved = 0;
@@ -609,7 +609,7 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("Basic Attack is disabled during Spectral Transmigration mode.\n",self.nameColor);
                 return;
             }
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             slowPrint("落ち着いて。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self,20);
@@ -625,7 +625,7 @@ void insertCharacterAbility(Character &character) {
             }
             // benediction part
             slowPrint("停云:万事順調～\n停云：諸悪退散～\n",  self.nameColor);
-            int target = selectTarget(state.allies);// selecting target
+            int target = selectTargetPrompt(state.allies);// selecting target
             Character &allies = state.allies[target];
             double increased_atk = allies.baseAtk * 0.5;
             if(increased_atk > self.atk*0.25) {
@@ -657,7 +657,7 @@ void insertCharacterAbility(Character &character) {
             state.timelineProceed=true;
         };
         character.ult = [](Character &self, State &state) {  // Amidst the Rejoicing Clouds
-            int target = selectTarget(state.allies);
+            int target = selectTargetPrompt(state.allies);
             Character &allies = state.allies[target];
             slowPrint("停云:万事吉とならん、一心同帰\n",  self.nameColor);
             addEnergy(allies,50);
@@ -678,7 +678,7 @@ void insertCharacterAbility(Character &character) {
     } else if (character.name=="Huohuo") {
         character.nameColor = {32};
         character.basicAtk = [](Character &self, State &state) {  // Banner: Stormcaller
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             if (hit(50)) slowPrint("シッポ：ほーらよっと。\nフォフォ：やあああ――\n", self.nameColor);
             else slowPrint("フォフォ：いやあ助けてええっ――\n", self.nameColor);
             singleAttack(state, self, target, 1.0);
@@ -691,7 +691,7 @@ void insertCharacterAbility(Character &character) {
                 slowPrint("No skill points left.\n", self.nameColor);
                 return;
             }
-            int targetPos = selectTarget(state.allies);
+            int targetPos = selectTargetPrompt(state.allies);
             Character &target = state.allies[targetPos];
             if (hit(50)) slowPrint("フォフォ：邪を払い...魅を縛らん...\n", self.nameColor);
             else slowPrint("フォフォ：霊符よ...守りたまえ...\n", self.nameColor);
@@ -757,7 +757,7 @@ void insertCharacterAbility(Character &character) {
     else if (character.name == "Kafka") {
         character.nameColor ={35};
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             slowPrint("一瞬よ。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self, 20);
@@ -771,7 +771,7 @@ void insertCharacterAbility(Character &character) {
                 return;
             }
             //skill point check
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             singleAttack(state, self, target, 2.0);
             blastAttack(state, self, target, 0.75, 0.75);
             //slowPrint((" ")); seem there are no lyris when kafka use skill
@@ -841,7 +841,7 @@ void insertCharacterAbility(Character &character) {
         };
         character.effects.push_back(bulf);
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             slowPrint("極数，知来！\n成象，効法！\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self, 20);
@@ -921,7 +921,7 @@ void insertCharacterAbility(Character &character) {
         character.nameColor ={97};
         character.basicAtk = [](Character &self, State &state) {  // Lucent Moonglow
 
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             slowPrint("重症ね。\n",  self.nameColor);
             slowPrint("生命の重みを味わいなさい。\n",  self.nameColor);
             slowPrint("眠るといいわ。\n",  self.nameColor);
@@ -939,7 +939,7 @@ void insertCharacterAbility(Character &character) {
             slowPrint("薬を飲みましょう。\n",  self.nameColor);
             slowPrint("痛くないでしょ。\n",self.nameColor);
             addEnergy(self, 30);
-            int target = selectTarget(state.allies);
+            int target = selectTargetPrompt(state.allies);
             Character &ally = state.allies[target];
             int self_pos = searchCharacter(state.allies, self.name);
             double healing_hp = self.baseHp*0.105 + 280;
@@ -1015,7 +1015,7 @@ void insertCharacterAbility(Character &character) {
         character.effects.push_back(astrometry);
         character.basicAtk = [](Character &self, State &state) {
             Effect &astro=self.getEffectOrCrash("Astrometry");
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             if (astro.stack<5) astro.stack+=1;
             Character &enemy = state.enemies[target];
             slowPrint("アスター: 避けてね。\n",  self.nameColor);
@@ -1049,7 +1049,7 @@ void insertCharacterAbility(Character &character) {
             }
             if (hit(50)) slowPrint("アスター: ラッキースターは誰かな～\n",self.nameColor);
             else slowPrint("アスター: 星の祝福を貴方に～\n",  self.nameColor);
-            int target = selectTarget((state.enemies)), add;
+            int target = selectTargetPrompt((state.enemies)), add;
             bounceAttack(state, self, target, 0.5, 4,add);
             if (add+astro.stack>5) astro.stack=5;
             else astro.stack+=add;
@@ -1081,7 +1081,7 @@ void insertCharacterAbility(Character &character) {
     else if (character.name == "Danheng") {
         character.nameColor ={92};
         character.basicAtk = [](Character &self, State &state) {
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             slowPrint("丹恒: 今だ。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             state.incSkillPoint();
@@ -1095,7 +1095,7 @@ void insertCharacterAbility(Character &character) {
             if (hit(50))
                 slowPrint("丹恒: 争いに...意味はない。\n",self.nameColor);
             else slowPrint("丹恒: どけ、騒ぎを起こしたくはない\n",self.nameColor);
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             Character &enemy = state.enemies[target];
             singleAttack(state, self, target, 2.6);
             addEnergy(self, 30);
@@ -1118,7 +1118,7 @@ void insertCharacterAbility(Character &character) {
 
         character.ult = [](Character &self, State &state) {
             slowPrint("丹恒: 生死虚実、一念の間なり。\n",  self.nameColor);
-            int target = selectTarget(state.enemies);
+            int target = selectTargetPrompt(state.enemies);
             Character &enemy = state.enemies[target];
             slowPrint("丹恒: 洞天幻化、長夢一覚...破！\n",  self.nameColor);
             if(enemy.effects[enemy.getEffectLoc("疾雨")].duration>0) {
