@@ -424,6 +424,56 @@ void insertEnemyAbility(Character &enemy){
             }
             state.timelineProceed = true;
         };
+    } else if(enemy.name == "Sweet Gorilla"){
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            if (hit(0)) {
+                slowPrint("Sweet Gorilla: !!!\n");
+                singleAttack(state, self, target, 3.8);
+                state.allies[target].hp -= state.allies[target].baseHp * 0.08;
+                state.allies[target].def -= state.allies[target].baseDef * 0.2;
+            } else {
+                Character summon= Character("",0,0,0,0,0,0,0,0,0, 0);
+                for (auto &enemy: state.enemiesOriginal){
+                    if (enemy.name == "Bubble Hound"){
+                        summon = enemy;
+                        enemy.maxHp = enemy.hp;
+                        if (state.enemies.size() != 3){
+                            state.enemies.push_back(enemy);
+                        } else {
+                            slowPrint("Sweet Gorilla: !!!\n");
+                            singleAttack(state, self, target, 3.8);
+                            state.allies[target].hp -= state.allies[target].baseHp * 0.08;
+                            state.allies[target].def -= state.allies[target].baseDef * 0.2;
+                        }
+                        break;
+                    }
+                }
+            }
+            state.timelineProceed = true;
+        };
+    } else if (enemy.name == "Winder Goon"){
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            if (hit(50)) {
+                slowPrint("Winder Goon: !!!\n");
+                singleAttack(state, self, target, 2.5);
+            } else {
+                for (auto & enemy : state.enemies){
+                    if (enemy.name != "Winder Goon"){
+                        enemy.remTime = 0;
+                    }
+                }
+            }
+            state.timelineProceed = true;
+        };
+    } else if (enemy.name == "Bubble Hound"){
+        enemy.basicAtk = [](Character &self, State &state) {
+            int target= aiTarget(state.allies);
+            slowPrint("Bubble Hound: !!!\n");
+            singleAttack(state, self, target, 2.5);
+            state.timelineProceed = true;
+        };
     }
 }
 
@@ -1170,6 +1220,7 @@ vector<Situation> getSituations() {
     return situations;
 }
 
+
 vector<Character> getPlayableCharacters() {
     vector<Character> playableCharacters;
     ifstream characterFile("characters.csv");
@@ -1204,6 +1255,8 @@ int levelscaling(double statistic, int level){
     int newstat = static_cast<int>(statistic * 7.4 * level - statistic * level - statistic * 7.4 + 80 * statistic) / 79;
     return newstat;
 }
+
+
 
 void enemyscaling(vector <Character> &enemy, int level){
     for (auto & character : enemy){
