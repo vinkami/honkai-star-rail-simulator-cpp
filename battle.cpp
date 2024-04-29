@@ -122,7 +122,7 @@ void printAllCharacters(State &state){
     characters.insert(characters.end(),state.enemies.begin(),state.enemies.end());
     for(int i=0;i<6;i++){
         for(int j=0;j<characters.size();j++){
-            printCharacterByLine(characters[j].name,i);
+            printCharacterByLine(characters[j].name,characters[j].nameColor[0],i);
         }
         cout << endl;
     }
@@ -166,7 +166,8 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         for (const auto& ally: state.allies) {
             auto color = ally.nameColor;
             if (ally.energy < ally.maxEnergy) color = {0};
-            slowPrint(ally.name + " " + to_string((int) ally.energy) + " / " + to_string((int) ally.maxEnergy) + "   ", color, 0);
+            slowPrint(ally.name + " " + to_string((int) ally.energy) + " / " + to_string((int) ally.maxEnergy) + "   ",
+                      {ally.nameColor}, 0);
         }
         cout << endl;
 
@@ -180,7 +181,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 //            cout << ally.name << " " << color << health << " / " << ally.maxHp << "\033[0m   ";
             vector<int> color = {0};
             if (ally.hp <= ally.maxHp*0.3) color = {31};
-            slowPrint(ally.name + " " + to_string((int) ally.hp) + " / " + to_string((int) ally.maxHp) + "   ", color, 0);
+            slowPrint(ally.name + " " + to_string((int) ally.hp) + " / " + to_string((int) ally.maxHp) + "   ", {ally.nameColor}, 0);
         }
         cout << endl;
 
@@ -196,7 +197,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             vector<int> color = {0};
             if (enemy.hp <= enemy.maxHp*0.3) color = {31};
             int healthPercent = (int) (enemy.hp/enemy.maxHp * 100);
-            slowPrint(enemy.name + " " + to_string(healthPercent) + "%   ", color, 0);
+            slowPrint(enemy.name + " " + to_string(healthPercent) + "%   ", {enemy.nameColor}, 0);
         }
         cout << endl << endl;
 

@@ -56,13 +56,13 @@ void printCharacterPortrait(const string &name) {
     portraitFile.close();
 }
 
-void printCharacterByLine(const string &name, int line) {
+void printCharacterByLine(const string &name,int charaColor, int line) {
     ifstream portraitFile("ANSI/" + name + ".txt");
     if (portraitFile.is_open()) {
         string l;
         int i=0;
         while (getline(portraitFile, l)) {
-            if (i==line) cout << l;
+            if (i==line) slowPrint(l,{charaColor},0);
             i++;
         }
         cout << "  ";
