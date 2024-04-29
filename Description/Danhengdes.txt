@@ -1,0 +1,11 @@
+Basic attack: Cloudlancer Art: North Wind (Q)
+Deals Physical DMG equal to 100% of Dan Heng's ATK to a single enemy.
+
+Skill: Cloudlancer Art: Torrent (E)
+Deals Physical DMG equal to 260% of Dan Heng's ATK to a single enemy.
+On a CRIT Hit, there is a 100% base chance to reduce the target's
+SPD by 12% for 2 turn(s).
+
+Ultimate: Ethereal Dream (100 energy cost)
+Deals Wind DMG equal to 400% of Dan Heng's ATK to a single enemy.
+If the enemy is Slowed, the Ultimate's DMG multiplier increases by 120%.

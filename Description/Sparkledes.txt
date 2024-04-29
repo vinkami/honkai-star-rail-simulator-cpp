@@ -1,0 +1,16 @@
+Basic attack: Monodrama (Q)
+Deals Physical DMG equal to 100% of Sparkle's ATK to a single
+target enemy.
+
+Skill: Dreamdiver (E)
+Increases the CRIT DMG of a single target ally by 24% of
+Sparkle's CRIT DMG plus 45%, lasting for 1 turn(s). And at the
+same time, Advances Forward this ally's action by 50%.
+When Sparkle uses this ability on herself, the Action Advance
+effect will not trigger.
+
+Ultimate: The Hero with a Thousand Faces (110 energy cost)
+Recovers 4 Skill Points for the team and grants all allies
+Cipher. For allies with Cipher, each stack of the DMG Boost
+effect provided by Sparkle's Talent additionally increases
+by 10%, lasting for 2 turns.
