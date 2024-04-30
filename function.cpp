@@ -418,68 +418,121 @@ void insertEnemyAbility(Character &enemy){
                     master.removeEffect(self);
                 }
             };
-            //addEnergy(self,15);
             if(hit(85)) {
                 state.allies[target].effects.push_back(DoT);
             }
             state.timelineProceed = true;
         };
     } else if(enemy.name == "Sweet Gorilla"){
+        enemy.nameColor={93};
         enemy.basicAtk = [](Character &self, State &state) {
+
+            Effect lowerDef= Effect("DEF reduction","debuff",self,2,0);
+            lowerDef.endRound = [](Effect &self, Character &master, State &state) {
+                self.stack-=1;
+                if(self.stack==0) {
+                    master.def+=self.values[0];
+                    master.removeEffect(self);
+                }
+            };
+
+            Effect freeDrinkCharge = Effect("Charge","other",self,-1,0);
             int target= aiTarget(state.allies);
-            if (hit(80)) {
-                slowPrint("Sweet Gorilla: Attack\n");
-                singleAttack(state, self, target, 3.8);
-                state.allies[target].hp -= state.allies[target].baseHp * 0.08;
-                state.allies[target].def -= state.allies[target].baseDef * 0.2;
-            } else {
-                Character summon= Character("",0,0,0,0,0,0,0,0,0, 0);
-                for (auto &enemy: state.enemiesOriginal){
-                    if (enemy.name == "Bubble Hound"){
-                        summon = enemy;
-                        enemy.maxHp = enemy.hp;
-                        if (state.enemies.size() == 2){
-                            state.enemies.push_back(enemy);
-                            slowPrint("Sweet Gorilla: Summon\n");
-                        } else if (state.enemies.size() == 1){
-                            state.enemies.push_back(enemy);
-                            state.enemies.push_back(enemy);
-                            slowPrint("Sweet Gorilla: Summon\n");
+            bool drinkCharge=false;
+            if (self.getEffectLoc("Charge")!=-1) drinkCharge=true;
+            if (drinkCharge){
+                Effect &charge = self.getEffectOrCrash("Charge");
+                self.dmgReduction-=charge.values[0];
+                self.removeEffect(charge);
+                slowPrint("スウィート．ゴリラ: フリードリンク（飲み放題）\n",self.nameColor);
+                for (int i=0;i<4;i++){
+                    target= aiTarget(state.allies);
+                    Character &defender=state.allies[target];
+                    singleAttack(state,self,target,2.0);
+                    if (hit(90)){
+                        slowPrint(defender.name+"'s defense is decreased.\n",{31});
+                        if (defender.getEffectLoc("DEF reduction")==-1) {
+                            double decreased_def = defender.baseDef*0.2;
+                            lowerDef.values.push_back(decreased_def);
+                            defender.effects.push_back(lowerDef);
+                            defender.def-=decreased_def;
                         } else {
-                            slowPrint("Sweet Gorilla: Attack\n");
-                            singleAttack(state, self, target, 3.8);
-                            state.allies[target].hp -= state.allies[target].baseHp * 0.08;
-                            state.allies[target].def -= state.allies[target].baseDef * 0.2;
+                            Effect freeDrink = defender.getEffectOrCrash("DEF reduction");
+                            freeDrink.duration=2;
                         }
-                        break;
                     }
                 }
-            }
-            state.timelineProceed = true;
-        };
-    } else if (enemy.name == "Winder Goon"){
-        enemy.basicAtk = [](Character &self, State &state) {
-            int target= aiTarget(state.allies);
-            if (hit(50)) {
-                slowPrint("Winder Goon: !!!\n");
-                singleAttack(state, self, target, 2.5);
-            } else {
-                for (auto & enemy : state.enemies){
-                    if (enemy.name != "Winder Goon"){
-                        enemy.remTime = 0;
+            }else if (hit(50)) {     //normal atk
+                Character &defender=state.allies[target];
+                slowPrint("スウィート．ゴリラ: フリードリンク（数量限定）\n",self.nameColor);
+                singleAttack(state, self, target, 3.8);
+                if (hit(90)){
+                    slowPrint(defender.name+"'s defense is decreased.\n",{31});
+                    if (defender.getEffectLoc("DEF reduction")==-1) {
+                        int decreased_def = static_cast<int>(defender.baseDef*0.2);
+                        lowerDef.values.push_back(decreased_def);
+                        defender.effects.push_back(lowerDef);
+                        defender.def-=decreased_def;
+                    } else {
+                        Effect freeDrink = defender.getEffectOrCrash("DEF reduction");
+                        freeDrink.duration=2;
                     }
                 }
-                slowPrint("Winder Goon: Again\n");
+            } else {        //charge
+                slowPrint("スウィート．ゴリラ: スラーダ噴水\n",self.nameColor);
+                slowPrint("Sweet Gorilla enters the Charge state and gains Toughness Protection.\nWhen taking action the next time, uses フリードリンク（飲み放題）.\n",self.nameColor);
+                double increased_dmg_reduction = 0.2;
+                freeDrinkCharge.values.push_back(increased_dmg_reduction);
+                self.effects.push_back(freeDrinkCharge);
+                self.dmgReduction+=increased_dmg_reduction;
             }
             state.timelineProceed = true;
         };
     } else if (enemy.name == "Bubble Hound"){
+        enemy.nameColor={93};
+        Effect dogTalent = Effect("Hearty Revelry","other",enemy,-1,0);
+        dogTalent.startRound = [](Effect &self, Character &master, State &state){
+            for (auto &effect:master.effects){if (effect.type=="debuff") self.stack+=1;}
+            if (self.stack>4) self.stack=4;
+            double increased_atk=master.baseAtk*self.stack*0.4;
+            master.atk+=increased_atk;
+            self.values.push_back(increased_atk);
+        };
+        dogTalent.endRound = [](Effect &self, Character &master, State &state){
+            master.atk-=self.values[0];
+            self.values={};
+            self.stack=0;
+        };
+        enemy.effects.push_back(dogTalent);
         enemy.basicAtk = [](Character &self, State &state) {
             int target= aiTarget(state.allies);
-            slowPrint("Bubble Hound: Attack\n");
+            slowPrint("ソーダドッグ: 飲みの誘い\n",self.nameColor);
             singleAttack(state, self, target, 2.5);
             state.timelineProceed = true;
         };
+    } else if (enemy.name=="Birdskull"){
+        enemy.nameColor={33};
+        enemy.basicAtk = [](Character &self, State &state) {
+            Effect bleeding = Effect("Bleeding","debuff",self,2,1);
+            bleeding.startRound = [](Effect &self, Character &master, State &state) {
+                dot(self, master,2);
+                self.duration--;
+                if (self.duration == 0) {
+                    master.removeEffect(self);
+                }
+            };
+            int target= aiTarget(state.allies);
+            Character &defender = state.allies[target];
+            slowPrint("踊る仮面の鳥: 舞踏への誘い\n");
+            singleAttack(state, self, target, 2.5);
+            if (hit(50)){
+                if (defender.getEffectLoc("Bleeding")!=-1) defender.effects.push_back(bleeding);
+                else defender.getEffectOrCrash("Bleeding").duration=2;
+                slowPrint(defender.name+" is bleeding.\n");
+            }
+            state.timelineProceed = true;
+        };
+
     }
 }
 
