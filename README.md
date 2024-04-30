@@ -107,4 +107,4 @@ When you enter the battle menu, you will be able to see the situations' descript
 - Ascii art: some of the art was modified from ascii.co.uk
 - Table: Table function from friedmud github.com/friedmud/variadic_table
 ## Link to demonstration video
-**TO BE ADDED**
+- https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3622713_connect_hku_hk/EgE_0wQxkhBDnc4aEoDhYlYBpzCvhVmTT25nYZPvd4Ksfw?e=Mr83u2
