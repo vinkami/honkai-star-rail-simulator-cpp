@@ -38,7 +38,23 @@ Restarts the game
 #### Quickstart
 Start the game with a predetermined team and battle.
 ### During battle
-**TO BE ADDED**
+#### Help
+Shows the help menu, shows all the commands.
+### Check
+Check the effects and stats of the allies or enemies.
+### Escape
+Escape from the fight.
+### Reset
+Restart with all same setting.
+### Exit
+Exit the battle menu and return to the main menu.
+### Q
+Do a normal attack.
+### E
+Release the skill of the current character
+### 1,2,3,4
+Release the ultimate of the character at the corresponding position, only when the ultimate energy bar is full.
+For most normal attacks, skills and ultimates, you will be prompted to select a target.
 
 ## Stats
 Each character and enemy has the following stats:
