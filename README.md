@@ -17,12 +17,26 @@ In the game you can run `help` and see the available commands to work out more.
 ## How to play
 ### Outside battle
 You can select from the main menu the actions you would like to do, such as selecting your team or opponents.
-#### exit
-Quits the same.
-#### team
-Sects the characters you would put in battle. You should select 4 for your team.
-#### battle
-Selects the battle scenario you would like to fight in.
+#### Exit
+Quits the game.
+#### Help
+Shows the help menu, provides details on all the commands.
+#### Start
+Starts the game, only works when you have a team snd battle selected.
+#### Team
+Let you select the characters you would put in battle. You should select 4 for your team.
+#### List
+Shows the list of playable characters available, and detailed profiles of them.
+#### Battle
+Let you select the battle scenario you would like to fight in.
+#### Level
+Shows the leveling sleextion menu, you can increase the levels to increase the game's difficulty.
+#### Settings
+Shows the settings menu.
+#### Restart
+Restarts the game
+#### Quickstart
+Start the game with a predetermined team and battle.
 ### During battle
 **TO BE ADDED**
 
