@@ -27,22 +27,13 @@ void teamMenu(State &state) {
     while (team.size() != 4){
         string selection;
         cin >> selection;
-        if (selection != "exit" && selection != "help" && selection != "list" && !all_of(selection.begin(), selection.end(), ::isdigit)) {
-            cout << "Selected Character not found! Please input appropriate number!" << endl;
-        } else if (selection == "exit") {
-            cout << "Character selection terminated." << endl;
-            return;
-        } else if (selection == "help") {
-            printHelp("team");
-        } else if (selection == "list") {
-            characterList(state); //takes the player to the list of characters
-        }else {
-            int number = stoi(selection);
-            if (number > playableCharacters.size() || number <= 0){
+        int number = 0;
+        try {number = stoi(selection);
+            if (number > playableCharacters.size() || number <= 0) {
                 cout << "Please input appropriate number! " << endl;
                 continue;
             }
-            Character &ally = playableCharacters[number-1];
+            Character &ally = playableCharacters[number - 1];
             if (searchCharacter(team, ally.name) != -1) {
                 cout << "Character already chosen. Please choose another! " << endl;
                 continue;
@@ -50,6 +41,18 @@ void teamMenu(State &state) {
 
             team.push_back(ally);
             cout << ally.name << " joined!" << endl;
+        }
+        catch(...) {
+            if (selection == "exit") {
+                cout << "Character selection terminated." << endl;
+                return;
+            } else if (selection == "help") {
+                printHelp("team");
+            } else if (selection == "list") {
+                characterList(state); //takes the player to the list of characters
+            }else {
+                cout << "Command not found! Please input appropriate number!" << endl;
+            }
         }
         cout << "Select a character to your team by typing their number. (1-10)" << endl;
     }
