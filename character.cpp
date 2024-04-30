@@ -105,3 +105,10 @@ void Character::cleanseDebuff() {
         }
     }
 }
+
+void Character::changeSpeed(double amount) {
+    double remDist = remTime * speed;
+    speed += amount;
+    remTime = remDist / speed;
+    resetRemTime = 10000.0 / speed;
+}
