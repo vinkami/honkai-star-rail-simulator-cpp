@@ -824,7 +824,7 @@ void insertCharacterAbility(Character &character) {
         character.nameColor ={35};
         character.basicAtk = [](Character &self, State &state) {  // Midnight Tumult
             int target = selectTargetPrompt(state.enemies);
-            slowPrint("一瞬よ。\n",  self.nameColor);
+            slowPrint("カフカ: 一瞬よ。\n",  self.nameColor);
             singleAttack(state, self, target, 1.0);
             addEnergy(self, 20);
             state.incSkillPoint();
@@ -844,8 +844,8 @@ void insertCharacterAbility(Character &character) {
         };
         character.ult = [](Character &self, State &state) {  // Twilight Trill
             //int character_pos = searchCharacter(state.allies, self.name);
-            slowPrint("素晴らしい時は…やがて過ぎ去る。\n", self.nameColor);
-            slowPrint("お別れの時間よ…ポン！\n",self.nameColor);
+            slowPrint("カフカ: 素晴らしい時は…やがて過ぎ去る。\n", self.nameColor);
+            slowPrint("カフカ: お別れの時間よ…ポン！\n",self.nameColor);
             aoeAttack(state, self, 0.8);
             //ult attack end
             //effect
