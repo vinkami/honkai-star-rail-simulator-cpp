@@ -50,7 +50,16 @@ Each character and enemy has the following stats:
 - CritDmg: Critical Damage
 
 ## Characters
-**TO BE ADDED**
+### Jingliu
+### Huohuo
+### Kafka
+### Clara
+### Tingyun
+### Fuxuan
+### Natasha
+### Asta
+### Danheng
+### Sparkle
 
 ## Enemies
 There are multiple situations in the game, and each situation has different enemies to fight against.  
