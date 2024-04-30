@@ -20,23 +20,23 @@ void teamMenu(State &state) {
         playableCharacters[i-1].printColorName(0);
         cout << endl;
     }
-//    for (const auto &character : playableCharacters) character.printCurrentStatus();
     cout << "More details of character can be found in list." << endl;
     cout << "A team must have 4 characters." << endl;
     //Ask the user what characters they want to use
-    cout << "Select a character to your team by typing their number. (1-9)" << endl;
+    cout << "Select a character to your team by typing their number. (1-10)" << endl;
     while (team.size() != 4){
         string selection;
         cin >> selection;
-        if (selection != "exit" && selection != "help" && !all_of(selection.begin(), selection.end(), ::isdigit)) {
+        if (selection != "exit" && selection != "help" && selection != "list" && !all_of(selection.begin(), selection.end(), ::isdigit)) {
             cout << "Selected Character not found! Please input appropriate number!" << endl;
         } else if (selection == "exit") {
             cout << "Character selection terminated." << endl;
             return;
         } else if (selection == "help") {
             printHelp("team");
-        // TODO: Add a command to direct the player to the list of characters
-        } else {
+        } else if (selection == "list") {
+            characterList(state); //takes the player to the list of characters
+        }else {
             int number = stoi(selection);
             if (number > playableCharacters.size() || number <= 0){
                 cout << "Please input appropriate number! " << endl;
@@ -51,7 +51,7 @@ void teamMenu(State &state) {
             team.push_back(ally);
             cout << ally.name << " joined!" << endl;
         }
-        cout << "Select a character to your team by typing their number. (1-9)" << endl;
+        cout << "Select a character to your team by typing their number. (1-10)" << endl;
     }
     cout << "Team formed successfully!" << endl << "Current Team:" << endl;
     for (const auto &character : team)
@@ -61,7 +61,7 @@ void teamMenu(State &state) {
     state.allies = std::move(team);
 }
 
-void characterList(State &state){
+void characterList(State &state){//shows the list of characters
     cout << "Character List Menu" << endl;
     cout << "You can see character's abilities by typing number. (1-6)" << endl;
     vector<Character> playableCharacters = getPlayableCharacters();
@@ -208,7 +208,6 @@ void settingsMenu(State &state) {
         }
         cout << "Select a difficulty for your game.(1-6) or type 'help': ";
     }
-//    cout << "Selected Difficulty is " << color << difficulty << resetColor << " mode" << endl << endl;
     slowPrint("You have selected difficulty " + difficulty + "\n\n" , color, 0);
 }
 

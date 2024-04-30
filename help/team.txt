@@ -1,5 +1,6 @@
 Commands:
 - help: Display this help message
 - character name: Input the name of Character to join team
+- list: Goes to the list menu, which shows the list of characters
 - exit: Exit the team menu and return to main menu
 
