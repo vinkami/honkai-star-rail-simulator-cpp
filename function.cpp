@@ -346,7 +346,6 @@ void insertEnemyAbility(Character &enemy){
             state.timelineProceed = true;
         };
     } else if (enemy.name== "Wooden Lupus"){
-        enemy.speed=120;
         Effect howl = Effect("howling","other",enemy,-1,1);
         enemy.effects.push_back(howl);
         enemy.nameColor={36};
@@ -764,12 +763,12 @@ void insertCharacterAbility(Character &character) {
             // speed up
             self.effects.push_back(speed_up);
             double increased_speed = self.baseSpeed*0.2;
-            self.speed += increased_speed;
+            self.changeSpeed(increased_speed);
             speed_up.values.push_back((increased_speed));
             speed_up.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 if (self.duration == 0) {
-                    master.speed -= self.values[0];
+                    master.changeSpeed(-self.values[0]);
                     master.removeEffect((self));
                 }
             };
@@ -1153,14 +1152,14 @@ void insertCharacterAbility(Character &character) {
             ult_speed_up.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 if (self.duration==0) {
-                    master.speed-=50;
+                    master.changeSpeed(-50);
                     master.removeEffect(self);
                 }
             };
             for (Character &ally: state.allies) {
                 if (ally.getEffectLoc("Astral Blessing")==-1){
                     ally.effects.push_back(ult_speed_up);
-                    ally.speed+= 50;
+                    ally.changeSpeed(50);
                 } else ally.getEffectOrCrash("Astral Blessing").duration=2;
             }
         };
@@ -1192,14 +1191,14 @@ void insertCharacterAbility(Character &character) {
             speed_lo.endRound = [](Effect &self, Character &master, State &state) {
                 self.duration--;
                 if (self.duration == 0) {
-                    master.speed += master.baseSpeed * 0.12;
+                    master.changeSpeed(master.baseSpeed * 0.12);
                     master.removeEffect(self);
                 }
             };
             if (hit(70)) {
                 if (enemy.getEffectLoc("Slowness") == -1) {
                     enemy.effects.push_back(speed_lo);
-                    enemy.speed -= enemy.baseSpeed * 0.12;
+                    enemy.changeSpeed(-enemy.baseSpeed * 0.12);
                 } else enemy.getEffectOrCrash("Slowness").duration = 2;
                 state.timelineProceed = true;
             }
