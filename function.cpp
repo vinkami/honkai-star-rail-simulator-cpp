@@ -860,7 +860,10 @@ void insertCharacterAbility(Character &character) {
             };
             for(auto &enemy: state.enemies) {
                 if(hit(75)) {
-                    enemy.effects.push_back(elecshock);
+                    if (enemy.getEffectLoc("Electric Shock")==-1)
+                        enemy.effects.push_back(elecshock);
+                    else enemy.getEffectOrCrash("Electric Shock").duration=2;
+                    slowPrint(enemy.name+ " is Shocked",self.nameColor,0);
                     //singleAttack(state, self, );
                     //enemy.hp-= elecshock.values[1];
                 }
