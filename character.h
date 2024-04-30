@@ -41,6 +41,7 @@ public:
     void removeEffect(Effect &efx);
     void cleanseDebuff();
     void printColorName(int delayMS=10);
+    void changeSpeed(double amount);
 };
 
 #endif //PROJECT_CHARACTER_H
