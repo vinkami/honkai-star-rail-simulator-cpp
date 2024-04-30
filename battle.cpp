@@ -172,7 +172,7 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
             vector<int> color = {0};
             if (ally.hp <= ally.maxHp*0.3) color = {31};
             slowPrint(ally.name+" ",ally.nameColor);
-            slowPrint(to_string(static_cast<int>(ally.hp)) + " / " + to_string(static_cast<int>(ally.maxHp)));
+            slowPrint(to_string(static_cast<int>(ally.hp)) + " / " + to_string(static_cast<int>(ally.maxHp)),color);
             slowPrint("    ");
         }
         cout << endl;
@@ -187,7 +187,6 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
 //                color = "\033[31m";
 //            cout<< enemy.name << " " << color << healthPercent << "%\033[0m   ";
             vector<int> color = {0};
-            if (enemy.hp <= enemy.maxHp*0.3) color = {31};
             int healthPercent = (int) (enemy.hp/enemy.maxHp * 100);
             slowPrint(enemy.name + " " + to_string(healthPercent) + "%   ", {enemy.nameColor}, 0);
         }
