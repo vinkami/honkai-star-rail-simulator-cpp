@@ -102,5 +102,8 @@ When you enter the battle menu, you will be able to see the situations' descript
 - Source: https://github.com/friedmud/variadic_table
 - Usage: To print the table of characters and enemies in a nice format
 
+## Credits
+- Ascii art: some of the art was modified from ascii.co.uk
+- Table: Table function from github.com/friedmud/variadic_table
 ## Link to demonstration video
 **TO BE ADDED**
