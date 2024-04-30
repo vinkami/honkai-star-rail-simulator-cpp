@@ -30,11 +30,11 @@ Shows the list of playable characters available, and detailed profiles of them.
 #### Battle
 Let you select the battle scenario you would like to fight in.
 #### Level
-Shows the leveling sleextion menu, you can increase the levels to increase the game's difficulty.
+Shows the leveling selection menu, you can change the levels of your characters.
 #### Settings
-Shows the settings menu.
+Shows the settings menu, you can change the levels and difficulty of the enemies.
 #### Restart
-Restarts the game
+Starts the game with the settings of the last game.
 #### Quickstart
 Start the game with a predetermined team and battle.
 ### During battle
