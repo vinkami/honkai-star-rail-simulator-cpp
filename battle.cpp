@@ -149,12 +149,6 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         printCharacterQueue(state);
         printAllCharacters(state);
         cout << "Energy: ";
-//        for (auto ally: state.allies) {
-//            string color = "\033[0m";
-//            if (ally.maxEnergy==ally.energy)
-//                color = "\033["+to_string(ally.nameColor[0])+"m";
-//            cout << color << ally.name << " " << ally.energy << " / " << ally.maxEnergy << "\033[0m   ";
-//        }
 
         // Print energy of all allies
         for (auto& ally: state.allies) {
@@ -180,12 +174,6 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         // Print health of all enemies
         cout << "Enemy's Health: ";
         for (auto &enemy: state.enemies) {
-//            string color = "\033[0m";
-//            double health = enemy.hp/enemy.maxHp * 100;
-//            int healthPercent = static_cast<int>(health);
-//            if (health <= 30)
-//                color = "\033[31m";
-//            cout<< enemy.name << " " << color << healthPercent << "%\033[0m   ";
             vector<int> color = {0};
             int healthPercent = (int) (enemy.hp/enemy.maxHp * 100);
             slowPrint(enemy.name + " " + to_string(healthPercent) + "%   ", {enemy.nameColor}, 0);
@@ -198,7 +186,6 @@ bool gameLoop(State &state) {  // return value: whether the battle is still ongo
         for (int i=0; i<state.maxSkillPoint; i++){
             if (i<state.skillPoint) cout << "■";
             else cout << "□";
-//            if(i!=state.maxSkillPoint-1) cout << " ";
         }
 
         string line, move;
