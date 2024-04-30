@@ -103,7 +103,8 @@ When you enter the battle menu, you will be able to see the situations' descript
 - Usage: To print the table of characters and enemies in a nice format
 
 ## Credits
+-Characters and enemies: inspired by the game Honkai Star Rail by Mihoyo hsr.hoyoverse.com/
 - Ascii art: some of the art was modified from ascii.co.uk
-- Table: Table function from github.com/friedmud/variadic_table
+- Table: Table function from friedmud github.com/friedmud/variadic_table
 ## Link to demonstration video
 **TO BE ADDED**
