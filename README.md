@@ -14,7 +14,9 @@ bash ./run.sh
 Yes, that's all you need to do.  
 In the game you can run `help` and see the available commands to work out more.
 
-## Game rules
+## How to play
+### Outside battle
+### During battle
 **TO BE ADDED**
 
 ## Stats
@@ -30,7 +32,8 @@ Each character and enemy has the following stats:
 **TO BE ADDED**
 
 ## Enemies
-**TO BE ADDED**
+There are multiple situations in the game, and each situation has different enemies to fight against.  
+When you enter the battle menu, you will be able to see the situations' description as well as the enemies in that situation.  
 
 # Other stuff that are required by the group project brief
 ## Team members
@@ -41,10 +44,10 @@ Each character and enemy has the following stats:
 - [Jacky](https://github.com/Icescream46)
 
 ## Features aka Code Requirements
-- Random game events: Enemies choose a random skill and a random target based on aggro system
+- Random game events: Enemies choose a random skill and a random target based on taunt system; allies critical hits
 - Data structures: `vector<Character> allies` and `vector<Character> enemies` to store the characters and enemies
 - Dynamic memory management: Many pass-by-reference functions and the vectors you saw above
-- File I/O: `loadCharacters()` to load the characters from a file (You can modify the values to manually change the difficulty)
+- File I/O: `getPlayableCharacters()` to load the characters from a file (You can actually modify the values in `characters.csv` to manually change the difficulty, but a difficulty setting is in game so it's not recommended)
 - Program codes in multiple files: `main.cpp`, `setup.cpp`, `battle.cpp`, `character.cpp`, etc.
 
 ## Non-standard libraries
