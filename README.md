@@ -17,11 +17,11 @@ In the game you can run `help` and see the available commands to work out more.
 ## How to play
 ### Outside battle
 You can select from the main menu the actions you would like to do, such as selecting your team or opponents.
-#exit
+# exit
 Quits the same.
-#team
+# team
 Sects the characters you would put in battle. You should select 4 for your team.
-#battle
+# battle
 Selects the battle scenario you would like to fight in.
 ### During battle
 **TO BE ADDED**
