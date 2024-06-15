@@ -1,5 +1,19 @@
 # Honkai: Star Rail Battle Simulator
 
+## Notes for COMP2113/ENGG1340 Newcomers
+Yes, this is one of the group projects done for this course.  
+This is group 39 of the 2023/2024 semester 2, getting the grade 14/15.  
+
+The project deadline was 30 Apr 2024. Just in case if the repository is modified after that point, you can do:
+```bash
+git clone https://github.com/vinkami/honkai-star-rail-simulator-cpp
+git reset --hard 3128854
+```
+to get the version exactly at the point where it is submitted.  
+At this version there are still quite a few bugs like repeated DoT checking and random crashing, but the results did show that it's not too shabby :D  
+Feel free to look around to get inspirations, just don't forget to mention this project in the citations and don't plagiarize.  
+--[vinkami](https://github.com/vinkami)
+
 ## Introduction
 This is a simulator for the battle in the game Honkai: Star Rail.    
 This game consists of various characters and enemies, which all have different skills and stats.  
